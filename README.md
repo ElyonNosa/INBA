@@ -1,4 +1,4 @@
-# INBA -- Is Not a Banking App
+# INBA -- INBA's Not a Banking App
 
 ## Group XV
 
