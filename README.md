@@ -28,7 +28,8 @@ With the addition of cloud functionality, the user can log in from any device to
 ## Why is this project valuable?
 The entire world is currently recovering from an economic recession. 
 The cost of living has risen a non-negligible amount, primarily due to rising inflation and increased demand from a restless population who is ready to move on from lockdown. 
-Now is not a bad time to learn how to manage your spendings.
+Now is not a bad time to learn how to manage your spendings. \
+On a less serious note, saving money is an important life skill that everyone should know. A penny saved is a penny earned, so any money saved in the present can be invested into important things (such as education) that will help you earn more money in the future. If this is something that you struggle with, then this app will assist you on your journey to becoming an ideal money saver. 
 
 ## What are the success criteria?
 - Provide the user as much information and statistics as possible about their spendings.
