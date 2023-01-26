@@ -46,4 +46,4 @@ The project will be considered successful if the user can understand their finan
 Another criteria for success is that the user should be able to record their transactions within 2 clicks or less. 
 
 
-It is ideal if INBA is preferred by users over their current financial planning platform. 
+It is ideal if INBA is preferred by 75% of users over their current financial planning platform. 
