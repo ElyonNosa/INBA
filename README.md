@@ -14,7 +14,7 @@ INBA (INBA's Not a Banking App) is an app designed for those who spend money on 
 ## What is it?
 This app serves as a primary platform for the user to record and view their day-to-day spendings. 
 The app acts as an easy to use and visually appealing alternative to other reporting mediums. 
-INBA also provides immersive visualizations `in the form of pie charts and graphs`, so the user can easily recognize vital information at a glance. 
+INBA also provides immersive visualizations, so the user can easily recognize vital information at a glance. 
 Through the use of tracking, the app can notice and indicate trends in the user's purchasing habits. 
 With the addition of cloud functionality, the user can log in from any device to record or view their spendings. 
 
