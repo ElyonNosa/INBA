@@ -52,7 +52,8 @@ It is ideal if INBA is preferred by 75% of users over their current financial pl
 
 ### Design Flow
 ##### Modified Github Pattern
-The main branch is split into sub branches called <b>Features<b>. Each Feature will split into three branches:  
-- <b> UI/UX <b>
-- <b> Database <b>
-- <b> Logic <b>
+The main branch is split into sub branches called **Features**. 
+Each Feature will split into three branches:  
+- **UI/UX**
+- **Database**
+- **Logic**
