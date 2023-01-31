@@ -47,3 +47,12 @@ Another criteria for success is that the user should be able to record their tra
 
 
 It is ideal if INBA is preferred by 75% of users over their current financial planning platform. 
+
+## The Strategy used for this project.
+
+### Design Flow
+##### Modified Github Pattern
+The main branch is split into sub branches called <b>Features<b>. Each Feature will split into three branches:  
+- <b> UI/UX <b>
+- <b> Database <b>
+- <b> Logic <b>
