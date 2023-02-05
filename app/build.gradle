@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 33
+    compileSdk 33
 
     defaultConfig {
-        applicationId "comp3350.srsys"
-        minSdkVersion 19
-        targetSdkVersion 33
+        applicationId "comp3350.inba"
+        minSdk 19
+        targetSdk 33
         versionCode 1
         versionName "1.0"
     }
@@ -16,7 +16,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    namespace 'comp3350.srsys'
+    namespace 'comp3350.inba'
 }
 
 dependencies {
