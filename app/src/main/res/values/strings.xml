@@ -7,6 +7,7 @@
     <string name="title_activity_courses">INBA: Courses</string>
     <string name="title_activity_student_courses">INBA: Student Course History</string>
     <string name="title_activity_course_students">INBA: Course Registrations</string>
+    <string name="title_activity_transactions">INBA: Transactions</string>
     <string name="students">Students</string>
     <string name="courses">Courses</string>
     <string name="registrations">Registrations</string>

@@ -9,12 +9,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-public class HomeActivity extends Activity {
+public class DashboardActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+        setContentView(R.layout.activity_dashboard);
     }
 
     @Override
@@ -39,13 +39,8 @@ public class HomeActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void buttonStudentsOnClick(View v) {
-        Intent studentsIntent = new Intent(HomeActivity.this, StudentsActivity.class);
-        HomeActivity.this.startActivity(studentsIntent);
-    }
-
-    public void buttonCoursesOnClick(View v) {
-        Intent coursesIntent = new Intent(HomeActivity.this, CoursesActivity.class);
-        HomeActivity.this.startActivity(coursesIntent);
+    public void buttonAddTransactionOnClick(View v) {
+        Intent transactionsIntent = new Intent(DashboardActivity.this, TransactionsActivity.class);
+        DashboardActivity.this.startActivity(transactionsIntent);
     }
 }

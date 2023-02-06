@@ -26,4 +26,3 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.0.0'
     implementation 'com.jjoe64:graphview:4.2.2'
 }
-    

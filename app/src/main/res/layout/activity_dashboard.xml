@@ -47,6 +47,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:enabled="false"
             android:text="@string/home" />
 
         <Button
@@ -55,6 +56,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:enabled="false"
             android:text="@string/view_transaction" />
 
         <Button
@@ -73,7 +75,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:enabled="true"
+            android:enabled="false"
             android:text="@string/settings" />
 
         <Button
@@ -82,7 +84,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:enabled="true"
+            android:enabled="false"
             android:text="@string/user_profile" />
     </LinearLayout>
 

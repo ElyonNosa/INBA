@@ -44,6 +44,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="comp3350.inba.presentation.CoursesActivity" />
         </activity>
+        <activity
+        android:name="comp3350.inba.presentation.TransactionsActivity"
+        android:label="@string/title_activity_transactions" >
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value="comp3350.inba.presentation.DashboardActivity" />
+    </activity>
 
     </application>
 
