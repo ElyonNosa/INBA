@@ -5,33 +5,40 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
+    android:background="@color/colorPrimary"
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="comp3350.inba.presentation.DashboardActivity">
 
     <TextView
         android:id="@+id/textTitle"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="40dp"
         android:layout_alignParentTop="true"
         android:layout_marginStart="0dp"
         android:layout_marginTop="0dp"
         android:layout_marginEnd="0dp"
+        android:layout_marginBottom="10dp"
         android:foregroundGravity="center"
+        android:gravity="center"
+        android:textColor="@color/colorLightBlue"
         android:text="@string/dashboard"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
 
     <com.jjoe64.graphview.GraphView
         android:id="@+id/graph"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="280dp"
         android:layout_below="@+id/textTitle"
+        android:layout_marginBottom="10dp"
         android:layout_marginTop="0dp" />
 
     <ListView
         android:id="@+id/transaction_list"
-        android:layout_width="395dp"
+        style="@style/transactionList"
+        android:layout_width="match_parent"
         android:layout_height="291dp"
         android:layout_below="@+id/graph"
+        android:layout_marginBottom="10dp"
         android:layout_marginTop="0dp" />
 
     <LinearLayout
@@ -43,47 +50,54 @@
 
         <Button
             android:id="@+id/buttonTemp"
-            style="@android:style/Widget.Button.Inset"
+            style="@style/nav.Btn"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:drawableLeft="@drawable/home"
             android:text="@string/home" />
 
         <Button
             android:id="@+id/buttonViewTransaction"
-            style="@android:style/Widget.Button.Inset"
+            style="@style/nav.Btn"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:drawableLeft="@drawable/view"
             android:text="@string/view_transaction" />
 
         <Button
             android:id="@+id/buttonAddTransaction"
-            style="@android:style/Widget.Button.Inset"
+            style="@style/navAdd.Btn"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:enabled="true"
+            android:translationY="-10dp"
             android:onClick="buttonAddTransactionOnClick"
             android:text="@string/add_transaction" />
 
         <Button
             android:id="@+id/buttonSettings"
-            style="@android:style/Widget.Button.Inset"
+            style="@style/nav.Btn"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:enabled="true"
+            android:drawableLeft="@drawable/settings"
             android:text="@string/settings" />
 
         <Button
             android:id="@+id/buttonProfile"
-            style="@android:style/Widget.Button.Inset"
+            style="@style/nav.Btn"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:enabled="true"
-            android:text="@string/user_profile" />
+            android:drawableLeft="@drawable/profile"
+            android:text="@string/user_profile"
+           />
+
     </LinearLayout>
 
 </RelativeLayout>
