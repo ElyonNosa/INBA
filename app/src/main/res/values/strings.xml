@@ -2,7 +2,7 @@
     <string name="app_name">INBA</string>
 
     <string name="action_settings">Settings</string>
-    <string name="student_records_system">Student Records System</string>
+    <string name="dashboard">Dashboard</string>
     <string name="title_activity_students">INBA: Students</string>
     <string name="title_activity_courses">INBA: Courses</string>
     <string name="title_activity_student_courses">INBA: Student Course History</string>
@@ -20,4 +20,13 @@
     <string name="gpa">GPA</string>
     <string name="fatalError">Fatal error</string>
     <string name="warning">Warning</string>
+
+
+    <string name="add_transaction">Add</string>
+    <string name="transaction_category">Category</string>
+    <string name="transaction_price">Price</string>
+    <string name="view_transaction">View</string>
+    <string name="user_profile">Profile</string>
+    <string name="home">Home</string>
+    <string name="settings">Settings</string>
 </resources>
