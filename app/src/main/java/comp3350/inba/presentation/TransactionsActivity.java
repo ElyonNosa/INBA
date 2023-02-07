@@ -124,16 +124,16 @@ public class TransactionsActivity extends Activity {
         editName.setText("" + selected.getPrice());
     }
 
-    public void buttonTransactionStudentsOnClick(View v) {
-        EditText editID = (EditText)findViewById(R.id.editTransactionCategory);
-        String transactionID = editID.getText().toString();
-
-        Intent csIntent = new Intent(TransactionsActivity.this, TransactionsActivity.class);
-        Bundle b = new Bundle();
-        b.putString("transactionID", transactionID);
-        csIntent.putExtras(b);
-        TransactionsActivity.this.startActivity(csIntent);
-    }
+//    public void buttonTransactionStudentsOnClick(View v) {
+//        EditText editID = (EditText)findViewById(R.id.editTransactionCategory);
+//        String transactionID = editID.getText().toString();
+//
+//        Intent csIntent = new Intent(TransactionsActivity.this, TransactionsActivity.class);
+//        Bundle b = new Bundle();
+//        b.putString("transactionID", transactionID);
+//        csIntent.putExtras(b);
+//        TransactionsActivity.this.startActivity(csIntent);
+//    }
 
     public void buttonTransactionCreateOnClick(View v) {
         Transaction transaction = createTransactionFromEditText();

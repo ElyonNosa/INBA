@@ -1,6 +1,8 @@
 package comp3350.inba.presentation;
 
 import comp3350.inba.R;
+import comp3350.inba.business.AccessTransactions;
+import comp3350.inba.objects.Transaction;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -8,13 +10,32 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+
+import java.util.List;
 
 public class DashboardActivity extends Activity {
+    private AccessTransactions accessTransactions;
+    private ArrayAdapter<Transaction> transactionArrayAdapter;
+    private List<Transaction> transactionList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
+        accessTransactions = new AccessTransactions();
+        try {
+            // display transactions in list
+            transactionList = accessTransactions.getTransactions();
+            transactionArrayAdapter = new ArrayAdapter<Transaction>(this, android.R.layout.simple_list_item_activated_2, 0, transactionList);
+            final ListView listView = (ListView)findViewById(R.id.listTransactions);
+            // this line causes an error. not sure what to do
+//            listView.setAdapter(transactionArrayAdapter);
+        }
+        catch (final Exception e) {
+            Messages.fatalError(this, e.getMessage());
+        }
     }
 
     @Override
