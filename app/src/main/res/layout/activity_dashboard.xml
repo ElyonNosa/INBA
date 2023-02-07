@@ -73,7 +73,6 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:enabled="true"
-            android:translationY="-10dp"
             android:onClick="buttonAddTransactionOnClick"
             android:text="@string/add_transaction" />
 
