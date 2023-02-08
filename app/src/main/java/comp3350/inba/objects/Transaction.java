@@ -1,8 +1,14 @@
 package comp3350.inba.objects;
 
+import android.annotation.SuppressLint;
+
+import java.util.Locale;
 import java.util.Objects;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Transaction {
+    public final static String[] CATEGORIES = {"Amenities", "Education", "Entertainment", "Food", "Hardware", "Hobby", "Medical", "Misc", "Transportation", "Utilities"};
     private final long time;
     private final double price;
     private final String category;
@@ -24,7 +30,8 @@ public class Transaction {
 
     public String toString()
     {
-        return String.format("%s, $%s", category, price);
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat jdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return String.format("%s, %s, $%s", jdf.format(new Date(time * 1000L)), category, String.format(Locale.ENGLISH,"%.2f", price));
     }
 
     public boolean equals(Object other)

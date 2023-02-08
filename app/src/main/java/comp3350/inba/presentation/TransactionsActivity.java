@@ -13,6 +13,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.List;
+import java.util.Locale;
 
 import comp3350.inba.R;
 import comp3350.inba.business.AccessTransactions;
@@ -47,7 +48,7 @@ public class TransactionsActivity extends Activity {
                     TextView text2 = view.findViewById(android.R.id.text2);
 
                     text1.setText(transactionList.get(position).getCategory());
-                    text2.setText(String.valueOf(transactionList.get(position).getPrice()));
+                    text2.setText(String.format(Locale.ENGLISH, "%.2f", transactionList.get(position).getPrice()));
 
                     return view;
                 }
@@ -106,7 +107,7 @@ public class TransactionsActivity extends Activity {
         EditText editPrice = findViewById(R.id.editTransactionPrice);
 
         editCategory.setText(selected.getCategory());
-        editPrice.setText(String.valueOf(selected.getPrice()));
+        editPrice.setText(String.format(Locale.ENGLISH, "%.2f", selected.getPrice()));
     }
 
     public void buttonTransactionCreateOnClick(View v) {
