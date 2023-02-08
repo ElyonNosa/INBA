@@ -1,15 +1,11 @@
 package comp3350.inba.presentation;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -29,6 +25,8 @@ public class TransactionsActivity extends Activity {
     private ArrayAdapter<Transaction> transactionArrayAdapter;
     private int selectedTransactionPosition = -1;
 
+    private long selectedTransactionTime = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,50 +43,37 @@ public class TransactionsActivity extends Activity {
                 public View getView(int position, View convertView, ViewGroup parent) {
                     View view = super.getView(position, convertView, parent);
 
-                    TextView text1 = (TextView) view.findViewById(android.R.id.text1);
-                    TextView text2 = (TextView) view.findViewById(android.R.id.text2);
+                    TextView text1 = view.findViewById(android.R.id.text1);
+                    TextView text2 = view.findViewById(android.R.id.text2);
 
                     text1.setText(transactionList.get(position).getCategory());
-                    text2.setText("" + transactionList.get(position).getPrice());
+                    text2.setText(String.valueOf(transactionList.get(position).getPrice()));
 
                     return view;
                 }
             };
 
-            final ListView listView = (ListView)findViewById(R.id.listTransactions);
+            final ListView listView = findViewById(R.id.listTransactions);
             listView.setAdapter(transactionArrayAdapter);
 
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Button updateButton = (Button)findViewById(R.id.buttonTransactionUpdate);
-                    Button deleteButton = (Button)findViewById(R.id.buttonTransactionDelete);
+            listView.setOnItemClickListener((parent, view, position, id) -> {
+                Button updateButton = findViewById(R.id.buttonTransactionUpdate);
+                Button deleteButton = findViewById(R.id.buttonTransactionDelete);
 
-                    if (position == selectedTransactionPosition) {
-                        listView.setItemChecked(position, false);
-                        updateButton.setEnabled(false);
-                        deleteButton.setEnabled(false);
-                        selectedTransactionPosition = -1;
-                    } else {
-                        listView.setItemChecked(position, true);
-                        updateButton.setEnabled(true);
-                        deleteButton.setEnabled(true);
-                        selectedTransactionPosition = position;
-                        selectTransactionAtPosition(position);
-                    }
+                if (position == selectedTransactionPosition) {
+                    listView.setItemChecked(position, false);
+                    updateButton.setEnabled(false);
+                    deleteButton.setEnabled(false);
+                    selectedTransactionPosition = -1;
+                    selectedTransactionTime = -1;
+                } else {
+                    listView.setItemChecked(position, true);
+                    updateButton.setEnabled(true);
+                    deleteButton.setEnabled(true);
+                    selectedTransactionPosition = position;
+                    selectTransactionAtPosition(position);
+                    selectedTransactionTime = transactionList.get(position).getTime();
                 }
-            });
-
-            final EditText editTransactionCategory = (EditText)findViewById(R.id.editTransactionCategory);
-            editTransactionCategory.setEnabled(true);
-            editTransactionCategory.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {}
-
-                @Override
-                public void afterTextChanged(Editable s) {}
             });
         }
         catch (final Exception e)
@@ -109,7 +94,7 @@ public class TransactionsActivity extends Activity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+//        int id = item.getItemId();
 
         return super.onOptionsItemSelected(item);
     }
@@ -117,29 +102,17 @@ public class TransactionsActivity extends Activity {
     public void selectTransactionAtPosition(int position) {
         Transaction selected = transactionArrayAdapter.getItem(position);
 
-        EditText editID = (EditText)findViewById(R.id.editTransactionCategory);
-        EditText editName = (EditText)findViewById(R.id.editTransactionPrice);
+        EditText editCategory = findViewById(R.id.editTransactionCategory);
+        EditText editPrice = findViewById(R.id.editTransactionPrice);
 
-        editID.setText(selected.getCategory());
-        editName.setText("" + selected.getPrice());
+        editCategory.setText(selected.getCategory());
+        editPrice.setText(String.valueOf(selected.getPrice()));
     }
 
-//    public void buttonTransactionStudentsOnClick(View v) {
-//        EditText editID = (EditText)findViewById(R.id.editTransactionCategory);
-//        String transactionID = editID.getText().toString();
-//
-//        Intent csIntent = new Intent(TransactionsActivity.this, TransactionsActivity.class);
-//        Bundle b = new Bundle();
-//        b.putString("transactionID", transactionID);
-//        csIntent.putExtras(b);
-//        TransactionsActivity.this.startActivity(csIntent);
-//    }
-
     public void buttonTransactionCreateOnClick(View v) {
-        Transaction transaction = createTransactionFromEditText();
-        String result;
+        Transaction transaction = createTransactionFromEditText(true);
+        String result = validateTransactionData(transaction, true);
 
-        result = validateTransactionData(transaction, true);
         if (result == null) {
             try {
                 transaction = accessTransactions.insertTransaction(transaction);
@@ -148,7 +121,7 @@ public class TransactionsActivity extends Activity {
                 transactionArrayAdapter.notifyDataSetChanged();
                 int pos = transactionList.indexOf(transaction);
                 if (pos >= 0) {
-                    ListView listView = (ListView)findViewById(R.id.listTransactions);
+                    ListView listView = findViewById(R.id.listTransactions);
                     listView.setSelection(pos);
                 }
             } catch (final Exception e) {
@@ -160,10 +133,9 @@ public class TransactionsActivity extends Activity {
     }
 
     public void buttonTransactionUpdateOnClick(View v) {
-        Transaction transaction = createTransactionFromEditText();
-        String result;
+        Transaction transaction = createTransactionFromEditText(false);
+        String result = validateTransactionData(transaction, false);
 
-        result = validateTransactionData(transaction, false);
         if (result == null) {
             try {
                 transaction = accessTransactions.updateTransaction(transaction);
@@ -172,7 +144,7 @@ public class TransactionsActivity extends Activity {
                 transactionArrayAdapter.notifyDataSetChanged();
                 int pos = transactionList.indexOf(transaction);
                 if (pos >= 0) {
-                    ListView listView = (ListView)findViewById(R.id.listTransactions);
+                    ListView listView = findViewById(R.id.listTransactions);
                     listView.setSelection(pos);
                 }
             } catch (final Exception e) {
@@ -184,15 +156,14 @@ public class TransactionsActivity extends Activity {
     }
 
     public void buttonTransactionDeleteOnClick(View v) {
-        Transaction transaction = createTransactionFromEditText();
-        String result;
+        Transaction transaction = createTransactionFromEditText(false);
 
         try {
             accessTransactions.deleteTransaction(transaction);
 
             int pos = transactionList.indexOf(transaction);
             if (pos >= 0) {
-                ListView listView = (ListView) findViewById(R.id.listTransactions);
+                ListView listView = findViewById(R.id.listTransactions);
                 listView.setSelection(pos);
             }
             transactionList = accessTransactions.getTransactions();
@@ -202,14 +173,19 @@ public class TransactionsActivity extends Activity {
         }
     }
 
-    private Transaction createTransactionFromEditText() {
-        EditText editCategory = (EditText)findViewById(R.id.editTransactionCategory);
-        EditText editPrice = (EditText)findViewById(R.id.editTransactionPrice);
+    private Transaction createTransactionFromEditText(boolean isNewTransaction) {
+        EditText editCategory = findViewById(R.id.editTransactionCategory);
+        EditText editPrice = findViewById(R.id.editTransactionPrice);
 
-        Transaction transaction = new Transaction(System.currentTimeMillis() / 1000L,
-                Double.parseDouble(editPrice.getText().toString()), editCategory.getText().toString());
+        long time = 0;
+        if(isNewTransaction) {
+            time = System.currentTimeMillis() / 1000L;
+        }
+        else {
+            time = selectedTransactionTime;
+        }
 
-        return transaction;
+        return new Transaction(time, Double.parseDouble(editPrice.getText().toString()), editCategory.getText().toString());
     }
 
     private String validateTransactionData(Transaction transaction, boolean isNewTransaction) {
@@ -221,10 +197,9 @@ public class TransactionsActivity extends Activity {
             return "Positive price required";
         }
 
-
         if (isNewTransaction && accessTransactions.getRandom(transaction.getTime()) != null) {
 //            return "Transaction ID " + transaction.getTransactionCategory() + " already exists.";
-            return "Transaction ID already exists.";
+            return "A transaction has already been made this second. Please wait 1 second and try again. ";
         }
 
 

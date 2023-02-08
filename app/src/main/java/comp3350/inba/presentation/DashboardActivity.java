@@ -28,10 +28,9 @@ public class DashboardActivity extends Activity {
         try {
             // display transactions in list
             transactionList = accessTransactions.getTransactions();
-            transactionArrayAdapter = new ArrayAdapter<Transaction>(this, android.R.layout.simple_list_item_activated_2, 0, transactionList);
-            final ListView listView = (ListView)findViewById(R.id.listTransactions);
-            // this line causes an error. not sure what to do
-//            listView.setAdapter(transactionArrayAdapter);
+            transactionArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, transactionList);
+            final ListView listView = findViewById(R.id.transaction_list);
+            listView.setAdapter(transactionArrayAdapter);
         }
         catch (final Exception e) {
             Messages.fatalError(this, e.getMessage());
@@ -55,9 +54,16 @@ public class DashboardActivity extends Activity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+//        int id = item.getItemId();
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        transactionList = accessTransactions.getTransactions();
+        transactionArrayAdapter.notifyDataSetChanged();
     }
 
     public void buttonAddTransactionOnClick(View v) {

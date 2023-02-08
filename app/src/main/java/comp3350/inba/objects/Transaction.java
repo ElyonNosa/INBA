@@ -24,7 +24,7 @@ public class Transaction {
 
     public String toString()
     {
-        return String.format("Transaction: %s %s", category, price);
+        return String.format("%s, $%s", category, price);
     }
 
     public boolean equals(Object other)

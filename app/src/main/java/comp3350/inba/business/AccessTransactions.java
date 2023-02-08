@@ -9,7 +9,7 @@ import comp3350.inba.persistence.TransactionPersistence;
 
 public class AccessTransactions
 {
-    private TransactionPersistence transactionPersistence;
+    private final TransactionPersistence transactionPersistence;
     private List<Transaction> transactions;
     private Transaction transaction;
     private int currentTransaction;
@@ -30,7 +30,6 @@ public class AccessTransactions
 
     public Transaction getSequential()
     {
-        String result = null;
         if (transactions == null)
         {
             transactions = transactionPersistence.getTransactionSequential();
@@ -38,7 +37,7 @@ public class AccessTransactions
         }
         if (currentTransaction < transactions.size())
         {
-            transaction = (Transaction) transactions.get(currentTransaction);
+            transaction = transactions.get(currentTransaction);
             currentTransaction++;
         }
         else
@@ -63,7 +62,6 @@ public class AccessTransactions
         {
             transactions = null;
             transaction = null;
-            currentTransaction = 0;
         }
         return transaction;
     }

@@ -27,9 +27,7 @@ public class TransactionPersistenceStub implements TransactionPersistence {
     @Override
     public List<Transaction> getTransactionRandom(Transaction currentTransaction) {
         List<Transaction> newTransactions = new ArrayList<>();
-        int index;
-
-        index = transactions.indexOf(currentTransaction);
+        int index = transactions.indexOf(currentTransaction);
         if (index >= 0)
         {
             newTransactions.add(transactions.get(index));
@@ -46,9 +44,7 @@ public class TransactionPersistenceStub implements TransactionPersistence {
 
     @Override
     public Transaction updateTransaction(Transaction currentTransaction) {
-        int index;
-
-        index = transactions.indexOf(currentTransaction);
+        int index = transactions.indexOf(currentTransaction);
         if (index >= 0)
         {
             transactions.set(index, currentTransaction);
@@ -58,9 +54,7 @@ public class TransactionPersistenceStub implements TransactionPersistence {
 
     @Override
     public void deleteTransaction(Transaction currentTransaction) {
-        int index;
-
-        index = transactions.indexOf(currentTransaction);
+        int index = transactions.indexOf(currentTransaction);
         if (index >= 0)
         {
             transactions.remove(index);

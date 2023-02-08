@@ -15,37 +15,41 @@
         android:layout_height="40dp"
         android:layout_alignParentTop="true"
         android:layout_marginStart="0dp"
-        android:layout_marginTop="0dp"
+        android:layout_marginTop="5dp"
         android:layout_marginEnd="0dp"
         android:layout_marginBottom="10dp"
         android:foregroundGravity="center"
         android:gravity="center"
-        android:textColor="@color/colorLightBlue"
         android:text="@string/dashboard"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:textColor="@color/colorLightBlue"
+        tools:ignore="TextSizeCheck" />
 
     <com.jjoe64.graphview.GraphView
         android:id="@+id/graph"
         android:layout_width="match_parent"
         android:layout_height="280dp"
         android:layout_below="@+id/textTitle"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="0dp" />
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="10dp" />
 
     <ListView
         android:id="@+id/transaction_list"
         style="@style/transactionList"
         android:layout_width="match_parent"
-        android:layout_height="291dp"
+        android:layout_height="420dp"
+        android:layout_alignWithParentIfMissing="false"
         android:layout_below="@+id/graph"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="0dp" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="10dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="72dp"
         android:layout_below="@+id/transaction_list"
-        android:layout_marginTop="0dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="5dp"
         android:orientation="horizontal">
 
         <Button
@@ -54,8 +58,9 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:drawableLeft="@drawable/home"
-            android:text="@string/home" />
+            android:drawableStart="@drawable/home"
+            android:text="@string/home"
+            tools:ignore="VisualLintButtonSize" />
 
         <Button
             android:id="@+id/buttonViewTransaction"
@@ -63,8 +68,9 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:drawableLeft="@drawable/view"
-            android:text="@string/view_transaction" />
+            android:drawableStart="@drawable/view"
+            android:text="@string/view_transaction"
+            tools:ignore="VisualLintButtonSize" />
 
         <Button
             android:id="@+id/buttonAddTransaction"
@@ -74,7 +80,8 @@
             android:layout_weight="1"
             android:enabled="true"
             android:onClick="buttonAddTransactionOnClick"
-            android:text="@string/add_transaction" />
+            android:text="@string/add_transaction"
+            tools:ignore="VisualLintButtonSize" />
 
         <Button
             android:id="@+id/buttonSettings"
@@ -82,9 +89,10 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:drawableStart="@drawable/settings"
             android:enabled="true"
-            android:drawableLeft="@drawable/settings"
-            android:text="@string/settings" />
+            android:text="@string/settings"
+            tools:ignore="VisualLintButtonSize" />
 
         <Button
             android:id="@+id/buttonProfile"
@@ -92,10 +100,10 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:drawableStart="@drawable/profile"
             android:enabled="true"
-            android:drawableLeft="@drawable/profile"
             android:text="@string/user_profile"
-           />
+            tools:ignore="VisualLintButtonSize" />
     </LinearLayout>
 
 </RelativeLayout>
