@@ -40,7 +40,7 @@ In addition, the conventional apps used to track transactions may not be appeali
 INBA will have a clean, minimalistic aesthetic, allowing users to easily find relevant info. This will be amplified by the ability to customize the appearance of the app. Ubiquity is the key goal of INBA. 
 
 ## What are the success criteria?
-The project will be considered successful if the user can understand their financial situation within 3 clicks or less.
+The project will be considered successful if the user can view their total monthly spendings and see where their money is going (their categories of spending) within 3 clicks or less.
 
 
 Another criteria for success is that the user should be able to record their transactions within 2 clicks or less. 
