@@ -12,14 +12,12 @@
         <item name="android:color">@color/colorPrimary</item>
         <item name="android:textColor">@color/colorWhite</item>
         <item name="colorControlHighlight">@color/colorLightBlue</item>
-        <item name="android:radius">40dp</item>
         <item name="android:background">@drawable/nav_btn</item>
     </style>
 
     <style name="navAdd.Btn" parent="Theme.AppCompat.DayNight.DarkActionBar">
         <item name="android:color">@color/colorLightBlue</item>
         <item name="android:textColor">@color/colorWhite</item>
-        <item name="android:radius">15dp</item>
         <item name="android:background">@drawable/nav_btn</item>
     </style>
 
