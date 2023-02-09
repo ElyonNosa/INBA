@@ -7,7 +7,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -58,8 +58,8 @@ public class TransactionsActivity extends Activity {
             listView.setAdapter(transactionArrayAdapter);
 
             listView.setOnItemClickListener((parent, view, position, id) -> {
-                ImageButton updateButton = findViewById(R.id.buttonTransactionUpdate);
-                ImageButton deleteButton = findViewById(R.id.buttonTransactionDelete);
+                Button updateButton = findViewById(R.id.buttonTransactionUpdate);
+                Button deleteButton = findViewById(R.id.buttonTransactionDelete);
 
                 if (position == selectedTransactionPosition) {
                     listView.setItemChecked(position, false);
