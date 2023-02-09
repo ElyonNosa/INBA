@@ -36,12 +36,12 @@
     <ListView
         android:id="@+id/transaction_list"
         style="@style/transactionList"
-        android:stackFromBottom="true" 
-        android:layout_width="395dp"
-        android:layout_height="285dp"
+        android:layout_width="match_parent"
+        android:layout_height="420dp"
         android:layout_below="@+id/graph"
         android:layout_marginTop="16dp"
-        android:layout_marginBottom="10dp" />
+        android:layout_marginBottom="10dp"
+        android:stackFromBottom="true" />
 
     <LinearLayout
         android:layout_width="match_parent"

@@ -11,7 +11,7 @@
     <ListView
         android:id="@+id/listTransactions"
         style="@style/transactionList"
-        android:layout_width="368dp"
+        android:layout_width="match_parent"
         android:layout_height="373dp"
         android:layout_gravity="top"
         android:layout_weight="1"
@@ -49,7 +49,8 @@
             android:layout_columnSpan="1"
             android:layout_gravity="fill_horizontal"
             android:backgroundTint="@color/colorWhite"
-            android:inputType="textNoSuggestions" />
+            android:inputType="textNoSuggestions"
+            android:textColor="@color/colorWhite" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -66,8 +67,9 @@
             android:layout_height="wrap_content"
             android:layout_columnSpan="1"
             android:layout_gravity="fill_horizontal"
+            android:backgroundTint="@color/colorWhite"
             android:inputType="numberDecimal"
-            android:backgroundTint="@color/colorWhite"/>
+            android:textColor="@color/colorWhite" />
 
     </GridLayout>
 
