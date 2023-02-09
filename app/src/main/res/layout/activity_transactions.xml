@@ -5,12 +5,14 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:orientation="vertical"
+    android:background="@color/colorPrimary"
     tools:context="comp3350.inba.presentation.TransactionsActivity">
 
     <ListView
         android:id="@+id/listTransactions"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        style="@style/transactionList"
+        android:layout_width="368dp"
+        android:layout_height="373dp"
         android:layout_gravity="top"
         android:layout_weight="1"
         android:choiceMode="singleChoice"
@@ -19,7 +21,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#000000"
+        android:background="@color/colorAccent"
         android:id="@+id/separator"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp" />
@@ -35,6 +37,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="@string/transaction_category"
+            android:textColor="@color/colorWhite"
             android:id="@+id/textTransactionCategory"
             android:layout_marginBottom="60dp"
             android:layout_marginEnd="60dp" />
@@ -45,15 +48,15 @@
             android:layout_height="wrap_content"
             android:layout_columnSpan="1"
             android:layout_gravity="fill_horizontal"
-            android:inputType="textNoSuggestions"
-            android:autofillHints=""
-            tools:ignore="LabelFor,VisualLintTextFieldSize" />
+            android:backgroundTint="@color/colorWhite"
+            android:inputType="textNoSuggestions" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="@string/transaction_price"
+            android:textColor="@color/colorWhite"
             android:id="@+id/textTransactionPrice"
             android:layout_marginBottom="64dp" />
 
@@ -64,43 +67,50 @@
             android:layout_columnSpan="1"
             android:layout_gravity="fill_horizontal"
             android:inputType="numberDecimal"
-            android:autofillHints=""
-            tools:ignore="LabelFor,VisualLintTextFieldSize" />
+            android:backgroundTint="@color/colorWhite"/>
 
     </GridLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="56dp"
         android:layout_marginTop="10dp">
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/delete"
+        <ImageButton
             android:id="@+id/buttonTransactionDelete"
-            android:layout_alignParentEnd="true"
+            style="@style/nav.Btn"
+            android:layout_width="120dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
             android:enabled="false"
             android:onClick="buttonTransactionDeleteOnClick"
-            tools:ignore="RelativeOverlap" />
+            android:text="@string/delete"
+            android:src="@drawable/delete_icon"
+            android:textColor="@color/colorAccent" />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/create"
+        <ImageButton
             android:id="@+id/buttonTransactionCreate"
-            android:layout_alignParentStart="true"
+            style="@style/nav.Btn"
+            android:layout_width="120dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
             android:enabled="true"
-            android:onClick="buttonTransactionCreateOnClick" />
+            android:onClick="buttonTransactionCreateOnClick"
+            android:text="@string/create"
+            android:src="@drawable/create_icon"
+            android:textColor="@color/colorAccent" />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/update"
+        <ImageButton
             android:id="@+id/buttonTransactionUpdate"
+            style="@style/nav.Btn"
+            android:layout_width="120dp"
+            android:layout_height="match_parent"
             android:layout_centerHorizontal="true"
             android:enabled="false"
-            android:onClick="buttonTransactionUpdateOnClick" />
+            android:onClick="buttonTransactionUpdateOnClick"
+            android:text="@string/update"
+            android:src="@drawable/update_icon"
+            android:textColor="@color/colorAccent" />
     </RelativeLayout>
 
 </LinearLayout>

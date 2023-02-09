@@ -15,15 +15,15 @@
         android:layout_height="40dp"
         android:layout_alignParentTop="true"
         android:layout_marginStart="0dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="-3dp"
         android:layout_marginEnd="0dp"
         android:layout_marginBottom="10dp"
         android:foregroundGravity="center"
         android:gravity="center"
         android:text="@string/dashboard"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-        android:textColor="@color/colorLightBlue"
-        tools:ignore="TextSizeCheck" />
+        tools:ignore="TextSizeCheck" 
+        android:textColor="@color/colorAccent" />
 
     <com.jjoe64.graphview.GraphView
         android:id="@+id/graph"
@@ -36,14 +36,12 @@
     <ListView
         android:id="@+id/transaction_list"
         style="@style/transactionList"
-        android:layout_width="match_parent"
-        android:layout_height="420dp"
-        android:layout_alignWithParentIfMissing="false"
+        android:stackFromBottom="true" 
+        android:layout_width="395dp"
+        android:layout_height="285dp"
         android:layout_below="@+id/graph"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="10dp"
-        android:stackFromBottom="true" />
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="10dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -53,38 +51,38 @@
         android:layout_marginTop="5dp"
         android:orientation="horizontal">
 
-        <Button
+        <ImageButton
             android:id="@+id/buttonTemp"
             style="@style/nav.Btn"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:drawableStart="@drawable/home"
-            android:text="@string/home"
-            tools:ignore="VisualLintButtonSize" />
+            android:layout_marginRight="5dp"
+            android:src="@drawable/home"
+            android:text="@string/home" />
 
-        <Button
+        <ImageButton
             android:id="@+id/buttonViewTransaction"
             style="@style/nav.Btn"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:drawableStart="@drawable/view"
-            android:text="@string/view_transaction"
-            tools:ignore="VisualLintButtonSize" />
-
-        <Button
+            android:layout_marginRight="5dp"
+            android:src="@drawable/view"
+            android:text="@string/view_transaction" />
+        <ImageButton
             android:id="@+id/buttonAddTransaction"
             style="@style/navAdd.Btn"
-            android:layout_width="0dp"
+            android:layout_width="40dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:enabled="true"
+            android:layout_marginRight="5dp"
             android:onClick="buttonAddTransactionOnClick"
-            android:text="@string/add_transaction"
-            tools:ignore="VisualLintButtonSize" />
+            android:src="@drawable/add"
+            android:text="@string/add_transaction" />
 
-        <Button
+        <ImageButton
             android:id="@+id/buttonSettings"
             style="@style/nav.Btn"
             android:layout_width="0dp"
@@ -92,10 +90,11 @@
             android:layout_weight="1"
             android:drawableStart="@drawable/settings"
             android:enabled="true"
-            android:text="@string/settings"
-            tools:ignore="VisualLintButtonSize" />
+            android:layout_marginRight="5dp"
+            android:src="@drawable/settings"
+            android:text="@string/settings" />
 
-        <Button
+        <ImageButton
             android:id="@+id/buttonProfile"
             style="@style/nav.Btn"
             android:layout_width="0dp"
@@ -103,8 +102,20 @@
             android:layout_weight="1"
             android:drawableStart="@drawable/profile"
             android:enabled="true"
+            android:layout_marginRight="5dp"
+            android:src="@drawable/profile"
             android:text="@string/user_profile"
-            tools:ignore="VisualLintButtonSize" />
+           />
+
     </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_below="@+id/graph"
+        android:layout_marginTop="-8dp"
+        android:layout_marginLeft="20dp"
+        android:text="@string/recent_transactions"
+        android:textColor="@color/colorAccent" />
 
 </RelativeLayout>

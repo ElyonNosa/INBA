@@ -24,6 +24,7 @@
 
 
     <string name="add_transaction">Add</string>
+    <string name="recent_transactions">Recent Transactions</string>
     <string name="transaction_category">Category</string>
     <string name="transaction_price">Price</string>
     <string name="view_transaction">View</string>
