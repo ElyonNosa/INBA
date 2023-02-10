@@ -31,4 +31,18 @@
     <string name="user_profile">Profile</string>
     <string name="home">Home</string>
     <string name="settings">Settings</string>
+
+    <string-array name="categories_array">
+        <item>Amenities</item>
+        <item>Education</item>
+        <item>Entertainment</item>
+        <item>Food</item>
+        <item>Hardware</item>
+        <item>Hobby</item>
+        <item>Medical</item>
+        <item>Misc</item>
+        <item>Transportation</item>
+        <item>Utilities</item>
+    </string-array>
+
 </resources>

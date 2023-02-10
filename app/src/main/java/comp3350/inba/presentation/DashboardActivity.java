@@ -15,11 +15,23 @@ import android.widget.ListView;
 
 import java.util.List;
 
+/**
+ * DashboardActivity.java
+ *
+ * This class is coupled with activity_dashboard.xml
+ */
 public class DashboardActivity extends Activity {
+    // the transactions database
     private AccessTransactions accessTransactions;
+    // the adapter to display transactions in a list view
     private ArrayAdapter<Transaction> transactionArrayAdapter;
+    // the local list of transactions
     private List<Transaction> transactionList;
 
+    /**
+     * Constructor
+     * @param savedInstanceState Bundle.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +42,7 @@ public class DashboardActivity extends Activity {
             transactionList = accessTransactions.getTransactions();
             transactionArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, transactionList);
             final ListView listView = findViewById(R.id.transaction_list);
+            // adapt the transactions list to the listview
             listView.setAdapter(transactionArrayAdapter);
         }
         catch (final Exception e) {
@@ -37,37 +50,32 @@ public class DashboardActivity extends Activity {
         }
     }
 
+    /**
+     * Destructor
+     */
     @Override
     protected void onDestroy() {
         super.onDestroy();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_home, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-
-        return super.onOptionsItemSelected(item);
-    }
-
+    /**
+     * This function runs when the user returns to this page.
+     */
     @Override
     protected void onResume() {
         super.onResume();
         transactionList = accessTransactions.getTransactions();
+        // update the transaction list
         transactionArrayAdapter.notifyDataSetChanged();
     }
 
+    /**
+     * This runs when the add button is clicked.
+     * @param v View.
+     */
     public void buttonAddTransactionOnClick(View v) {
         Intent transactionsIntent = new Intent(DashboardActivity.this, TransactionsActivity.class);
+        // open the transactions activity
         DashboardActivity.this.startActivity(transactionsIntent);
     }
 }
