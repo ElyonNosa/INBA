@@ -28,7 +28,7 @@
     <com.jjoe64.graphview.GraphView
         android:id="@+id/graph"
         android:layout_width="wrap_content"
-        android:layout_height="379dp"
+        android:layout_height="360dp"
         android:layout_below="@+id/textTitle"
         android:layout_marginTop="0dp"
         android:layout_marginBottom="10dp" />
@@ -37,7 +37,7 @@
         android:id="@+id/transaction_list"
         style="@style/transactionList"
         android:layout_width="match_parent"
-        android:layout_height="330dp"
+        android:layout_height="340dp"
         android:layout_below="@+id/graph"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="10dp"
@@ -45,10 +45,11 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="72dp"
+        android:layout_height="151dp"
         android:layout_below="@+id/transaction_list"
         android:layout_alignParentBottom="true"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="9dp"
+        android:layout_marginBottom="0dp"
         android:orientation="horizontal">
 
         <ImageButton
@@ -56,66 +57,57 @@
             style="@style/nav.Btn"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_marginEnd="5dp"
             android:layout_weight="1"
-            android:layout_marginRight="5dp"
-            android:src="@drawable/home"
-            android:text="@string/home" />
+            android:contentDescription="@string/home"
+            android:src="@drawable/home" />
 
         <ImageButton
             android:id="@+id/buttonViewTransaction"
             style="@style/nav.Btn"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_marginEnd="5dp"
             android:layout_weight="1"
-            android:layout_marginRight="5dp"
-            android:src="@drawable/view"
-            android:text="@string/view_transaction" />
+            android:contentDescription="@string/view_transaction"
+            android:src="@drawable/view" />
+
         <ImageButton
             android:id="@+id/buttonAddTransaction"
             style="@style/navAdd.Btn"
             android:layout_width="40dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:enabled="true"
             android:layout_marginRight="5dp"
+            android:layout_weight="1"
+            android:contentDescription="@string/add_transaction"
+            android:enabled="true"
             android:onClick="buttonAddTransactionOnClick"
-            android:src="@drawable/add"
-            android:text="@string/add_transaction" />
+            android:src="@drawable/add" />
 
         <ImageButton
             android:id="@+id/buttonSettings"
             style="@style/nav.Btn"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_marginRight="5dp"
             android:layout_weight="1"
+            android:contentDescription="@string/settings"
             android:drawableStart="@drawable/settings"
             android:enabled="true"
-            android:layout_marginRight="5dp"
-            android:src="@drawable/settings"
-            android:text="@string/settings" />
+            android:src="@drawable/settings" />
 
         <ImageButton
             android:id="@+id/buttonProfile"
             style="@style/nav.Btn"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_marginRight="5dp"
             android:layout_weight="1"
+            android:contentDescription="@string/user_profile"
             android:drawableStart="@drawable/profile"
             android:enabled="true"
-            android:layout_marginRight="5dp"
-            android:src="@drawable/profile"
-            android:text="@string/user_profile"
-           />
+            android:src="@drawable/profile" />
 
     </LinearLayout>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="20dp"
-        android:layout_below="@+id/graph"
-        android:layout_marginTop="-8dp"
-        android:layout_marginLeft="20dp"
-        android:text="@string/recent_transactions"
-        android:textColor="@color/colorAccent" />
 
 </RelativeLayout>
