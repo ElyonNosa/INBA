@@ -7,7 +7,7 @@ graph TD
 
     PR --> |res| R[pkg layout]
     R --> ACTD(activity_dashboard.xml)
-    R --> ACTT[activity_transactions.xml]
+    R --> ACTT(activity_transactions.xml)
     PR ----> |comp3350.inba| PRES[pkg presentation]
     PRES --> DACT(DashboardActivity.java)
     PRES --> TACT(TransactionsActivity.java)
