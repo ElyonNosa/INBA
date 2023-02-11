@@ -1,7 +1,9 @@
 package comp3350.inba.presentation;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -10,6 +12,10 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AutoCompleteTextView;
+
+import androidx.annotation.NonNull;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.List;
 import java.util.Locale;
@@ -40,6 +46,8 @@ public class TransactionsActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transactions);
+
+
 
         // Get a reference to the AutoCompleteTextView in the layout
         AutoCompleteTextView textView = (AutoCompleteTextView) findViewById(R.id.editTransactionCategory);
@@ -116,6 +124,45 @@ public class TransactionsActivity extends Activity {
         } catch (final Exception e) {
             Messages.fatalError(this, e.getMessage());
         }
+
+        // Initialize and assign variable
+        BottomNavigationView bottomNavigationView=findViewById(R.id.bottom_navigation);
+
+        // Set TransactionActivity selected
+        bottomNavigationView.setSelectedItemId(R.id.buttonAddTransaction);
+
+        // Perform item selected listener
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+                switch(item.getItemId()) // DashboardActivity
+                {
+                    case R.id.home:
+                        startActivity(new Intent(getApplicationContext(),DashboardActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                   /* case R.id.buttonViewTransaction:
+                        // Intent to start new Activity
+                        startActivity(new Intent(getApplicationContext(), ViewActivity.class)); // Replace ViewActivity with the class used to view the graphs
+                        // Can Adjust Transition Speed, both enter and exit
+                        overridePendingTransition(0,0);
+                        return true;*/
+                    case R.id.buttonAddTransaction:
+                        // true if already on page.
+                        return true;
+                    /* case R.id.buttonSettings:
+                    startActivity(new Intent(getApplicationContext(),SettingsActivity.class));
+                    overridePendingTransition(0,0);
+                    return true;*/
+                    case R.id.buttonProfile:
+                        startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                }
+                return false;
+            }
+        });
     }
 
     /**
