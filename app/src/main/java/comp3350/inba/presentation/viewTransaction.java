@@ -49,13 +49,11 @@ public class viewTransaction extends AppCompatActivity {
                             overridePendingTransition(0,0);
                             return true;
                         case R.id.buttonViewTransaction:
-                            // Intent to start new Activity
-                            startActivity(new Intent(getApplicationContext(), viewTransaction.class)); // Replace ViewActivity with the class used to view the graphs
-                            // Can Adjust Transition Speed, both enter and exit
-                            overridePendingTransition(0,0);
+                            // true if already on page.
                             return true;
                         case R.id.buttonAddTransaction:
-                            // true if already on page.
+                            startActivity(new Intent(getApplicationContext(),TransactionsActivity.class));
+                            overridePendingTransition(0,0);
                             return true;
                     /* case R.id.buttonSettings:
                     startActivity(new Intent(getApplicationContext(),SettingsActivity.class));
