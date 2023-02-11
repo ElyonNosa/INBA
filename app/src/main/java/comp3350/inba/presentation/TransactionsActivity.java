@@ -201,7 +201,7 @@ public class TransactionsActivity extends Activity {
     }
 
     /**
-     * buttonTransactionDeleteOnClick(): this runs when the update button is pressed.
+     * buttonTransactionDeleteOnClick(): this runs when the delete button is pressed.
      * @param v View
      */
     public void buttonTransactionDeleteOnClick(View v) {
@@ -241,7 +241,7 @@ public class TransactionsActivity extends Activity {
         long time = 0;
         double price = 0;
         try {
-            // attempt to parse transaction price to dobule
+            // attempt to parse transaction price to double
             price = Double.parseDouble(editPrice.getText().toString());
             // check if this transaction does not yet exist
             if (isNewTransaction) {

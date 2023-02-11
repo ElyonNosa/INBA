@@ -89,7 +89,7 @@ public class Transaction {
     /**
      * equals(): compare this transaction with another.
      *
-     * @param otherthe transaction to compare to.
+     * @param other the transaction to compare to.
      * @return true if they are the same transaction.
      */
     public boolean equals(Object other) {
