@@ -27,7 +27,7 @@ public class ProfileActivity extends AppCompatActivity {
         // Perform item selected listener
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
 
-//            @Override
+            @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
                 switch(item.getItemId()) // DashboardActivity
