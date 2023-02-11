@@ -1,0 +1,91 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:background="@color/colorPrimary"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="comp3350.inba.presentation.DashboardActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16sp"
+        tools:context=".MainActivity">
+
+        <com.jjoe64.graphview.GraphView
+            android:id="@+id/graph"
+            android:layout_width="wrap_content"
+            android:layout_height="520dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:layout_below="@+id/transaction_list"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <ImageButton
+            android:id="@+id/buttonTemp"
+            style="@style/nav.Btn"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1"
+            android:src="@drawable/home"
+            android:text="@string/home" />
+
+        <ImageButton
+            android:id="@+id/buttonViewTransaction"
+            style="@style/nav.Btn"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1"
+            android:src="@drawable/view"
+            android:text="@string/view_transaction" />
+
+        <ImageButton
+            android:id="@+id/buttonAddTransaction"
+            style="@style/navAdd.Btn"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1"
+            android:enabled="true"
+            android:onClick="buttonAddTransactionOnClick"
+            android:src="@drawable/add"
+            android:text="@string/add_transaction" />
+
+        <ImageButton
+            android:id="@+id/buttonSettings"
+            style="@style/nav.Btn"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1"
+            android:drawableStart="@drawable/settings"
+            android:enabled="true"
+            android:src="@drawable/settings"
+            android:text="@string/settings" />
+
+        <ImageButton
+            android:id="@+id/buttonProfile"
+            style="@style/nav.Btn"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1"
+            android:drawableStart="@drawable/profile"
+            android:enabled="true"
+            android:src="@drawable/profile"
+            android:text="@string/user_profile" />
+
+    </LinearLayout>
+</RelativeLayout>
