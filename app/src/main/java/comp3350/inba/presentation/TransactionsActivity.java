@@ -142,12 +142,12 @@ public class TransactionsActivity extends Activity {
                         startActivity(new Intent(getApplicationContext(),DashboardActivity.class));
                         overridePendingTransition(0,0);
                         return true;
-                   /* case R.id.buttonViewTransaction:
+                    case R.id.buttonViewTransaction:
                         // Intent to start new Activity
-                        startActivity(new Intent(getApplicationContext(), ViewActivity.class)); // Replace ViewActivity with the class used to view the graphs
+                        startActivity(new Intent(getApplicationContext(), viewTransaction.class)); // Replace ViewActivity with the class used to view the graphs
                         // Can Adjust Transition Speed, both enter and exit
                         overridePendingTransition(0,0);
-                        return true;*/
+                        return true;
                     case R.id.buttonAddTransaction:
                         // true if already on page.
                         return true;

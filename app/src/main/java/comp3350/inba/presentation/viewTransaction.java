@@ -1,10 +1,16 @@
 package comp3350.inba.presentation;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
 import android.os.Bundle;
 import comp3350.inba.R;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
@@ -23,6 +29,48 @@ public class viewTransaction extends AppCompatActivity {
                     new DataPoint(4, 6)
             });
             graph.addSeries(series);
+
+
+            // Initialize and assign variable
+            BottomNavigationView bottomNavigationView=findViewById(R.id.bottom_navigation);
+
+            // Set View Transaction selected
+            bottomNavigationView.setSelectedItemId(R.id.buttonViewTransaction);
+
+            // Perform item selected listener
+            bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+                    switch(item.getItemId()) // DashboardActivity
+                    {
+                        case R.id.home:
+                            startActivity(new Intent(getApplicationContext(),DashboardActivity.class));
+                            overridePendingTransition(0,0);
+                            return true;
+                        case R.id.buttonViewTransaction:
+                            // Intent to start new Activity
+                            startActivity(new Intent(getApplicationContext(), viewTransaction.class)); // Replace ViewActivity with the class used to view the graphs
+                            // Can Adjust Transition Speed, both enter and exit
+                            overridePendingTransition(0,0);
+                            return true;
+                        case R.id.buttonAddTransaction:
+                            // true if already on page.
+                            return true;
+                    /* case R.id.buttonSettings:
+                    startActivity(new Intent(getApplicationContext(),SettingsActivity.class));
+                    overridePendingTransition(0,0);
+                    return true;*/
+                        case R.id.buttonProfile:
+                            startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+                            overridePendingTransition(0,0);
+                            return true;
+                    }
+                    return false;
+                }
+            });
         }
+
+
 }
 

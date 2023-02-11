@@ -21,7 +21,7 @@ public class ProfileActivity extends AppCompatActivity {
         // Initialize and assign variable
         BottomNavigationView bottomNavigationView=findViewById(R.id.bottom_navigation);
 
-        // Set Home selected
+        // Set profile selected
         bottomNavigationView.setSelectedItemId(R.id.buttonProfile);
 
         // Perform item selected listener
@@ -36,12 +36,12 @@ public class ProfileActivity extends AppCompatActivity {
                         startActivity(new Intent(getApplicationContext(),DashboardActivity.class));
                         overridePendingTransition(0,0);
                         return true;
-                   /* case R.id.buttonViewTransaction:
+                    case R.id.buttonViewTransaction:
                         // Intent to start new Activity
-                        startActivity(new Intent(getApplicationContext(), ViewActivity.class)); // Replace ViewActivity with the class used to view the graphs
+                        startActivity(new Intent(getApplicationContext(), viewTransaction.class)); // Replace ViewActivity with the class used to view the graphs
                         // Can Adjust Transition Speed, both enter and exit
                         overridePendingTransition(0,0);
-                        return true;*/
+                        return true;
                     case R.id.buttonAddTransaction:
                         startActivity(new Intent(getApplicationContext(),TransactionsActivity.class));
                         overridePendingTransition(0,0);

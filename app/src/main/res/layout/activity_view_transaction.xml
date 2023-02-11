@@ -21,71 +21,16 @@
             android:id="@+id/graph"
             android:layout_width="wrap_content"
             android:layout_height="520dp" />
-    </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="72dp"
-        android:layout_below="@+id/transaction_list"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent">
-
-        <ImageButton
-            android:id="@+id/buttonTemp"
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottom_navigation"
             style="@style/nav.Btn"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginRight="5dp"
-            android:layout_weight="1"
-            android:src="@drawable/home"
-            android:text="@string/home" />
-
-        <ImageButton
-            android:id="@+id/buttonViewTransaction"
-            style="@style/nav.Btn"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginRight="5dp"
-            android:layout_weight="1"
-            android:src="@drawable/view"
-            android:text="@string/view_transaction" />
-
-        <ImageButton
-            android:id="@+id/buttonAddTransaction"
-            style="@style/navAdd.Btn"
-            android:layout_width="40dp"
-            android:layout_height="match_parent"
-            android:layout_marginRight="5dp"
-            android:layout_weight="1"
-            android:enabled="true"
-            android:onClick="buttonAddTransactionOnClick"
-            android:src="@drawable/add"
-            android:text="@string/add_transaction" />
-
-        <ImageButton
-            android:id="@+id/buttonSettings"
-            style="@style/nav.Btn"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginRight="5dp"
-            android:layout_weight="1"
-            android:drawableStart="@drawable/settings"
-            android:enabled="true"
-            android:src="@drawable/settings"
-            android:text="@string/settings" />
-
-        <ImageButton
-            android:id="@+id/buttonProfile"
-            style="@style/nav.Btn"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginRight="5dp"
-            android:layout_weight="1"
-            android:drawableStart="@drawable/profile"
-            android:enabled="true"
-            android:src="@drawable/profile"
-            android:text="@string/user_profile" />
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"
+            app:menu="@menu/menu_bottom_nav_bar" />
 
     </LinearLayout>
 </RelativeLayout>
