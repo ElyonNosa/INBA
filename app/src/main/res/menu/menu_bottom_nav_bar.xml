@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/home"
+        android:title="@string/home"
+        android:icon="@drawable/home"/>
+    <item
+        android:id="@+id/buttonViewTransaction"
+        android:title="View Data"
+        android:icon="@drawable/view"/>
+    <item
+        android:id="@+id/buttonAddTransaction"
+        android:title="@string/add_transaction"
+        android:icon="@drawable/add"/>
+    <item
+        android:id="@+id/buttonSettings"
+        android:title="@string/settings"
+        android:icon="@drawable/settings"/>
+    <item
+        android:id="@+id/buttonProfile"
+        android:title="@string/user_profile"
+        android:icon="@drawable/profile"/>
+</menu>

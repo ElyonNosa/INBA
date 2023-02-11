@@ -13,6 +13,10 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import androidx.annotation.NonNull;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import java.util.List;
 
 /**
@@ -48,7 +52,49 @@ public class DashboardActivity extends Activity {
         catch (final Exception e) {
             Messages.fatalError(this, e.getMessage());
         }
-    }
+
+        // Code below Allows for Navigation Bar functionality between activities.
+
+        // Initialize and assign variable
+        BottomNavigationView bottomNavigationView=findViewById(R.id.bottom_navigation);
+
+        // Set Home selected
+        bottomNavigationView.setSelectedItemId(R.id.home);
+
+        // Perform item selected listener
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+                switch(item.getItemId()) // DashboardActivity
+                {
+                    case R.id.home:
+                        // true if already on page.
+                        return true;
+                   /* case R.id.buttonViewTransaction:
+                        // Intent to start new Activity
+                        startActivity(new Intent(getApplicationContext(), ViewActivity.class)); // Replace ViewActivity with the class used to view the graphs
+                        // Can Adjust Transition Speed, both enter and exit
+                        overridePendingTransition(0,0);
+                        return true;*/
+                    case R.id.buttonAddTransaction:
+                        startActivity(new Intent(getApplicationContext(),TransactionsActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                    /* case R.id.buttonSettings:
+                    startActivity(new Intent(getApplicationContext(),SettingsActivity.class));
+                    overridePendingTransition(0,0);
+                    return true;*/
+                    case R.id.buttonProfile:
+                        startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                }
+                return false;
+            }
+        });
+
+    }//onCreate
 
     /**
      * Destructor
@@ -73,9 +119,9 @@ public class DashboardActivity extends Activity {
      * This runs when the add button is clicked.
      * @param v View.
      */
-    public void buttonAddTransactionOnClick(View v) {
+/*    public void buttonAddTransactionOnClick(View v) {
         Intent transactionsIntent = new Intent(DashboardActivity.this, TransactionsActivity.class);
         // open the transactions activity
         DashboardActivity.this.startActivity(transactionsIntent);
-    }
+    }*/
 }
