@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.graphics.Color;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -21,6 +22,7 @@ import com.jjoe64.graphview.ValueDependentColor;
 import com.jjoe64.graphview.DefaultLabelFormatter;
 
 import java.util.List;
+import java.util.Locale;
 
 
 import comp3350.inba.R;
@@ -92,7 +94,8 @@ public class DashboardActivity extends Activity {
         graph.getGridLabelRenderer().setVerticalLabelsColor(0xFFA6ABBD);
         graph.getGridLabelRenderer().setNumHorizontalLabels(CATEGORIES.length);
         graph.getGridLabelRenderer().setHorizontalLabelsAngle(90);
-
+        graph.setTitle("All Time Transactions:");
+        graph.setTitleColor(0xFFA6ABBD);
         graph.getGridLabelRenderer().setGridStyle(GridLabelRenderer.GridStyle.HORIZONTAL);
         graph.getGridLabelRenderer().setLabelsSpace(50);
         graph.getGridLabelRenderer().setTextSize(35);
@@ -221,6 +224,20 @@ public class DashboardActivity extends Activity {
         transactionArrayAdapter.notifyDataSetChanged();
 
         updateGraph();
+
+        updateMonthlyTotal();
     }
 
+    /**
+     * Print total monthly spending on title text.
+     */
+    private void updateMonthlyTotal() {
+        final int SECONDS_PER_MONTH = 2629744;
+        TextView title = findViewById(R.id.textTitle);
+        long now = System.currentTimeMillis() / 1000L;
+        // get sum of transactions between now and 1 month ago
+        double total = accessTransactions.getSumInPeriod(now - SECONDS_PER_MONTH, now);
+        String text = "Monthly Total: $" + String.format(Locale.ENGLISH, "%.2f", total);
+        title.setText(text);
+    }
 }

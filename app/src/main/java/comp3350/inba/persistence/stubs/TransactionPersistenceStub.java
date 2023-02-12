@@ -15,8 +15,6 @@ import comp3350.inba.persistence.TransactionPersistence;
 public class TransactionPersistenceStub implements TransactionPersistence {
     // the list of transactions
     private final List<Transaction> transactions;
-    // the number of example transactions to create
-    private final int NUM_EXAMPLES = 10;
 
     /**
      * Constructor
@@ -28,7 +26,9 @@ public class TransactionPersistenceStub implements TransactionPersistence {
         long time = 0;
         String category = null;
         // time between example transactions
-        final int TIME_INTERVAL = 1013;
+        final int TIME_INTERVAL = 500000;
+        // the number of example transactions to create
+        final int NUM_EXAMPLES = 30;
 
         // generate random transactions
         for(i = 0; i < NUM_EXAMPLES; i++) {
