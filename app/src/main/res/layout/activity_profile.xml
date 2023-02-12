@@ -117,6 +117,7 @@
         android:layout_below="@id/profile_divider2">
 
         <com.jjoe64.graphview.GraphView
+            android:id="@+id/graph"
             android:layout_width="250dp"
             android:layout_height="250dp"
             android:layout_marginTop="20dp"

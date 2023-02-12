@@ -28,45 +28,47 @@ public class viewTransactionActivity extends AppCompatActivity {
             });
             graph.addSeries(series);
 
+            navigationBarInit();
 
-            // Initialize and assign variable
-            BottomNavigationView bottomNavigationView=findViewById(R.id.bottom_navigation);
-
-            // Set View Transaction selected
-            bottomNavigationView.setSelectedItemId(R.id.buttonViewTransaction);
-
-            // Perform item selected listener
-            bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-                @Override
-                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
-                    switch(item.getItemId()) // DashboardActivity
-                    {
-                        case R.id.home:
-                            startActivity(new Intent(getApplicationContext(),DashboardActivity.class));
-                            overridePendingTransition(0,0);
-                            return true;
-                        case R.id.buttonViewTransaction:
-                            // true if already on page.
-                            return true;
-                        case R.id.buttonAddTransaction:
-                            startActivity(new Intent(getApplicationContext(),TransactionsActivity.class));
-                            overridePendingTransition(0,0);
-                            return true;
-                        case R.id.buttonSettings:
-                            startActivity(new Intent(getApplicationContext(),SettingsActivity.class));
-                            overridePendingTransition(0,0);
-                            return true;
-                        case R.id.buttonProfile:
-                            startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
-                            overridePendingTransition(0,0);
-                            return true;
-                    }
-                    return false;
-                }
-            });
         }
 
+    protected void navigationBarInit() {
+        // Initialize and assign variable
+        BottomNavigationView bottomNavigationView=findViewById(R.id.bottom_navigation);
 
+        // Set View Transaction selected
+        bottomNavigationView.setSelectedItemId(R.id.buttonViewTransaction);
+
+        // Perform item selected listener
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+                switch(item.getItemId()) // DashboardActivity
+                {
+                    case R.id.home:
+                        startActivity(new Intent(getApplicationContext(),DashboardActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.buttonViewTransaction:
+                        // true if already on page.
+                        return true;
+                    case R.id.buttonAddTransaction:
+                        startActivity(new Intent(getApplicationContext(),TransactionsActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.buttonSettings:
+                        startActivity(new Intent(getApplicationContext(),SettingsActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.buttonProfile:
+                        startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                }
+                return false;
+            }
+        });
+    }
 }
 
