@@ -42,4 +42,11 @@ public interface TransactionPersistence {
      * @param currentTransaction The transaction to delete.
      */
     void deleteTransaction(Transaction currentTransaction);
+
+    /**
+     * Get the sum of prices within a period of time.
+     * @param start The time to start at.
+     * @param end The time to end at.
+     */
+    double getSumInPeriod(long start, long end);
 }

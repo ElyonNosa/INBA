@@ -77,4 +77,14 @@ public class AccessTransactions
     {
         transactionPersistence.deleteTransaction(currentTransaction);
     }
+
+    /**
+     * Get the sum of prices within a period of time.
+     *
+     * @param start The time to start at.
+     * @param end   The time to end at.
+     */
+    public double getSumInPeriod(long start, long end) {
+        return transactionPersistence.getSumInPeriod(start, end);
+    }
 }

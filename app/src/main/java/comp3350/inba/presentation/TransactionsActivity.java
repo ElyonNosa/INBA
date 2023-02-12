@@ -277,6 +277,8 @@ public class TransactionsActivity extends Activity {
      * @return The error message if the transaction is invalid, null string otherwise.
      */
     private String validateTransactionData(Transaction transaction, boolean isNewTransaction) {
+        final int LIMIT = 1000000000;
+
         // check if the transaction is null (incorrectly parsed price)
         if (transaction == null) {
             return "Price is not valid";
@@ -292,9 +294,14 @@ public class TransactionsActivity extends Activity {
             return "Positive price required";
         }
 
+        // check for valid price
+        if (transaction.getPrice() >= LIMIT) {
+            return "We know you are too poor to afford this!";
+        }
+
         // check if transaction already exists
         if (isNewTransaction && accessTransactions.getTimestampIndex(transaction.getTime()) != -1) {
-            return "A transaction has already been made within the last second.\n" +
+            return "A transaction has already been made within the last second. " +
                     "Please wait 1 second and try again.";
         }
 
