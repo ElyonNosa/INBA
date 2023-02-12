@@ -20,6 +20,14 @@ public class TransactionPersistenceStub implements TransactionPersistence {
      * Constructor
      */
     public TransactionPersistenceStub() {
+        this(true);
+    }
+
+    /**
+     * Constructor
+     * @param generateExamples True if example transactions should be generated.
+     */
+    public TransactionPersistenceStub(boolean generateExamples) {
         long currTime = System.currentTimeMillis() / 1000L;
         this.transactions = new ArrayList<>();
         int i = 0;
@@ -30,14 +38,16 @@ public class TransactionPersistenceStub implements TransactionPersistence {
         // the number of example transactions to create
         final int NUM_EXAMPLES = 100;
 
-        // generate random transactions
-        for(i = 0; i < NUM_EXAMPLES; i++) {
-            // make the timestamp increase with each example
-            time = currTime - ((long)TIME_INTERVAL * (NUM_EXAMPLES - i));
-            // choose a random category
-            category = Transaction.CATEGORIES[(int)(Math.random() * Transaction.CATEGORIES.length)];
+        if (generateExamples) {
+            // generate random transactions
+            for(i = 0; i < NUM_EXAMPLES; i++) {
+                // make the timestamp increase with each example
+                time = currTime - ((long)TIME_INTERVAL * (NUM_EXAMPLES - i));
+                // choose a random category
+                category = Transaction.CATEGORIES[(int)(Math.random() * Transaction.CATEGORIES.length)];
 
-            transactions.add(new Transaction(time, Math.random() * 30, category));
+                insertTransaction(new Transaction(time, Math.random() * 30, category));
+            }
         }
     }
 
@@ -71,15 +81,20 @@ public class TransactionPersistenceStub implements TransactionPersistence {
     }
 
     /**
-     * Insert a transaction to the list.
+     * Insert a transaction to the list only if it is chronological.
      * @param currentTransaction The transaction to insert.
-     * @return The inserted transaction.
+     * @return The inserted transaction. Null if the transaction was not chronologically ordered.
      */
     @Override
     public Transaction insertTransaction(Transaction currentTransaction) {
-        // don't bother checking for duplicates
-        transactions.add(currentTransaction);
-        return currentTransaction;
+        Transaction output = null;
+        // check if timestamp is greater than timestamp of last transaction
+        if (transactions.size() == 0 || currentTransaction.getTime()
+                > transactions.get(transactions.size()-1).getTime()) {
+            output = currentTransaction;
+            transactions.add(currentTransaction);
+        }
+        return output;
     }
 
     /**

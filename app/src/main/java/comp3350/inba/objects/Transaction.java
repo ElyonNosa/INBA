@@ -26,15 +26,6 @@ public class Transaction {
     /**
      * Constructor
      *
-     * @param newTime The timestamp of the transaction.
-     */
-    public Transaction(final long newTime) {
-        this(newTime, 11.11, "Example");
-    }
-
-    /**
-     * Constructor
-     *
      * @param newTime     The timestamp of the transaction.
      * @param newPrice    The price of the transaction.
      * @param newCategory The category of the transaction.

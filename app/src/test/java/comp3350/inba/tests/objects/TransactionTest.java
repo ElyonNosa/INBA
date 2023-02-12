@@ -13,11 +13,14 @@ public class TransactionTest
     {
         Transaction transaction;
 
-        System.out.println("\nStarting testCourse");
+        System.out.println("\nStarting testTransaction");
 
         transaction = new Transaction(System.currentTimeMillis() / 1000, 12.34, "Education");
+        // non null test
         assertNotNull(transaction);
+        // category test
         assertEquals("Education", transaction.getCategory());
+        // price test
         assertEquals(12.34, transaction.getPrice(), 0.0);
 
         System.out.println("Finished testTransaction");

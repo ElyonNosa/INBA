@@ -87,12 +87,17 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
         LineGraphSeries<DataPoint> series1 = new LineGraphSeries<>(getDataPoint());
         BarGraphSeries<DataPoint> series2 = new BarGraphSeries<>(getDataPoint());
 
+        final String[] MONTHS = {
+                "Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"};
+
+        // graph properties
         graph.getGridLabelRenderer().setGridColor(0xFFA6ABBD);
         graph.getGridLabelRenderer().setHorizontalLabelsColor(0xFFA6ABBD);
         graph.getGridLabelRenderer().setVerticalLabelsColor(0xFFA6ABBD);
         graph.getGridLabelRenderer().setGridStyle(GridLabelRenderer.GridStyle.HORIZONTAL);
         graph.setTitleColor(0xFFA6ABBD);
-//        graph.setTitle("WIP, moved to iteration 2");
+        // change this title when view transactions is finished!
+        graph.setTitle("WIP, moved to iteration 2");
 
         switch (view.getId()) {
             case R.id.button:
@@ -102,8 +107,7 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
                 graph.addSeries(series1);
 
                 StaticLabelsFormatter staticLabelsFormatter = new StaticLabelsFormatter(graph);
-                staticLabelsFormatter.setHorizontalLabels(new String[]{
-                        "Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"});
+                staticLabelsFormatter.setHorizontalLabels(MONTHS);
                 graph.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
 
                 break;
@@ -121,10 +125,8 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
                 });
                 graph.addSeries(series2);
                 StaticLabelsFormatter staticLabelsFormatter2 = new StaticLabelsFormatter(graph);
-                staticLabelsFormatter2.setHorizontalLabels(new String[]{
-                        "Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"});
+                staticLabelsFormatter2.setHorizontalLabels(MONTHS);
                 graph.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter2);
-//                series2.setSpacing(50);
                 series2.setDrawValuesOnTop(true);
                 series2.setValuesOnTopColor(0xFFA6ABBD);
 
