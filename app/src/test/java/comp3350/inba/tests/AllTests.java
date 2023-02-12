@@ -11,6 +11,10 @@ import comp3350.inba.tests.objects.TransactionTest;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
+//        StudentTest.class,
+//        CourseTest.class,
+//        SCTest.class,
+//        CalculateGPATest.class,
         TransactionTest.class
 })
 public class AllTests

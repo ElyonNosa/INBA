@@ -15,6 +15,8 @@ import comp3350.inba.persistence.TransactionPersistence;
 public class TransactionPersistenceStub implements TransactionPersistence {
     // the list of transactions
     private final List<Transaction> transactions;
+    // the number of example transactions to create
+    private final int NUM_EXAMPLES = 10;
 
     /**
      * Constructor
@@ -26,9 +28,7 @@ public class TransactionPersistenceStub implements TransactionPersistence {
         long time = 0;
         String category = null;
         // time between example transactions
-        final int TIME_INTERVAL = 500000;
-        // the number of example transactions to create
-        final int NUM_EXAMPLES = 100;
+        final int TIME_INTERVAL = 1013;
 
         // generate random transactions
         for(i = 0; i < NUM_EXAMPLES; i++) {
@@ -108,33 +108,5 @@ public class TransactionPersistenceStub implements TransactionPersistence {
         {
             transactions.remove(index);
         }
-    }
-
-    /**
-     * Get the sum of prices within a period of time.
-     * This function assumes that transactions are in chronological order!
-     *
-     * @param start The time to start at.
-     * @param end   The time to end at.
-     */
-    @Override
-    public double getSumInPeriod(long start, long end) {
-        double output = 0;
-        int i = 0;
-        boolean withinPeriod = true;
-        // loop through all transactions
-        for (i = 0; i < transactions.size() && withinPeriod; i++) {
-            // check if transaction is after start time
-            if (transactions.get(i).getTime() >= start) {
-                // check if transaction is before end time
-                withinPeriod = (transactions.get(i).getTime() <= end);
-                if(withinPeriod) {
-                    output += transactions.get(i).getPrice();
-                }
-            }
-        }
-        // truncate output to 2 places after decimal
-        output = Math.floor(output * 100) / 100;
-        return output;
     }
 }
