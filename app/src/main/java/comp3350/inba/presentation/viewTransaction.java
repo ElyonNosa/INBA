@@ -2,33 +2,41 @@ package comp3350.inba.presentation;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import comp3350.inba.R;
 
-import androidx.appcompat.app.AppCompatActivity;
-import android.os.Bundle;
+
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.ValueDependentColor;
+import com.jjoe64.graphview.helper.StaticLabelsFormatter;
+import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
-public class viewTransaction extends AppCompatActivity {
+public class viewTransaction extends AppCompatActivity implements View.OnClickListener {
 
-        protected void onCreate(Bundle savedInstanceState) {
+
+    protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_view_transaction);
-            GraphView graph = findViewById(R.id.graph);
-            LineGraphSeries<DataPoint> series = new LineGraphSeries<>(new DataPoint[]{
-                    new DataPoint(0, 1),
-                    new DataPoint(1, 5),
-                    new DataPoint(2, 3),
-                    new DataPoint(3, 2),
-                    new DataPoint(4, 6)
-            });
-            graph.addSeries(series);
+
+
+            Button button1 = findViewById(R.id.button);
+            Button button2 = findViewById(R.id.button2);
+            Button button3 = findViewById(R.id.button3);
+
+            button1.setOnClickListener(this);
+            button2.setOnClickListener(this);
+            button3.setOnClickListener(this);
 
 
             // Initialize and assign variable
@@ -70,5 +78,77 @@ public class viewTransaction extends AppCompatActivity {
         }
 
 
+    @SuppressLint("NonConstantResourceId")
+    @Override
+    public void onClick(View view) {
+
+        GraphView graph = findViewById(R.id.graph);
+        LineGraphSeries<DataPoint> series1 = new LineGraphSeries<>(getDataPoint());
+        BarGraphSeries<DataPoint> series2 = new BarGraphSeries<>(getDataPoint());
+        switch (view.getId()) {
+            case R.id.button:
+
+                //Line Graph
+                graph.removeAllSeries();
+                graph.addSeries(series1);
+
+                StaticLabelsFormatter staticLabelsFormatter = new StaticLabelsFormatter(graph);
+                staticLabelsFormatter.setHorizontalLabels(new String[]{"Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"});
+                graph.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
+
+                break;
+            case R.id.button2:
+                graph.removeAllSeries();
+                series2.setValueDependentColor(new ValueDependentColor<DataPoint>() {
+                    @Override
+                    public int get(DataPoint data) {
+                        if (data.getX() % 2 == 0) {
+                            return Color.GREEN;
+                        } else {
+                            return Color.BLUE;
+                        }
+                    }
+                });
+                graph.addSeries(series2);
+                StaticLabelsFormatter staticLabelsFormatter2 = new StaticLabelsFormatter(graph);
+                staticLabelsFormatter2.setHorizontalLabels(new String[]{"Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"});
+                graph.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter2);
+                series2.setSpacing(50);
+                series2.setDrawValuesOnTop(true);
+                series2.setValuesOnTopColor(Color.RED);
+
+                graph.addSeries(series2);
+
+                break;
+            case R.id.button3:
+                System.out.println("Work in progress 2");
+                break;
+
+            default:
+                throw new IllegalStateException("Unexpected value: " + view.getId());
+        }
+    }
+
+    private DataPoint[] getDataPoint() {
+            DataPoint[] dp = new DataPoint[]{
+                    new DataPoint(0, 1),
+                    new DataPoint(1, 5),
+                    new DataPoint(2, 4),
+                    new DataPoint(3, 2),
+                    new DataPoint(4, 5),
+                    new DataPoint(5, 6),
+                    new DataPoint(6, 2),
+                    new DataPoint(7, 7),
+                    new DataPoint(8, 5),
+                    new DataPoint(9, 3),
+                    new DataPoint(10, 6),
+                    new DataPoint(11, 8)
+            };
+            return dp;
+    }
+
 }
+
+
+
 
