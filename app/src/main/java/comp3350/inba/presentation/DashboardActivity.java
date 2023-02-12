@@ -8,9 +8,11 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.graphics.Color;
 
 import androidx.annotation.NonNull;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import com.jjoe64.graphview.GraphView;
@@ -21,6 +23,7 @@ import com.jjoe64.graphview.ValueDependentColor;
 import com.jjoe64.graphview.DefaultLabelFormatter;
 
 import java.util.List;
+import java.util.Locale;
 
 
 import comp3350.inba.R;
@@ -29,7 +32,7 @@ import comp3350.inba.objects.Transaction;
 
 /**
  * DashboardActivity.java
- *
+ * <p>
  * This class is coupled with activity_dashboard.xml
  */
 public class DashboardActivity extends Activity {
@@ -42,6 +45,7 @@ public class DashboardActivity extends Activity {
 
     /**
      * Constructor
+     *
      * @param savedInstanceState Bundle.
      */
     @Override
@@ -56,15 +60,14 @@ public class DashboardActivity extends Activity {
             final ListView listView = findViewById(R.id.transaction_list);
             // adapt the transactions list to the listview
             listView.setAdapter(transactionArrayAdapter);
-        }
-        catch (final Exception e) {
+        } catch (final Exception e) {
             Messages.fatalError(this, e.getMessage());
         }
 
         // Code below Allows for Navigation Bar functionality between activities.
 
         // Initialize and assign variable
-        BottomNavigationView bottomNavigationView=findViewById(R.id.bottom_navigation);
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
         // Set Home selected
         bottomNavigationView.setSelectedItemId(R.id.home);
@@ -74,7 +77,7 @@ public class DashboardActivity extends Activity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-                switch(item.getItemId()) // DashboardActivity
+                switch (item.getItemId()) // DashboardActivity
                 {
                     case R.id.home:
                         // true if already on page.
@@ -83,19 +86,19 @@ public class DashboardActivity extends Activity {
                         // Intent to start new Activity
                         startActivity(new Intent(getApplicationContext(), viewTransactionActivity.class)); // Replace ViewActivity with the class used to view the graphs
                         // Can Adjust Transition Speed, both enter and exit
-                        overridePendingTransition(0,0);
+                        overridePendingTransition(0, 0);
                         return true;
                     case R.id.buttonAddTransaction:
-                        startActivity(new Intent(getApplicationContext(),TransactionsActivity.class));
-                        overridePendingTransition(0,0);
+                        startActivity(new Intent(getApplicationContext(), TransactionsActivity.class));
+                        overridePendingTransition(0, 0);
                         return true;
                     case R.id.buttonSettings:
-                        startActivity(new Intent(getApplicationContext(),SettingsActivity.class));
-                        overridePendingTransition(0,0);
+                        startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
+                        overridePendingTransition(0, 0);
                         return true;
                     case R.id.buttonProfile:
                         startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
-                        overridePendingTransition(0,0);
+                        overridePendingTransition(0, 0);
                         return true;
                 }
                 return false;
@@ -116,7 +119,7 @@ public class DashboardActivity extends Activity {
         series.setValueDependentColor(new ValueDependentColor<DataPoint>() {
             @Override
             public int get(DataPoint data) {
-                return Color.rgb((int) (data.getX()*(122)*CATEGORIES.length)%255, 80, 140);
+                return Color.rgb((int) (data.getX() * (122) * CATEGORIES.length) % 255, 80, 140);
             }
         });
 
@@ -150,7 +153,7 @@ public class DashboardActivity extends Activity {
                     // check if category string length is more than desired
                     if ((output = CATEGORIES[index]).length() > TRUNCATE_LEN) {
                         // truncate the string
-                        output = CATEGORIES[index].substring(0,TRUNCATE_LEN);
+                        output = CATEGORIES[index].substring(0, TRUNCATE_LEN);
                     }
                     // return category of a given index
                     return output;
@@ -164,6 +167,7 @@ public class DashboardActivity extends Activity {
 
     /**
      * Convert the total spendings of transactions per category into an array of data points.
+     *
      * @return The data points of the total spendings.
      */
     private DataPoint[] transactionsToGraphView() {
@@ -182,7 +186,7 @@ public class DashboardActivity extends Activity {
             // loop through all predefined categories
             for (j = 0; j < CATEGORIES.length && !found; j++) {
                 // check if the transaction category matches with a predefined category
-                if(CATEGORIES[j].equals(temp.getCategory())) {
+                if (CATEGORIES[j].equals(temp.getCategory())) {
                     // increase the total price of this category
                     categoryTotals[j] += temp.getPrice();
                     found = true;
@@ -217,7 +221,22 @@ public class DashboardActivity extends Activity {
         // update the transaction list
         transactionArrayAdapter.notifyDataSetChanged();
 
+        updateMonthlyTotal();
+
         updateGraph();
+    }
+
+    /**
+     * Print total monthly spending on title text.
+     */
+    private void updateMonthlyTotal() {
+        final int SECONDS_PER_MONTH = 2629744;
+        TextView title = findViewById(R.id.textTitle);
+        long now = System.currentTimeMillis() / 1000L;
+        // get sum of transactions between now and 1 month ago
+        double total = accessTransactions.getSumInPeriod(now - SECONDS_PER_MONTH, now);
+        String text = "Monthly Total: $" + String.format(Locale.ENGLISH, "%.2f", total);
+        title.setText(text);
     }
 
     /**
