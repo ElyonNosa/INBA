@@ -151,10 +151,10 @@ public class TransactionsActivity extends Activity {
                     case R.id.buttonAddTransaction:
                         // true if already on page.
                         return true;
-                    /* case R.id.buttonSettings:
-                    startActivity(new Intent(getApplicationContext(),SettingsActivity.class));
-                    overridePendingTransition(0,0);
-                    return true;*/
+                        case R.id.buttonSettings:
+                            startActivity(new Intent(getApplicationContext(),SettingsActivity.class));
+                            overridePendingTransition(0,0);
+                            return true;
                     case R.id.buttonProfile:
                         startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
                         overridePendingTransition(0,0);

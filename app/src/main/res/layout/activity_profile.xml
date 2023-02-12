@@ -59,7 +59,9 @@
         android:layout_below="@id/profile_divider"
         android:layout_height="wrap_content"
         android:columnCount="2"
-        android:rowCount="2">
+        android:rowCount="2"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
 
         <TextView
             android:id="@+id/spending_limit"
@@ -83,7 +85,8 @@
             android:backgroundTint="@color/colorAccent"
             android:layout_gravity="fill_horizontal"
             android:textColor="@color/colorAccent"
-            android:inputType="numberDecimal" />
+            android:inputType="numberDecimal"
+            />
 
 
         <SeekBar
