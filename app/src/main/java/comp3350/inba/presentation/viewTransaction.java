@@ -177,17 +177,7 @@ public class viewTransaction extends AppCompatActivity implements View.OnClickLi
             };
             return dp;
     }
-
-//    private List<PieChart> getPieChartData() {
-//
-//        List<PieChart> entries = new ArrayList<>();
-//        entries.add(new PieEntry())
-//
-//        return entries;
-//
-//    }
-
-
+    
     private  void showPieChart(PieChart pieChart){
 
         //======================================================================================================================================
