@@ -1,6 +1,5 @@
 package comp3350.inba.presentation;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -21,7 +20,7 @@ import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
-public class viewTransactionActivity extends Activity implements View.OnClickListener {
+public class ViewTransactionActivity extends Activity implements View.OnClickListener {
 
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -92,6 +91,8 @@ public class viewTransactionActivity extends Activity implements View.OnClickLis
         graph.getGridLabelRenderer().setHorizontalLabelsColor(0xFFA6ABBD);
         graph.getGridLabelRenderer().setVerticalLabelsColor(0xFFA6ABBD);
         graph.getGridLabelRenderer().setGridStyle(GridLabelRenderer.GridStyle.HORIZONTAL);
+        graph.setTitleColor(0xFFA6ABBD);
+//        graph.setTitle("WIP, moved to iteration 2");
 
         switch (view.getId()) {
             case R.id.button:

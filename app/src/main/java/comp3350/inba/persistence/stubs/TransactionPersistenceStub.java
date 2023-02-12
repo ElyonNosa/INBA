@@ -28,7 +28,7 @@ public class TransactionPersistenceStub implements TransactionPersistence {
         // time between example transactions
         final int TIME_INTERVAL = 500000;
         // the number of example transactions to create
-        final int NUM_EXAMPLES = 30;
+        final int NUM_EXAMPLES = 100;
 
         // generate random transactions
         for(i = 0; i < NUM_EXAMPLES; i++) {

@@ -24,7 +24,6 @@ import com.jjoe64.graphview.ValueDependentColor;
 import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
 
-import java.util.Collections;
 import java.util.List;
 
 
@@ -86,7 +85,7 @@ public class ProfileActivity extends Activity {
                         return true;
                     case R.id.buttonViewTransaction:
                         // Intent to start new Activity
-                        startActivity(new Intent(getApplicationContext(), viewTransactionActivity.class)); // Replace ViewActivity with the class used to view the graphs
+                        startActivity(new Intent(getApplicationContext(), ViewTransactionActivity.class)); // Replace ViewActivity with the class used to view the graphs
                         // Can Adjust Transition Speed, both enter and exit
                         overridePendingTransition(0, 0);
                         return true;
