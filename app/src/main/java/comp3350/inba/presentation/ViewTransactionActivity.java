@@ -64,10 +64,10 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
                         startActivity(new Intent(getApplicationContext(),TransactionsActivity.class));
                         overridePendingTransition(0,0);
                         return true;
-                    case R.id.buttonSettings:
-                        startActivity(new Intent(getApplicationContext(),SettingsActivity.class));
-                        overridePendingTransition(0,0);
-                        return true;
+//                    case R.id.buttonSettings:
+//                        startActivity(new Intent(getApplicationContext(),SettingsActivity.class));
+//                        overridePendingTransition(0,0);
+//                        return true;
                     case R.id.buttonProfile:
                         startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
                         overridePendingTransition(0,0);
