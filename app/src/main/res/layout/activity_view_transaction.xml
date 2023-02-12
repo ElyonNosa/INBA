@@ -11,10 +11,18 @@
     tools:context="comp3350.inba.presentation.DashboardActivity">
 
 
+    <!-- Another Graph library. Need to adjust its DPI Later on-->
     <com.jjoe64.graphview.GraphView
         android:id="@+id/graph"
         android:layout_width="wrap_content"
         android:layout_height="580dp" />
+
+    <com.github.mikephil.charting.charts.PieChart
+        android:id="@+id/pie_chart"
+        android:layout_width="381dp"
+        android:layout_height="590dp"
+        android:layout_above="@+id/button_layout"
+        android:layout_marginBottom="0dp" />
 
 
 <!-- Buttons representing different graphs  -->
