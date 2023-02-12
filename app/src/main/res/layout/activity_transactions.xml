@@ -75,7 +75,7 @@
             android:backgroundTint="@color/colorWhite"
             android:inputType="numberDecimal"
             android:textColor="@color/colorWhite"
-            />
+            android:autofillHints="" />
 
     </GridLayout>
 
@@ -90,12 +90,14 @@
             style="@style/nav.Btn"
             android:layout_width="140dp"
             android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
             android:enabled="false"
             android:onClick="buttonTransactionDeleteOnClick"
             android:text="@string/delete"
-            android:textSize="20dp"
-            android:drawableLeft="@drawable/delete_icon"
+            android:textSize="20sp"
+            android:drawableStart="@drawable/delete_icon"
             android:textColor="@color/colorAccent" />
 
         <Button
@@ -103,12 +105,14 @@
             style="@style/nav.Btn"
             android:layout_width="140dp"
             android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
             android:enabled="true"
             android:onClick="buttonTransactionCreateOnClick"
             android:text="@string/create"
-            android:textSize="20dp"
-            android:drawableLeft="@drawable/create_icon"
+            android:textSize="20sp"
+            android:drawableStart="@drawable/create_icon"
             android:textColor="@color/colorAccent" />
 
         <Button
@@ -117,11 +121,13 @@
             android:layout_width="140dp"
             android:layout_height="match_parent"
             android:layout_centerHorizontal="true"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
             android:enabled="false"
             android:onClick="buttonTransactionUpdateOnClick"
             android:text="@string/update"
-            android:textSize="20dp"
-            android:drawableLeft="@drawable/update_icon"
+            android:textSize="20sp"
+            android:drawableStart="@drawable/update_icon"
             android:textColor="@color/colorAccent" />
     </RelativeLayout>
 
