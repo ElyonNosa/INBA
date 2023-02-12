@@ -42,7 +42,8 @@ public class Transaction {
     public Transaction(final long newTime, final double newPrice, final String newCategory) {
         time = newTime;
         category = newCategory;
-        price = newPrice;
+        // truncate the price (2 decimal places)
+        price = Math.floor(newPrice * 100) / 100;
     }
 
     /**

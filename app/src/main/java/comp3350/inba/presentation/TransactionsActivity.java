@@ -125,44 +125,7 @@ public class TransactionsActivity extends Activity {
             Messages.fatalError(this, e.getMessage());
         }
 
-        // Initialize and assign variable
-        BottomNavigationView bottomNavigationView=findViewById(R.id.bottom_navigation);
-
-        // Set TransactionActivity selected
-        bottomNavigationView.setSelectedItemId(R.id.buttonAddTransaction);
-
-        // Perform item selected listener
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
-                switch(item.getItemId()) // DashboardActivity
-                {
-                    case R.id.home:
-                        startActivity(new Intent(getApplicationContext(),DashboardActivity.class));
-                        overridePendingTransition(0,0);
-                        return true;
-                    case R.id.buttonViewTransaction:
-                        // Intent to start new Activity
-                        startActivity(new Intent(getApplicationContext(), viewTransaction.class)); // Replace ViewActivity with the class used to view the graphs
-                        // Can Adjust Transition Speed, both enter and exit
-                        overridePendingTransition(0,0);
-                        return true;
-                    case R.id.buttonAddTransaction:
-                        // true if already on page.
-                        return true;
-                    /* case R.id.buttonSettings:
-                    startActivity(new Intent(getApplicationContext(),SettingsActivity.class));
-                    overridePendingTransition(0,0);
-                    return true;*/
-                    case R.id.buttonProfile:
-                        startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
-                        overridePendingTransition(0,0);
-                        return true;
-                }
-                return false;
-            }
-        });
+        navigationBarInit();
     }
 
     /**
@@ -314,6 +277,8 @@ public class TransactionsActivity extends Activity {
      * @return The error message if the transaction is invalid, null string otherwise.
      */
     private String validateTransactionData(Transaction transaction, boolean isNewTransaction) {
+        final int LIMIT = 1000000000;
+
         // check if the transaction is null (incorrectly parsed price)
         if (transaction == null) {
             return "Price is not valid";
@@ -329,12 +294,58 @@ public class TransactionsActivity extends Activity {
             return "Positive price required";
         }
 
+        // check for valid price
+        if (transaction.getPrice() >= LIMIT) {
+            return "We know you are too poor to afford this!";
+        }
+
         // check if transaction already exists
         if (isNewTransaction && accessTransactions.getTimestampIndex(transaction.getTime()) != -1) {
-            return "A transaction has already been made within the last second.\n" +
+            return "A transaction has already been made within the last second. " +
                     "Please wait 1 second and try again.";
         }
 
         return null;
+    }
+
+    protected void navigationBarInit() {
+        // Initialize and assign variable
+        BottomNavigationView bottomNavigationView=findViewById(R.id.bottom_navigation);
+
+        // Set TransactionActivity selected
+        bottomNavigationView.setSelectedItemId(R.id.buttonAddTransaction);
+
+        // Perform item selected listener
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+                switch(item.getItemId()) // DashboardActivity
+                {
+                    case R.id.home:
+                        startActivity(new Intent(getApplicationContext(),DashboardActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.buttonViewTransaction:
+                        // Intent to start new Activity
+                        startActivity(new Intent(getApplicationContext(), viewTransactionActivity.class)); // Replace ViewActivity with the class used to view the graphs
+                        // Can Adjust Transition Speed, both enter and exit
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.buttonAddTransaction:
+                        // true if already on page.
+                        return true;
+                    case R.id.buttonSettings:
+                        startActivity(new Intent(getApplicationContext(),SettingsActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.buttonProfile:
+                        startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                }
+                return false;
+            }
+        });
     }
 }
