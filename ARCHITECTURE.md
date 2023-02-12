@@ -7,10 +7,16 @@ graph TD
 
     PR --> |res| R[pkg layout]
     R --> ACTD(activity_dashboard.xml)
-    R --> ACTT(activity_transactions.xml)
+    R ---> ACTT(activity_transactions.xml)
+    R --> ACTP(activity_profile.xml)
+    R ---> ACTS(activity_settings.xml)
+    R --> ACTVT(activity_view_transaction.xml)
     PR ----> |comp3350.inba| PRES[pkg presentation]
     PRES --> DACT(DashboardActivity.java)
-    PRES --> TACT(TransactionsActivity.java)
+    PRES ---> TACT(TransactionsActivity.java)
+    PRES --> PACT(ProfileActivity.java)
+    PRES ---> SACT(SettingsActivity.java)
+    PRES --> VTACT(ViewTransactionActivity.java)
 
     L --> |comp3350.inba| BUS[pkg business]
     BUS --> AT(AccessTransactions.java)

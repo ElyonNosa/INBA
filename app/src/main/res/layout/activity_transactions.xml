@@ -15,11 +15,13 @@
         android:id="@+id/listTransactions"
         style="@style/transactionList"
         android:layout_width="match_parent"
-        android:layout_marginVertical="10dp"
         android:layout_height="350dp"
         android:layout_gravity="top"
+        android:layout_marginVertical="10dp"
         android:layout_weight="1"
         android:choiceMode="singleChoice"
+        android:drawSelectorOnTop="false"
+        android:listSelector="@drawable/list_item"
         android:stackFromBottom="true" />
 
     <View

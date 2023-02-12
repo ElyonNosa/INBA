@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <application
         android:allowBackup="true"
@@ -10,13 +10,22 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".presentation.ProfileActivity"
-            android:exported="false">
+            android:name=".presentation.SettingsActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
 
+        <activity
+            android:name=".presentation.ProfileActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
         <activity
             android:name=".presentation.DashboardActivity"
             android:exported="true"
@@ -29,7 +38,7 @@
         </activity>
 
         <activity
-            android:name=".presentation.viewTransaction"
+            android:name=".presentation.ViewTransactionActivity"
             android:exported="true"
             android:label="@string/app_name">
             <meta-data
@@ -37,34 +46,6 @@
                 android:value="comp3350.inba.presentation.DashboardActivity" />
         </activity>
 
-        <activity
-            android:name=".presentation.StudentsActivity"
-            android:label="@string/title_activity_students">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="comp3350.inba.presentation.DashboardActivity" />
-        </activity>
-        <activity
-            android:name=".presentation.StudentCoursesActivity"
-            android:label="@string/title_activity_student_courses">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="comp3350.inba.presentation.StudentsActivity" />
-        </activity>
-        <activity
-            android:name=".presentation.CoursesActivity"
-            android:label="@string/title_activity_courses">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="comp3350.inba.presentation.DashboardActivity" />
-        </activity>
-        <activity
-            android:name=".presentation.CourseStudentsActivity"
-            android:label="@string/title_activity_course_students">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="comp3350.inba.presentation.CoursesActivity" />
-        </activity>
         <activity
             android:name=".presentation.TransactionsActivity"
             android:label="@string/title_activity_transactions"
