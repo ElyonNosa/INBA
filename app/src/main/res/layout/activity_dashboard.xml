@@ -28,17 +28,26 @@
 
     <com.jjoe64.graphview.GraphView
         android:id="@+id/graph"
-        android:layout_width="wrap_content"
-        android:layout_height="379dp"
+        android:layout_width="match_parent"
+        android:layout_height="325dp"
         android:layout_below="@+id/textTitle"
         android:layout_marginTop="0dp"
         android:layout_marginBottom="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_below="@+id/graph"
+        android:layout_marginTop="-8dp"
+        android:layout_marginLeft="20dp"
+        android:text="@string/recent_transactions"
+        android:textColor="@color/colorAccent" />
 
     <ListView
         android:id="@+id/transaction_list"
         style="@style/transactionList"
         android:layout_width="match_parent"
-        android:layout_height="370dp"
+        android:layout_height="325dp"
         android:layout_below="@+id/graph"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="10dp"
@@ -54,13 +63,6 @@
         android:layout_marginBottom="5dp"
         app:menu="@menu/menu_bottom_nav_bar" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="20dp"
-        android:layout_below="@+id/graph"
-        android:layout_marginTop="-8dp"
-        android:layout_marginLeft="20dp"
-        android:text="@string/recent_transactions"
-        android:textColor="@color/colorAccent" />
+
 
 </RelativeLayout>
