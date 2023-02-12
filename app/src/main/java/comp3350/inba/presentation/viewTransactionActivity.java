@@ -6,8 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import comp3350.inba.R;
 
-import androidx.appcompat.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -15,7 +13,7 @@ import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
-public class viewTransaction extends AppCompatActivity {
+public class viewTransactionActivity extends AppCompatActivity {
 
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -55,10 +53,10 @@ public class viewTransaction extends AppCompatActivity {
                             startActivity(new Intent(getApplicationContext(),TransactionsActivity.class));
                             overridePendingTransition(0,0);
                             return true;
-                    /* case R.id.buttonSettings:
-                    startActivity(new Intent(getApplicationContext(),SettingsActivity.class));
-                    overridePendingTransition(0,0);
-                    return true;*/
+                        case R.id.buttonSettings:
+                            startActivity(new Intent(getApplicationContext(),SettingsActivity.class));
+                            overridePendingTransition(0,0);
+                            return true;
                         case R.id.buttonProfile:
                             startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
                             overridePendingTransition(0,0);

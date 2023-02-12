@@ -17,13 +17,6 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-        <activity
-            android:name=".presentation.ViewActivity"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
 
         <activity
             android:name=".presentation.ProfileActivity"
@@ -45,7 +38,7 @@
         </activity>
 
         <activity
-            android:name=".presentation.viewTransaction"
+            android:name=".presentation.viewTransactionActivity"
             android:exported="true"
             android:label="@string/app_name">
             <meta-data
