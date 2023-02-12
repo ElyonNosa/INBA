@@ -109,7 +109,6 @@ public class viewTransaction extends AppCompatActivity implements View.OnClickLi
         switch (view.getId()) {
             //Line Graph
             case R.id.button:
-
                 graph.removeAllSeries();
                 graph.setVisibility(View.VISIBLE);
                 graph.addSeries(series1);
@@ -177,9 +176,10 @@ public class viewTransaction extends AppCompatActivity implements View.OnClickLi
             };
             return dp;
     }
-    
+
     private  void showPieChart(PieChart pieChart){
 
+        System.out.println("hey there i am inside");
         //======================================================================================================================================
         ArrayList<PieEntry> pieEntries = new ArrayList<>();
         String label = "type";
