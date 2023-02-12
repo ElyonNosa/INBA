@@ -47,34 +47,6 @@
         </activity>
 
         <activity
-            android:name=".presentation.StudentsActivity"
-            android:label="@string/title_activity_students">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="comp3350.inba.presentation.DashboardActivity" />
-        </activity>
-        <activity
-            android:name=".presentation.StudentCoursesActivity"
-            android:label="@string/title_activity_student_courses">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="comp3350.inba.presentation.StudentsActivity" />
-        </activity>
-        <activity
-            android:name=".presentation.CoursesActivity"
-            android:label="@string/title_activity_courses">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="comp3350.inba.presentation.DashboardActivity" />
-        </activity>
-        <activity
-            android:name=".presentation.CourseStudentsActivity"
-            android:label="@string/title_activity_course_students">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="comp3350.inba.presentation.CoursesActivity" />
-        </activity>
-        <activity
             android:name=".presentation.TransactionsActivity"
             android:label="@string/title_activity_transactions"
             android:windowSoftInputMode="adjustPan">

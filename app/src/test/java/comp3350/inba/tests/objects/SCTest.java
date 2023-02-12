@@ -2,9 +2,6 @@ package comp3350.inba.tests.objects;
 
 import org.junit.Test;
 
-import comp3350.inba.objects.Course;
-import comp3350.inba.objects.SC;
-import comp3350.inba.objects.Student;
 import static org.junit.Assert.*;
 
 public class SCTest
