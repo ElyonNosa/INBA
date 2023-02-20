@@ -3,10 +3,15 @@
 ## Group XV
 
 - Elyon
+  - <nosaaife@myumanitoba.ca>
 - Barney
+  - <barnonmt@myumanitoba.ca>
 - Adwait
+  - <pujarias@myumanitoba.ca>
 - Darwin
+  - <rossd4@myumanitoba.ca>
 - Josh
+  - <sigurd35@myumanitoba.ca>
 
 # Vision Statement
 INBA (INBA's Not a Banking App) is an app designed for those who spend money on a frequent basis, which analyzes spendings to advise towards a financially sustainable lifestyle by optimizing the saving/spending ratio.
