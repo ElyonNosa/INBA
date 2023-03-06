@@ -1,10 +1,9 @@
 package comp3350.inba.presentation;
 
-import static comp3350.inba.objects.Transaction.CATEGORIES;
-
 import comp3350.inba.R;
 import comp3350.inba.business.AccessTransactions;
 import comp3350.inba.objects.Transaction;
+import comp3350.inba.objects.Category;
 
 import androidx.annotation.NonNull;
 
@@ -116,7 +115,7 @@ public class ProfileActivity extends Activity {
         series.setValueDependentColor(new ValueDependentColor<DataPoint>() {
             @Override
             public int get(DataPoint data) {
-                return Color.rgb((int) (data.getX()*(122)*CATEGORIES.length)%255, 80, 140);
+                return Color.rgb((int) (data.getX()*(122)*Category.getCategorySet().size())%255, 80, 140);
             }
         });
 
@@ -148,9 +147,9 @@ public class ProfileActivity extends Activity {
                     // convert the x value to an index number
                     index = (int) Double.parseDouble(super.formatLabel(value, isValueX));
                     // check if category string length is more than desired
-                    if ((output = CATEGORIES[index]).length() > TRUNCATE_LEN) {
+                    if ((output = Category.getCategorySet().get(index)).length() > TRUNCATE_LEN) {
                         // truncate the string
-                        output = CATEGORIES[index].substring(0,TRUNCATE_LEN);
+                        output = Category.getCategorySet().get(index).substring(0,TRUNCATE_LEN);
                     }
                     // return category of a given index
                     return output;
@@ -167,9 +166,9 @@ public class ProfileActivity extends Activity {
      * @return The data points of the total spendings.
      */
     private DataPoint[] transactionsToGraphView() {
-        DataPoint[] output = new DataPoint[CATEGORIES.length];
+        DataPoint[] output = new DataPoint[Category.getCategorySet().size()];
         // the running price totals per category
-        double[] categoryTotals = new double[CATEGORIES.length];
+        double[] categoryTotals = new double[Category.getCategorySet().size()];
         int i = 0;
         int j = 0;
         boolean found = false;
@@ -180,9 +179,9 @@ public class ProfileActivity extends Activity {
             temp = transactionList.get(i);
             found = false;
             // loop through all predefined categories
-            for (j = 0; j < CATEGORIES.length && !found; j++) {
+            for (j = 0; j < Category.getCategorySet().size() && !found; j++) {
                 // check if the transaction category matches with a predefined category
-                if(CATEGORIES[j].equals(temp.getCategory())) {
+                if(Category.getCategorySet().get(j).equals(temp.getCategory())) {
                     // increase the total price of this category
                     categoryTotals[j] += temp.getPrice();
                     found = true;
@@ -191,7 +190,7 @@ public class ProfileActivity extends Activity {
         }
 
         // loop through all predefined categories
-        for (i = 0; i < CATEGORIES.length; i++) {
+        for (i = 0; i < Category.getCategorySet().size(); i++) {
             // make a data point per category
 
             output[i] = new DataPoint(i, categoryTotals[i]);

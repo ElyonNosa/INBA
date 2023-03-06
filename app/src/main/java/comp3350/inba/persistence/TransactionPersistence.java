@@ -17,13 +17,6 @@ public interface TransactionPersistence {
     List<Transaction> getTransactionList();
 
     /**
-     * Get index of a transaction with a given timestamp.
-     * @param time The timestamp.
-     * @return The index of the transaction, or -1 if it doesn't exist.
-     */
-    int getTimestampIndex(long time);
-
-    /**
      * Insert a transaction to the list.
      * @param currentTransaction The transaction to insert.
      * @return The inserted transaction.
@@ -42,11 +35,4 @@ public interface TransactionPersistence {
      * @param currentTransaction The transaction to delete.
      */
     void deleteTransaction(Transaction currentTransaction);
-
-    /**
-     * Get the sum of prices within a period of time.
-     * @param start The time to start at.
-     * @param end The time to end at.
-     */
-    double getSumInPeriod(long start, long end);
 }

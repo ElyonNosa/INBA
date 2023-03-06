@@ -7,21 +7,20 @@ import java.util.Objects;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import comp3350.inba.business.AccessTransactions;
+
 /**
  * Transaction()
  * <p>
  * Store simple information pertaining to a financial transaction.
  */
 public class Transaction {
-    // list of predefined transaction categories
-    public final static String[] CATEGORIES = {"Amenities", "Education", "Entertainment", "Food",
-            "Hardware", "Hobby", "Medical", "Misc", "Transportation", "Utilities"};
     // unix timestamp of the transaction
     private final long time;
     // the money spend in the transaction
     private final double price;
     // the type of transaction
-    private final String category;
+    private final Category category;
 
     /**
      * Constructor
@@ -32,7 +31,7 @@ public class Transaction {
      */
     public Transaction(final long newTime, final double newPrice, final String newCategory) {
         time = newTime;
-        category = newCategory;
+        category = new Category(newCategory);
         // truncate the price (2 decimal places)
         price = Math.floor(newPrice * 100) / 100;
     }
@@ -52,7 +51,7 @@ public class Transaction {
      * @return category
      */
     public String getCategory() {
-        return category;
+        return category.getName();
     }
 
     /**
@@ -74,7 +73,7 @@ public class Transaction {
         @SuppressLint("SimpleDateFormat") SimpleDateFormat jdf =
                 new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         // print date, category and price
-        return String.format("%s, %s, $%s", jdf.format(new Date(time * 1000L)), category,
+        return String.format("%s, %s, $%s", jdf.format(new Date(time * 1000L)), category.getName(),
                 String.format(Locale.ENGLISH, "%.2f", price));
     }
 
@@ -93,5 +92,38 @@ public class Transaction {
             equals = Objects.equals(this.time, otherTransaction.time);
         }
         return equals;
+    }
+
+    /**
+     * Ensure the transaction has valid properties.
+     * @param accessTransactions The transaction persistence.
+     * @param isNewTransaction True if the transaction does not exist in the database.
+     * @return The error message if the transaction is invalid, null string otherwise.
+     */
+    public String validateTransactionData(AccessTransactions accessTransactions, boolean isNewTransaction) {
+        final int LIMIT = 1000000000;
+
+        // check for valid category type
+        if (getCategory() == null || getCategory().length() < 1) {
+            return "Transaction Category required";
+        }
+
+        // check for valid price
+        if (getPrice() <= 0) {
+            return "Positive price required";
+        }
+
+        // check for valid price
+        if (getPrice() >= LIMIT) {
+            return "We know you are too poor to afford this!";
+        }
+
+        // check if transaction already exists
+        if (isNewTransaction && accessTransactions.getTimestampIndex(getTime()) != -1) {
+            return "A transaction has already been made within the last second. " +
+                    "Please wait 1 second and try again.";
+        }
+
+        return null;
     }
 }

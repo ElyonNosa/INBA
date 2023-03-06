@@ -28,6 +28,9 @@ public class TransactionPersistenceStub implements TransactionPersistence {
      * @param generateExamples True if example transactions should be generated.
      */
     public TransactionPersistenceStub(boolean generateExamples) {
+        // list of example categories to be used in the example transactions
+        final String[] EXAMPLE_CATS = {"Amenities", "Education", "Entertainment", "Food",
+                "Hardware", "Hobby", "Medical", "Misc", "Transportation", "Utilities"};
         long currTime = System.currentTimeMillis() / 1000L;
         this.transactions = new ArrayList<>();
         int i = 0;
@@ -37,6 +40,8 @@ public class TransactionPersistenceStub implements TransactionPersistence {
         final int TIME_INTERVAL = 500000;
         // the number of example transactions to create
         final int NUM_EXAMPLES = 100;
+        // the max price of an example transaction
+        final double MAX_EXAMPLE_PRICE = 30;
 
         if (generateExamples) {
             // generate random transactions
@@ -44,9 +49,9 @@ public class TransactionPersistenceStub implements TransactionPersistence {
                 // make the timestamp increase with each example
                 time = currTime - ((long)TIME_INTERVAL * (NUM_EXAMPLES - i));
                 // choose a random category
-                category = Transaction.CATEGORIES[(int)(Math.random() * Transaction.CATEGORIES.length)];
+                category = EXAMPLE_CATS[(int)(Math.random() * EXAMPLE_CATS.length)];
 
-                insertTransaction(new Transaction(time, Math.random() * 30, category));
+                insertTransaction(new Transaction(time, Math.random() * MAX_EXAMPLE_PRICE, category));
             }
         }
     }
@@ -58,26 +63,6 @@ public class TransactionPersistenceStub implements TransactionPersistence {
     @Override
     public List<Transaction> getTransactionList() {
         return Collections.unmodifiableList(transactions);
-    }
-
-    /**
-     * Get index of a transaction with a given timestamp.
-     * @param time The timestamp.
-     * @return The index of the transaction, or -1 if it doesn't exist.
-     */
-    @Override
-    public int getTimestampIndex(long time) {
-        int output = -1;
-        int i = 0;
-        // start at end of array to reduce complexity
-        for(i = transactions.size() - 1; i >= 0 && output == -1; --i) {
-            // check if the timestamps match
-            if (time == transactions.get(i).getTime()) {
-                output = i;
-            }
-        }
-
-        return output;
     }
 
     /**
@@ -123,33 +108,5 @@ public class TransactionPersistenceStub implements TransactionPersistence {
         {
             transactions.remove(index);
         }
-    }
-
-    /**
-     * Get the sum of prices within a period of time.
-     * This function assumes that transactions are in chronological order!
-     *
-     * @param start The time to start at.
-     * @param end   The time to end at.
-     */
-    @Override
-    public double getSumInPeriod(long start, long end) {
-        double output = 0;
-        int i = 0;
-        boolean withinPeriod = true;
-        // loop through all transactions
-        for (i = 0; i < transactions.size() && withinPeriod; i++) {
-            // check if transaction is after start time
-            if (transactions.get(i).getTime() >= start) {
-                // check if transaction is before end time
-                withinPeriod = (transactions.get(i).getTime() <= end);
-                if(withinPeriod) {
-                    output += transactions.get(i).getPrice();
-                }
-            }
-        }
-        // truncate output to 2 places after decimal
-        output = Math.floor(output * 100) / 100;
-        return output;
     }
 }

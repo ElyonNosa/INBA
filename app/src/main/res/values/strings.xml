@@ -35,17 +35,4 @@
     <string name="user_email">frankybrisky@umanitoba.ca</string>
     <string name="spending_limit">Spending Limit</string>
 
-    <string-array name="categories_array">
-        <item>Amenities</item>
-        <item>Education</item>
-        <item>Entertainment</item>
-        <item>Food</item>
-        <item>Hardware</item>
-        <item>Hobby</item>
-        <item>Medical</item>
-        <item>Misc</item>
-        <item>Transportation</item>
-        <item>Utilities</item>
-    </string-array>
-
 </resources>
