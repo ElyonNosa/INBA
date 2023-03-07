@@ -17,16 +17,19 @@ import androidx.annotation.NonNull;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import comp3350.inba.R;
 import comp3350.inba.business.AccessTransactions;
+import comp3350.inba.objects.Category;
 import comp3350.inba.objects.Transaction;
 
 /**
  * TransactionsActivity.java
- *
+ * <p>
  * This class is coupled to activity_transactions.xm
  */
 public class TransactionsActivity extends Activity {
@@ -39,8 +42,9 @@ public class TransactionsActivity extends Activity {
     // index of the current selected transaction
     private int selectedTransactionPosition = -1;
     // the unix timestamp of the current selected transaction
-    private long selectedTransactionTime = 0;
+    private LocalDateTime selectedTransactionTime;
 
+    AutoCompleteTextView textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,15 +52,10 @@ public class TransactionsActivity extends Activity {
         setContentView(R.layout.activity_transactions);
 
 
-
         // Get a reference to the AutoCompleteTextView in the layout
-        AutoCompleteTextView textView = (AutoCompleteTextView) findViewById(R.id.editTransactionCategory);
-        // Get the string array
-        String[] categories = getResources().getStringArray(R.array.categories_array);
-        // Create the adapter and set it to the AutoCompleteTextView
-        ArrayAdapter<String> adapter =
-                new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, categories);
-        textView.setAdapter(adapter);
+        textView = (AutoCompleteTextView) findViewById(R.id.editTransactionCategory);
+        // create an adapter from the existing list of categories, assign this to the autocomplete view
+        textView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, Category.getCategorySet()));
         // create instance of the database
         accessTransactions = new AccessTransactions();
         try {
@@ -107,7 +106,7 @@ public class TransactionsActivity extends Activity {
                     deleteButton.setEnabled(false);
                     // reset values of transaction position and timestamp
                     selectedTransactionPosition = -1;
-                    selectedTransactionTime = -1;
+                    selectedTransactionTime = null;
                 }
                 // else a transaction was not selected
                 else {
@@ -168,6 +167,7 @@ public class TransactionsActivity extends Activity {
     /**
      * selectTransactionAtPosition(): given an index, find the respective transaction in the
      * transaction list and update the EditText views.
+     *
      * @param position the index of the selected transaction.
      */
     public void selectTransactionAtPosition(int position) {
@@ -185,70 +185,87 @@ public class TransactionsActivity extends Activity {
 
     /**
      * buttonTransactionCreateOnClick(): this runs when the create button is pressed.
+     *
      * @param v View
      */
     public void buttonTransactionCreateOnClick(View v) {
         // create a new transaction from the EditText fields
         Transaction transaction = createTransactionFromEditText(true);
-        // check if the transaction is valid
-        String result = validateTransactionData(transaction, true);
+        String result;
 
-        if (result == null) {
-            try {
-                // insert the transaction into the database list
-                transaction = accessTransactions.insertTransaction(transaction);
-                // update our local list
-                transactionList = accessTransactions.getTransactions();
-                // refresh the transaction list view
-                transactionArrayAdapter.notifyDataSetChanged();
-                // set list position to the new transaction
-                int pos = transactionList.indexOf(transaction);
-                if (pos >= 0) {
-                    ListView listView = findViewById(R.id.listTransactions);
-                    listView.setSelection(pos);
+        // check for non null
+        if (transaction != null) {
+            // validate the transaction
+            result = transaction.validateTransactionData(accessTransactions, true);
+            // check if return is null (there are no errors)
+            if (result == null) {
+                try {
+                    // insert the transaction into the database list
+                    transaction = accessTransactions.insertTransaction(transaction);
+                    // update our local list
+                    transactionList = accessTransactions.getTransactions();
+                    // refresh the transaction list view
+                    transactionArrayAdapter.notifyDataSetChanged();
+                    // set list position to the new transaction
+                    int pos = transactionList.indexOf(transaction);
+                    if (pos >= 0) {
+                        ListView listView = findViewById(R.id.listTransactions);
+                        listView.setSelection(pos);
+                    }
+                    // create an adapter from the existing list of categories, assign this to the autocomplete view
+                    // this is done in case of a new category addition, we want to update the autocomplete list
+                    textView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, Category.getCategorySet()));
+                } catch (final Exception e) {
+                    Messages.fatalError(this, e.getMessage());
                 }
-            } catch (final Exception e) {
-                Messages.fatalError(this, e.getMessage());
+            } else {
+                Messages.warning(this, result);
             }
-        } else {
-            Messages.warning(this, result);
         }
     }
 
     /**
      * buttonTransactionUpdateOnClick(): this runs when the update button is pressed.
+     *
      * @param v View
      */
     public void buttonTransactionUpdateOnClick(View v) {
         // create a transaction from the EditText fields
         Transaction transaction = createTransactionFromEditText(false);
-        // check if the transaction is valid
-        String result = validateTransactionData(transaction, false);
+        String result;
 
-        if (result == null) {
-            try {
-                // overwrite the given transaction into the database list
-                transaction = accessTransactions.updateTransaction(transaction);
-                // update our local list
-                transactionList = accessTransactions.getTransactions();
-                // refresh the transaction list view
-                transactionArrayAdapter.notifyDataSetChanged();
-                // set list position to the updated transaction
-                int pos = transactionList.indexOf(transaction);
-                if (pos >= 0) {
-                    ListView listView = findViewById(R.id.listTransactions);
-                    listView.setSelection(pos);
+        // check for non null
+        if (transaction != null) {
+            // validate the transaction
+            result = transaction.validateTransactionData(accessTransactions, false);
+            // check if return is null (there are no errors)
+            if (result == null) {
+                try {
+                    // overwrite the given transaction into the database list
+                    transaction = accessTransactions.updateTransaction(transaction);
+                    // update our local list
+                    transactionList = accessTransactions.getTransactions();
+                    // refresh the transaction list view
+                    transactionArrayAdapter.notifyDataSetChanged();
+                    // set list position to the updated transaction
+                    int pos = transactionList.indexOf(transaction);
+                    if (pos >= 0) {
+                        ListView listView = findViewById(R.id.listTransactions);
+                        listView.setSelection(pos);
+                    }
+
+                } catch (final Exception e) {
+                    Messages.fatalError(this, e.getMessage());
                 }
-            } catch (final Exception e) {
-                Messages.fatalError(this, e.getMessage());
+            } else {
+                Messages.warning(this, result);
             }
-        } else {
-            Messages.warning(this, result);
         }
     }
 
     /**
      * buttonTransactionDeleteOnClick(): this runs when the delete button is pressed.
+     *
      * @param v View
      */
     public void buttonTransactionDeleteOnClick(View v) {
@@ -276,6 +293,7 @@ public class TransactionsActivity extends Activity {
 
     /**
      * createTransactionFromEditText(): Using the EditText fields, create a new transaction instance.
+     *
      * @param isNewTransaction True if this transaction does not yet exist in the database.
      * @return The created transaction.
      */
@@ -285,7 +303,7 @@ public class TransactionsActivity extends Activity {
         EditText editPrice = findViewById(R.id.editTransactionPrice);
         // transaction properties
         Transaction output = null;
-        long time = 0;
+        LocalDateTime time;
         double price = 0;
         try {
             // attempt to parse transaction price to double
@@ -293,7 +311,7 @@ public class TransactionsActivity extends Activity {
             // check if this transaction does not yet exist
             if (isNewTransaction) {
                 // set timestamp to current time
-                time = System.currentTimeMillis() / 1000L;
+                time = LocalDateTime.now();
             } else {
                 // use timestamp of selected transaction
                 time = selectedTransactionTime;
@@ -307,34 +325,44 @@ public class TransactionsActivity extends Activity {
         return output;
     }
 
-    /**
-     * Ensure the transaction has valid properties.
-     * @param transaction The transaction to test.
-     * @param isNewTransaction True if the transaction does not exist in the database.
-     * @return The error message if the transaction is invalid, null string otherwise.
-     */
-    private String validateTransactionData(Transaction transaction, boolean isNewTransaction) {
-        // check if the transaction is null (incorrectly parsed price)
-        if (transaction == null) {
-            return "Price is not valid";
-        }
+    protected void navigationBarInit() {
+        // Initialize and assign variable
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
-        // check for valid category type
-        if (transaction.getCategory() == null || transaction.getCategory().length() < 1) {
-            return "Transaction Category required";
-        }
+        // Set TransactionActivity selected
+        bottomNavigationView.setSelectedItemId(R.id.buttonAddTransaction);
 
-        // check for valid price
-        if (transaction.getPrice() <= 0) {
-            return "Positive price required";
-        }
+        // Perform item selected listener
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-        // check if transaction already exists
-        if (isNewTransaction && accessTransactions.getTimestampIndex(transaction.getTime()) != -1) {
-            return "A transaction has already been made within the last second.\n" +
-                    "Please wait 1 second and try again.";
-        }
-
-        return null;
+                switch (item.getItemId()) // DashboardActivity
+                {
+                    case R.id.home:
+                        startActivity(new Intent(getApplicationContext(), DashboardActivity.class));
+                        overridePendingTransition(0, 0);
+                        return true;
+                    case R.id.buttonViewTransaction:
+                        // Intent to start new Activity
+                        startActivity(new Intent(getApplicationContext(), ViewTransactionActivity.class)); // Replace ViewActivity with the class used to view the graphs
+                        // Can Adjust Transition Speed, both enter and exit
+                        overridePendingTransition(0, 0);
+                        return true;
+                    case R.id.buttonAddTransaction:
+                        // true if already on page.
+                        return true;
+                    case R.id.buttonSettings:
+                        startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
+                        overridePendingTransition(0, 0);
+                        return true;
+                    case R.id.buttonProfile:
+                        startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+                        overridePendingTransition(0, 0);
+                        return true;
+                }
+                return false;
+            }
+        });
     }
 }

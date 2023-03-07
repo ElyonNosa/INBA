@@ -1,7 +1,5 @@
 package comp3350.inba.presentation;
 
-import static comp3350.inba.objects.Transaction.CATEGORIES;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,11 +18,13 @@ import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.ValueDependentColor;
 import com.jjoe64.graphview.DefaultLabelFormatter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 
 import comp3350.inba.R;
 import comp3350.inba.business.AccessTransactions;
+import comp3350.inba.objects.Category;
 import comp3350.inba.objects.Transaction;
 
 /**
@@ -116,7 +116,7 @@ public class DashboardActivity extends Activity {
         series.setValueDependentColor(new ValueDependentColor<DataPoint>() {
             @Override
             public int get(DataPoint data) {
-                return Color.rgb((int) data.getX()*255/4, (int) Math.abs(data.getY()*255/6), 100);
+                return Color.rgb((int) (data.getX()*(122)* Category.getCategorySet().size())%255, 80, 140);
             }
         });
 
@@ -125,10 +125,10 @@ public class DashboardActivity extends Activity {
         series.setValuesOnTopColor(Color.RED);
 
         // graph label properties
-        graph.getGridLabelRenderer().setGridColor(-255);
-        graph.getGridLabelRenderer().setHorizontalLabelsColor(-255);
-        graph.getGridLabelRenderer().setVerticalLabelsColor(-255);
-        graph.getGridLabelRenderer().setNumHorizontalLabels(CATEGORIES.length);
+        graph.getGridLabelRenderer().setGridColor(0xFFA6ABBD);
+        graph.getGridLabelRenderer().setHorizontalLabelsColor(0xFFA6ABBD);
+        graph.getGridLabelRenderer().setVerticalLabelsColor(0xFFA6ABBD);
+        graph.getGridLabelRenderer().setNumHorizontalLabels(Category.getCategorySet().size());
         graph.getGridLabelRenderer().setHorizontalLabelsAngle(90);
         graph.getGridLabelRenderer().setGridStyle(GridLabelRenderer.GridStyle.HORIZONTAL);
         graph.getGridLabelRenderer().setLabelsSpace(40);
@@ -146,9 +146,9 @@ public class DashboardActivity extends Activity {
                     // convert the x value to an index number
                     index = (int) Double.parseDouble(super.formatLabel(value, isValueX));
                     // check if category string length is more than desired
-                    if ((output = CATEGORIES[index]).length() > TRUNCATE_LEN) {
+                    if ((output = Category.getCategorySet().get(index)).length() > TRUNCATE_LEN) {
                         // truncate the string
-                        output = CATEGORIES[index].substring(0,TRUNCATE_LEN);
+                        output = Category.getCategorySet().get(index).substring(0,TRUNCATE_LEN);
                     }
                     // return category of a given index
                     return output;
@@ -164,10 +164,11 @@ public class DashboardActivity extends Activity {
      * Convert the total spendings of transactions per category into an array of data points.
      * @return The data points of the total spendings.
      */
-    private DataPoint[] transactionsToGraphView() {
-        DataPoint[] output = new DataPoint[CATEGORIES.length];
+
+    protected DataPoint[] transactionsToGraphView() {
+        DataPoint[] output = new DataPoint[Category.getCategorySet().size()];
         // the running price totals per category
-        double[] categoryTotals = new double[CATEGORIES.length];
+        double[] categoryTotals = new double[Category.getCategorySet().size()];
         int i = 0;
         int j = 0;
         boolean found = false;
@@ -178,9 +179,9 @@ public class DashboardActivity extends Activity {
             temp = transactionList.get(i);
             found = false;
             // loop through all predefined categories
-            for (j = 0; j < CATEGORIES.length && !found; j++) {
+            for (j = 0; j < Category.getCategorySet().size() && !found; j++) {
                 // check if the transaction category matches with a predefined category
-                if(CATEGORIES[j].equals(temp.getCategory())) {
+                if(Category.getCategorySet().get(j).equals(temp.getCategory())) {
                     // increase the total price of this category
                     categoryTotals[j] += temp.getPrice();
                     found = true;
@@ -219,12 +220,15 @@ public class DashboardActivity extends Activity {
     }
 
     /**
-     * This runs when the add button is clicked.
-     * @param v View.
+     * Update the montly total on the dashboard. 
      */
-/*    public void buttonAddTransactionOnClick(View v) {
-        Intent transactionsIntent = new Intent(DashboardActivity.this, TransactionsActivity.class);
-        // open the transactions activity
-        DashboardActivity.this.startActivity(transactionsIntent);
-    }*/
+    private void updateMonthlyTotal() {
+        final int SECONDS_PER_MONTH = 2629744;
+        TextView title = findViewById(R.id.textTitle);
+        LocalDateTime now = LocalDateTime.now();
+        // get sum of transactions between now and 1 month ago
+        double total = accessTransactions.getSumInPeriod(now.minusSeconds(SECONDS_PER_MONTH), now);
+        String text = "Monthly Total: $" + String.format(Locale.ENGLISH, "%.2f", total);
+        title.setText(text);
+    }
 }

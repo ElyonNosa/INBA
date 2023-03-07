@@ -13,6 +13,21 @@ public class Service {
     private static TransactionPersistence transactionPersistence = null;
 
     /**
+     * Constructor
+     */
+    public Service() {
+        this(true);
+    }
+
+    /**
+     * Constructor
+     * @param generateExamples True if the database should generate examples.
+     */
+    public Service(boolean generateExamples) {
+        transactionPersistence = new TransactionPersistenceStub(generateExamples);
+    }
+
+    /**
      * getTransactionPersistence(): Ensure that only one instance of the
      * transaction database exists at a time.
      *

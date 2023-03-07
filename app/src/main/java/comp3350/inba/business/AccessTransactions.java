@@ -1,5 +1,6 @@
 package comp3350.inba.business;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
@@ -14,19 +15,12 @@ import comp3350.inba.persistence.TransactionPersistence;
  */
 public class AccessTransactions
 {
-    // the transaction "database"
-    private final TransactionPersistence transactionPersistence;
-    // the list of transactions in the "database"
-    private List<Transaction> transactions;
-
     /*
      * Constructor
      */
     public AccessTransactions()
     {
-        // retrieve the database
-        transactionPersistence = Service.getTransactionPersistence();
-        transactions = null;
+        // do nothing
     }
 
     /**
@@ -35,18 +29,7 @@ public class AccessTransactions
      */
     public List<Transaction> getTransactions()
     {
-        transactions = transactionPersistence.getTransactionList();
-        return Collections.unmodifiableList(transactions);
-    }
-
-    /**
-     * Check if a timestamp exists in the array.
-     * @param time The timestamp of the transaction.
-     * @return The index of the transaction with the timestamp, or -1 if it doesn't exist.
-     */
-    public int getTimestampIndex(long time)
-    {
-        return transactionPersistence.getTimestampIndex(time);
+        return Collections.unmodifiableList(Service.getTransactionPersistence().getTransactionList());
     }
 
     /**
@@ -56,7 +39,7 @@ public class AccessTransactions
      */
     public Transaction insertTransaction(Transaction currentTransaction)
     {
-        return transactionPersistence.insertTransaction(currentTransaction);
+        return Service.getTransactionPersistence().insertTransaction(currentTransaction);
     }
 
     /**
@@ -66,7 +49,7 @@ public class AccessTransactions
      */
     public Transaction updateTransaction(Transaction currentTransaction)
     {
-        return transactionPersistence.updateTransaction(currentTransaction);
+        return Service.getTransactionPersistence().updateTransaction(currentTransaction);
     }
 
     /**
@@ -75,6 +58,56 @@ public class AccessTransactions
      */
     public void deleteTransaction(Transaction currentTransaction)
     {
-        transactionPersistence.deleteTransaction(currentTransaction);
+        Service.getTransactionPersistence().deleteTransaction(currentTransaction);
+    }
+
+    /**
+     * Get index of a transaction with a given timestamp.
+     * @param time The timestamp.
+     * @return The index of the transaction, or -1 if it doesn't exist.
+     */
+    public int getTimestampIndex(LocalDateTime time) {
+        // the list of transactions obtained from the database
+        List<Transaction> transactions = Service.getTransactionPersistence().getTransactionList();
+        int output = -1;
+        int i = 0;
+        // start at end of array to reduce complexity
+        for(i = transactions.size() - 1; i >= 0 && output == -1; --i) {
+            // check if the timestamps match
+            if (time.equals(transactions.get(i).getTime())) {
+                output = i;
+            }
+        }
+
+        return output;
+    }
+
+    /**
+     * Get the sum of prices within a period of time.
+     * This function assumes that transactions are in chronological order!
+     *
+     * @param start The time to start at.
+     * @param end   The time to end at.
+     */
+    public double getSumInPeriod(LocalDateTime start, LocalDateTime end) {
+        // the list of transactions obtained from the database
+        List<Transaction> transactions = Service.getTransactionPersistence().getTransactionList();
+        double output = 0;
+        int i = 0;
+        boolean withinPeriod = true;
+        // loop through all transactions
+        for (i = 0; i < transactions.size() && withinPeriod; i++) {
+            // check if transaction is after or at the start time
+            if (transactions.get(i).getTime().isAfter(start.minusSeconds(1))) {
+                // check if transaction is before or at the end time
+                withinPeriod = transactions.get(i).getTime().isBefore(end.plusSeconds(1));
+                if(withinPeriod) {
+                    output += transactions.get(i).getPrice();
+                }
+            }
+        }
+        // truncate output to 2 places after decimal
+        output = Math.floor(output * 100) / 100;
+        return output;
     }
 }

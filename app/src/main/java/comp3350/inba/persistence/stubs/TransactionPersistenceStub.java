@@ -1,5 +1,8 @@
 package comp3350.inba.persistence.stubs;
 
+import android.annotation.SuppressLint;
+
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -30,23 +33,30 @@ public class TransactionPersistenceStub implements TransactionPersistence {
      * @param generateExamples True if example transactions should be generated.
      */
     public TransactionPersistenceStub(boolean generateExamples) {
-        long currTime = System.currentTimeMillis() / 1000L;
+        // list of example categories to be used in the example transactions
+        final String[] EXAMPLE_CATS = {"Amenities", "Education", "Entertainment", "Food",
+                "Hardware", "Hobby", "Medical", "Misc", "Transportation", "Utilities"};
+         LocalDateTime currTime = LocalDateTime.now();
         this.transactions = new ArrayList<>();
         int i = 0;
-        long time = 0;
+        LocalDateTime time = null;
         String category = null;
         // time between example transactions
-        final int TIME_INTERVAL = 1013;
+        final int TIME_INTERVAL = 500000;
+        // the number of example transactions to create
+        final int NUM_EXAMPLES = 100;
+        // the max price of an example transaction
+        final double MAX_EXAMPLE_PRICE = 30;
 
         if (generateExamples) {
             // generate random transactions
             for(i = 0; i < NUM_EXAMPLES; i++) {
                 // make the timestamp increase with each example
-                time = currTime - ((long)TIME_INTERVAL * (NUM_EXAMPLES - i));
+                time = currTime.minusSeconds((long)TIME_INTERVAL * (NUM_EXAMPLES - i));
                 // choose a random category
-                category = Transaction.CATEGORIES[(int)(Math.random() * Transaction.CATEGORIES.length)];
+                category = EXAMPLE_CATS[(int)(Math.random() * EXAMPLE_CATS.length)];
 
-                insertTransaction(new Transaction(time, Math.random() * 30, category));
+                insertTransaction(new Transaction(time, Math.random() * MAX_EXAMPLE_PRICE, category));
             }
         }
     }
@@ -61,26 +71,6 @@ public class TransactionPersistenceStub implements TransactionPersistence {
     }
 
     /**
-     * Get index of a transaction with a given timestamp.
-     * @param time The timestamp.
-     * @return The index of the transaction, or -1 if it doesn't exist.
-     */
-    @Override
-    public int getTimestampIndex(long time) {
-        int output = -1;
-        int i = 0;
-        // start at end of array to reduce complexity
-        for(i = transactions.size() - 1; i >= 0 && output == -1; --i) {
-            // check if the timestamps match
-            if (time == transactions.get(i).getTime()) {
-                output = i;
-            }
-        }
-
-        return output;
-    }
-
-    /**
      * Insert a transaction to the list only if it is chronological.
      * @param currentTransaction The transaction to insert.
      * @return The inserted transaction. Null if the transaction was not chronologically ordered.
@@ -89,8 +79,8 @@ public class TransactionPersistenceStub implements TransactionPersistence {
     public Transaction insertTransaction(Transaction currentTransaction) {
         Transaction output = null;
         // check if timestamp is greater than timestamp of last transaction
-        if (transactions.size() == 0 || currentTransaction.getTime()
-                > transactions.get(transactions.size()-1).getTime()) {
+        if (transactions.size() == 0 || currentTransaction.getTime().isAfter(
+                transactions.get(transactions.size()-1).getTime())) {
             output = currentTransaction;
             transactions.add(currentTransaction);
         }
