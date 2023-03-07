@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -41,7 +42,7 @@ public class TransactionsActivity extends Activity {
     // index of the current selected transaction
     private int selectedTransactionPosition = -1;
     // the unix timestamp of the current selected transaction
-    private long selectedTransactionTime = 0;
+    private LocalDateTime selectedTransactionTime;
 
     AutoCompleteTextView textView;
 
@@ -105,7 +106,7 @@ public class TransactionsActivity extends Activity {
                     deleteButton.setEnabled(false);
                     // reset values of transaction position and timestamp
                     selectedTransactionPosition = -1;
-                    selectedTransactionTime = -1;
+                    selectedTransactionTime = null;
                 }
                 // else a transaction was not selected
                 else {
@@ -265,7 +266,7 @@ public class TransactionsActivity extends Activity {
         EditText editPrice = findViewById(R.id.editTransactionPrice);
         // transaction properties
         Transaction output = null;
-        long time = 0;
+        LocalDateTime time;
         double price = 0;
         try {
             // attempt to parse transaction price to double
@@ -273,7 +274,7 @@ public class TransactionsActivity extends Activity {
             // check if this transaction does not yet exist
             if (isNewTransaction) {
                 // set timestamp to current time
-                time = System.currentTimeMillis() / 1000L;
+                time = LocalDateTime.now();
             } else {
                 // use timestamp of selected transaction
                 time = selectedTransactionTime;

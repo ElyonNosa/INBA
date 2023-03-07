@@ -1,5 +1,8 @@
 package comp3350.inba.persistence.stubs;
 
+import android.annotation.SuppressLint;
+
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -31,10 +34,10 @@ public class TransactionPersistenceStub implements TransactionPersistence {
         // list of example categories to be used in the example transactions
         final String[] EXAMPLE_CATS = {"Amenities", "Education", "Entertainment", "Food",
                 "Hardware", "Hobby", "Medical", "Misc", "Transportation", "Utilities"};
-        long currTime = System.currentTimeMillis() / 1000L;
+         LocalDateTime currTime = LocalDateTime.now();
         this.transactions = new ArrayList<>();
         int i = 0;
-        long time = 0;
+        LocalDateTime time = null;
         String category = null;
         // time between example transactions
         final int TIME_INTERVAL = 500000;
@@ -47,7 +50,7 @@ public class TransactionPersistenceStub implements TransactionPersistence {
             // generate random transactions
             for(i = 0; i < NUM_EXAMPLES; i++) {
                 // make the timestamp increase with each example
-                time = currTime - ((long)TIME_INTERVAL * (NUM_EXAMPLES - i));
+                time = currTime.minusSeconds((long)TIME_INTERVAL * (NUM_EXAMPLES - i));
                 // choose a random category
                 category = EXAMPLE_CATS[(int)(Math.random() * EXAMPLE_CATS.length)];
 
@@ -74,8 +77,8 @@ public class TransactionPersistenceStub implements TransactionPersistence {
     public Transaction insertTransaction(Transaction currentTransaction) {
         Transaction output = null;
         // check if timestamp is greater than timestamp of last transaction
-        if (transactions.size() == 0 || currentTransaction.getTime()
-                > transactions.get(transactions.size()-1).getTime()) {
+        if (transactions.size() == 0 || currentTransaction.getTime().isAfter(
+                transactions.get(transactions.size()-1).getTime())) {
             output = currentTransaction;
             transactions.add(currentTransaction);
         }

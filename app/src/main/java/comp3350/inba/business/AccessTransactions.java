@@ -1,5 +1,6 @@
 package comp3350.inba.business;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
@@ -65,7 +66,7 @@ public class AccessTransactions
      * @param time The timestamp.
      * @return The index of the transaction, or -1 if it doesn't exist.
      */
-    public int getTimestampIndex(long time) {
+    public int getTimestampIndex(LocalDateTime time) {
         // the list of transactions obtained from the database
         List<Transaction> transactions = Service.getTransactionPersistence().getTransactionList();
         int output = -1;
@@ -73,7 +74,7 @@ public class AccessTransactions
         // start at end of array to reduce complexity
         for(i = transactions.size() - 1; i >= 0 && output == -1; --i) {
             // check if the timestamps match
-            if (time == transactions.get(i).getTime()) {
+            if (time.equals(transactions.get(i).getTime())) {
                 output = i;
             }
         }
@@ -88,7 +89,7 @@ public class AccessTransactions
      * @param start The time to start at.
      * @param end   The time to end at.
      */
-    public double getSumInPeriod(long start, long end) {
+    public double getSumInPeriod(LocalDateTime start, LocalDateTime end) {
         // the list of transactions obtained from the database
         List<Transaction> transactions = Service.getTransactionPersistence().getTransactionList();
         double output = 0;
@@ -96,10 +97,10 @@ public class AccessTransactions
         boolean withinPeriod = true;
         // loop through all transactions
         for (i = 0; i < transactions.size() && withinPeriod; i++) {
-            // check if transaction is after start time
-            if (transactions.get(i).getTime() >= start) {
-                // check if transaction is before end time
-                withinPeriod = (transactions.get(i).getTime() <= end);
+            // check if transaction is after or at the start time
+            if (transactions.get(i).getTime().isAfter(start.minusSeconds(1))) {
+                // check if transaction is before or at the end time
+                withinPeriod = transactions.get(i).getTime().isBefore(end.plusSeconds(1));
                 if(withinPeriod) {
                     output += transactions.get(i).getPrice();
                 }

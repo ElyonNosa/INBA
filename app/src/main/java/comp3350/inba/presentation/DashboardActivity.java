@@ -19,6 +19,7 @@ import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.ValueDependentColor;
 import com.jjoe64.graphview.DefaultLabelFormatter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Locale;
 
@@ -233,9 +234,9 @@ public class DashboardActivity extends Activity {
     private void updateMonthlyTotal() {
         final int SECONDS_PER_MONTH = 2629744;
         TextView title = findViewById(R.id.textTitle);
-        long now = System.currentTimeMillis() / 1000L;
+        LocalDateTime now = LocalDateTime.now();
         // get sum of transactions between now and 1 month ago
-        double total = accessTransactions.getSumInPeriod(now - SECONDS_PER_MONTH, now);
+        double total = accessTransactions.getSumInPeriod(now.minusSeconds(SECONDS_PER_MONTH), now);
         String text = "Monthly Total: $" + String.format(Locale.ENGLISH, "%.2f", total);
         title.setText(text);
     }

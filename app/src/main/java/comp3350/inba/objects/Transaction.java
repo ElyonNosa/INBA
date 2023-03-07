@@ -2,6 +2,7 @@ package comp3350.inba.objects;
 
 import android.annotation.SuppressLint;
 
+import java.time.LocalDateTime;
 import java.util.Locale;
 import java.util.Objects;
 import java.text.SimpleDateFormat;
@@ -16,7 +17,7 @@ import comp3350.inba.business.AccessTransactions;
  */
 public class Transaction {
     // unix timestamp of the transaction
-    private final long time;
+    private final LocalDateTime time;
     // the money spend in the transaction
     private final double price;
     // the type of transaction
@@ -25,12 +26,12 @@ public class Transaction {
     /**
      * Constructor
      *
-     * @param newTime     The timestamp of the transaction.
      * @param newPrice    The price of the transaction.
      * @param newCategory The category of the transaction.
      */
-    public Transaction(final long newTime, final double newPrice, final String newCategory) {
-        time = newTime;
+    @SuppressLint("NewApi")
+    public Transaction(final LocalDateTime time, double newPrice, final String newCategory) {
+        this.time = time;
         category = new Category(newCategory);
         // truncate the price (2 decimal places)
         price = Math.floor(newPrice * 100) / 100;
@@ -41,7 +42,7 @@ public class Transaction {
      *
      * @return time
      */
-    public long getTime() {
+    public LocalDateTime getTime() {
         return time;
     }
 
@@ -73,7 +74,7 @@ public class Transaction {
         @SuppressLint("SimpleDateFormat") SimpleDateFormat jdf =
                 new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         // print date, category and price
-        return String.format("%s, %s, $%s", jdf.format(new Date(time * 1000L)), category.getName(),
+        return String.format("%s, %s, $%s", time.toString(), category.getName(),
                 String.format(Locale.ENGLISH, "%.2f", price));
     }
 
