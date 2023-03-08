@@ -110,4 +110,25 @@ public class AccessTransactions
         output = Math.floor(output * 100) / 100;
         return output;
     }
+
+    /**
+     * Return the index of the transaction after a given date.
+     * Return the last index if all transactions are before the given date.
+     * This function assumes that transactions are in chronological order!
+     * @param date The date to test.
+     * @return The index of the transaction after the date.
+     */
+    public int getIndexAfterDate(LocalDateTime date) {
+        // the list of transactions obtained from the database
+        List<Transaction> transactions = Service.getTransactionPersistence().getTransactionList();
+        int i = 0;
+        boolean found = false;
+        // loop through all items in the transaction list
+        for (i = 0; i < transactions.size() && !found; i++) {
+            found = transactions.get(i).getTime().isAfter(date);
+        }
+        // decrement i upon exiting the for loop
+        --i;
+        return i;
+    }
 }

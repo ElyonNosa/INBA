@@ -1,13 +1,16 @@
 package comp3350.inba.presentation;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -18,7 +21,7 @@ import androidx.annotation.NonNull;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -41,17 +44,20 @@ public class TransactionsActivity extends Activity {
     private ArrayAdapter<Transaction> transactionArrayAdapter;
     // index of the current selected transaction
     private int selectedTransactionPosition = -1;
-    // the unix timestamp of the current selected transaction
+    // the LocalDateTime timestamp of the current selected transaction
     private LocalDateTime selectedTransactionTime;
+    // the text view for category suggestions
+    private AutoCompleteTextView textView;
+    // the list view containing the transactions
+    private ListView listView;
 
-    AutoCompleteTextView textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transactions);
-
-
+        // disable traditional input for the date input text box
+        ((EditText)findViewById(R.id.editTextDate)).setInputType(InputType.TYPE_NULL);
         // Get a reference to the AutoCompleteTextView in the layout
         textView = (AutoCompleteTextView) findViewById(R.id.editTransactionCategory);
         // create an adapter from the existing list of categories, assign this to the autocomplete view
@@ -77,19 +83,22 @@ public class TransactionsActivity extends Activity {
                     View view = super.getView(position, convertView, parent);
                     TextView text1 = view.findViewById(android.R.id.text1);
                     TextView text2 = view.findViewById(android.R.id.text2);
+                    // a string containing category, followed by price
+                    String categoryPrice = transactionList.get(position).getCategory() + ": $"
+                            + String.format(Locale.ENGLISH, "%.2f",
+                            transactionList.get(position).getPrice());
 
-                    // the top text is the category of the transaction
-                    text1.setText(transactionList.get(position).getCategory());
-                    // the bottom text is the price of the transaction
-                    text2.setText(String.format(Locale.ENGLISH, "%.2f",
-                            transactionList.get(position).getPrice()));
+                    // the top text is the category and price of the transaction
+                    text1.setText(categoryPrice);
+                    // the bottom text is the timestamp of the transaction
+                    text2.setText(transactionList.get(position).getTime().toString());
 
                     return view;
                 }
             };
 
             // create listview object from the list view in the layout
-            final ListView listView = findViewById(R.id.listTransactions);
+            listView = findViewById(R.id.listTransactions);
             // link the list view with the adapter for the transaction list
             listView.setAdapter(transactionArrayAdapter);
 
@@ -226,6 +235,7 @@ public class TransactionsActivity extends Activity {
         }
     }
 
+
     /**
      * buttonTransactionDeleteOnClick(): this runs when the delete button is pressed.
      *
@@ -252,6 +262,28 @@ public class TransactionsActivity extends Activity {
         } catch (final Exception e) {
             Messages.warning(this, e.getMessage());
         }
+    }
+
+    /**
+     * After clicking on the date text, show calendar dialog then scroll to the selected date.
+     * @param v The view.
+     */
+    public void textEnterDateOnClick(View v) {
+        // create object of EditText
+        EditText dateText = findViewById(R.id.editTextDate);
+        final Calendar cldr = Calendar.getInstance();
+        // date picker dialog
+        DatePickerDialog picker = new DatePickerDialog(TransactionsActivity.this,
+                (view, year, month, day) -> {
+                    String output = year + "-" + (month + 1) + "-" + day;
+                    dateText.setText(output);
+                    // create a date using the selected day, month, year.
+                    // get the index of the transaction after this date.
+                    // use the index to select a position in the list.
+                    listView.smoothScrollToPosition(accessTransactions.getIndexAfterDate(
+                            LocalDateTime.of(year, month+1, day, 0, 0)));
+                }, cldr.get(Calendar.YEAR), cldr.get(Calendar.MONTH), cldr.get(Calendar.DAY_OF_MONTH));
+        picker.show();
     }
 
     /**

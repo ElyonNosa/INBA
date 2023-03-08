@@ -25,9 +25,12 @@
 
     <string name="add_transaction">Add</string>
     <string name="recent_transactions">Recent Transactions</string>
-    <string name="transaction_category">Category</string>
-    <string name="transaction_price">Price</string>
+    <string name="transaction_category">Category:</string>
+    <string name="transaction_price">Price:</string>
+    <string name="goto_date">Go To Date:</string>
+    <string name="category_filter">Category Filter:</string>
     <string name="view_transaction">View</string>
+    <string name="enter_date">Go To Date…</string>
     <string name="user_profile">Profile</string>
     <string name="home">Home</string>
     <string name="settings">Settings</string>
