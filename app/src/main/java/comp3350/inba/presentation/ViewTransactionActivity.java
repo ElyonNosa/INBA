@@ -26,6 +26,7 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ViewTransactionActivity extends Activity implements View.OnClickListener {
@@ -153,7 +154,7 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
                 graph.removeAllSeries();
                 graph.setVisibility(View.INVISIBLE);
                 System.out.println("PIE CHART is currently under progress ");
-                // showPieChart(pieChart);
+                 showPieChart(pieChart);
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + view.getId());
@@ -180,35 +181,15 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
 
     private  void showPieChart(PieChart pieChart){
 
-        System.out.println("hey there i am inside");
         //======================================================================================================================================
         ArrayList<PieEntry> pieEntries = new ArrayList<>();
         String label = "type";
 
-        //initializing data
-        Map<String, Integer> typeAmountMap = new HashMap<>();
-        typeAmountMap.put("Jan",10);
-        typeAmountMap.put("Feb",50);
-        typeAmountMap.put("Mar",40);
-        typeAmountMap.put("Apr",20);
-        typeAmountMap.put("May",50);
-        typeAmountMap.put("June",60);
-        typeAmountMap.put("July",20);
-        typeAmountMap.put("Aug",70);
-        typeAmountMap.put("Sept",50);
-        typeAmountMap.put("Oct",30);
-        typeAmountMap.put("Nov",60);
-        typeAmountMap.put("Dec",80);
+        //PieChart Data
+        Map<String, Integer> typeAmountMap = initData();
 
-        //initializing colors for the entries
-        ArrayList<Integer> colors = new ArrayList<>();
-        colors.add(Color.parseColor("#304567"));
-        colors.add(Color.parseColor("#309967"));
-        colors.add(Color.parseColor("#476567"));
-        colors.add(Color.parseColor("#890567"));
-        colors.add(Color.parseColor("#a35567"));
-        colors.add(Color.parseColor("#ff5f67"));
-        colors.add(Color.parseColor("#3ca567"));
+        //PieChart Colours
+        ArrayList<Integer> colors = (ArrayList<Integer>) initChartColours();
 
         //input data and fit data into pie chart entry
         for(String type: typeAmountMap.keySet()){
@@ -230,6 +211,42 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
         pieChart.invalidate();
         //======================================================================================================================================
 
+    }
+
+    public Map<String, Integer> initData()
+    {
+
+        //initializing data
+        Map<String, Integer> typeAmountMap = new HashMap<>();
+        typeAmountMap.put("Jan",10);
+        typeAmountMap.put("Feb",50);
+        typeAmountMap.put("Mar",40);
+        typeAmountMap.put("Apr",20);
+        typeAmountMap.put("May",50);
+        typeAmountMap.put("June",60);
+        typeAmountMap.put("July",20);
+        typeAmountMap.put("Aug",70);
+        typeAmountMap.put("Sept",50);
+        typeAmountMap.put("Oct",30);
+        typeAmountMap.put("Nov",60);
+        typeAmountMap.put("Dec",80);
+
+        return typeAmountMap;
+    }
+
+    public List<Integer> initChartColours()
+    {
+        //initializing colors for the entries
+        ArrayList<Integer> colors = new ArrayList<>();
+        colors.add(Color.parseColor("#304567"));
+        colors.add(Color.parseColor("#309967"));
+        colors.add(Color.parseColor("#476567"));
+        colors.add(Color.parseColor("#890567"));
+        colors.add(Color.parseColor("#a35567"));
+        colors.add(Color.parseColor("#ff5f67"));
+        colors.add(Color.parseColor("#3ca567"));
+
+        return  colors;
     }
 }
 
