@@ -12,7 +12,7 @@
 
 
     <!-- Another Graph library. Need to adjust its DPI Later on-->
-
+    <!-- Need to remove this block of code, (this is implementation of old graph-->
     <com.jjoe64.graphview.GraphView
         android:id="@+id/graph"
         android:layout_width="match_parent"

@@ -144,7 +144,7 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
         }
     }
 
-    private List<Entry> getDataset() {
+    public List<Entry> getDataset() {
         List<Entry> entries = new ArrayList<>();
         entries.add(new BarEntry(0f, 10));
         entries.add(new BarEntry(1f, 20));
