@@ -70,10 +70,10 @@ public class viewTransaction extends AppCompatActivity implements View.OnClickLi
                         startActivity(new Intent(getApplicationContext(),TransactionsActivity.class));
                         overridePendingTransition(0,0);
                         return true;
-                    /* case R.id.buttonSettings:
+                    case R.id.buttonSettings:
                     startActivity(new Intent(getApplicationContext(),SettingsActivity.class));
                     overridePendingTransition(0,0);
-                    return true;*/
+                    return true;
                     case R.id.buttonProfile:
                         startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
                         overridePendingTransition(0,0);
@@ -88,7 +88,6 @@ public class viewTransaction extends AppCompatActivity implements View.OnClickLi
     @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View view) {
-
         //Local Variable
         String[] months = {"Jan", "Feb", "Mar", "Apr", "May", "June", "July",
                 "Aug", "Sept", "Oct", "Nov", "Dec", ""};

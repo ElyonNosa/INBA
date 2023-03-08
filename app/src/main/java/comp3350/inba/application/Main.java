@@ -1,14 +1,11 @@
 package comp3350.inba.application;
 
-import comp3350.inba.presentation.CLI;
-
 public class Main
 {
 	private static String dbName="TXN";
 
 	public static void main(String[] args)
 	{
-		CLI.run();
 		System.out.println("All done");
 	}
 

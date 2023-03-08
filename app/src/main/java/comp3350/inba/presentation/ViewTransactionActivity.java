@@ -10,6 +10,10 @@ import comp3350.inba.R;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.jjoe64.graphview.GraphView;
@@ -19,6 +23,10 @@ import com.jjoe64.graphview.helper.StaticLabelsFormatter;
 import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ViewTransactionActivity extends Activity implements View.OnClickListener {
 
@@ -64,10 +72,10 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
                         startActivity(new Intent(getApplicationContext(),TransactionsActivity.class));
                         overridePendingTransition(0,0);
                         return true;
-//                    case R.id.buttonSettings:
-//                        startActivity(new Intent(getApplicationContext(),SettingsActivity.class));
-//                        overridePendingTransition(0,0);
-//                        return true;
+                    case R.id.buttonSettings:
+                        startActivity(new Intent(getApplicationContext(),SettingsActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
                     case R.id.buttonProfile:
                         startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
                         overridePendingTransition(0,0);
@@ -83,27 +91,31 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
      */
     @Override
     public void onClick(View view) {
+        //Local Variable
+        final String[] MONTHS = {"Jan", "Feb", "Mar", "Apr", "May", "June", "July",
+                "Aug", "Sept", "Oct", "Nov", "Dec"};
+        //Initializing the graphs
         GraphView graph = findViewById(R.id.graph);
         LineGraphSeries<DataPoint> series1 = new LineGraphSeries<>(getDataPoint());
         BarGraphSeries<DataPoint> series2 = new BarGraphSeries<>(getDataPoint());
-
-        final String[] MONTHS = {
-                "Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"};
+        PieChart pieChart = findViewById(R.id.pie_chart);
 
         // graph properties
+        graph.getViewport().setXAxisBoundsManual(true);
+        graph.getViewport().setMinX(0);
+        graph.getViewport().setMaxX(12);
+
         graph.getGridLabelRenderer().setGridColor(0xFFA6ABBD);
         graph.getGridLabelRenderer().setHorizontalLabelsColor(0xFFA6ABBD);
         graph.getGridLabelRenderer().setVerticalLabelsColor(0xFFA6ABBD);
         graph.getGridLabelRenderer().setGridStyle(GridLabelRenderer.GridStyle.HORIZONTAL);
         graph.setTitleColor(0xFFA6ABBD);
-        // change this title when view transactions is finished!
-        graph.setTitle("WIP, moved to iteration 2");
 
         switch (view.getId()) {
+            //Line Graph
             case R.id.button:
-
-                //Line Graph
                 graph.removeAllSeries();
+                graph.setVisibility(View.VISIBLE);
                 graph.addSeries(series1);
 
                 StaticLabelsFormatter staticLabelsFormatter = new StaticLabelsFormatter(graph);
@@ -111,8 +123,10 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
                 graph.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
 
                 break;
+            //Bar Graph
             case R.id.button2:
                 graph.removeAllSeries();
+                graph.setVisibility(View.VISIBLE);
                 series2.setValueDependentColor(new ValueDependentColor<DataPoint>() {
                     @Override
                     public int get(DataPoint data) {
@@ -127,16 +141,20 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
                 StaticLabelsFormatter staticLabelsFormatter2 = new StaticLabelsFormatter(graph);
                 staticLabelsFormatter2.setHorizontalLabels(MONTHS);
                 graph.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter2);
+                series2.setSpacing(0);
                 series2.setDrawValuesOnTop(true);
                 series2.setValuesOnTopColor(0xFFA6ABBD);
 
                 graph.addSeries(series2);
 
                 break;
+            //Pie Chart
             case R.id.button3:
-                System.out.println("Work in progress 2");
+                graph.removeAllSeries();
+                graph.setVisibility(View.INVISIBLE);
+                System.out.println("PIE CHART is currently under progress ");
+                // showPieChart(pieChart);
                 break;
-
             default:
                 throw new IllegalStateException("Unexpected value: " + view.getId());
         }
@@ -158,6 +176,60 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
                 new DataPoint(11, 8)
         };
         return dp;
+    }
+
+    private  void showPieChart(PieChart pieChart){
+
+        System.out.println("hey there i am inside");
+        //======================================================================================================================================
+        ArrayList<PieEntry> pieEntries = new ArrayList<>();
+        String label = "type";
+
+        //initializing data
+        Map<String, Integer> typeAmountMap = new HashMap<>();
+        typeAmountMap.put("Jan",10);
+        typeAmountMap.put("Feb",50);
+        typeAmountMap.put("Mar",40);
+        typeAmountMap.put("Apr",20);
+        typeAmountMap.put("May",50);
+        typeAmountMap.put("June",60);
+        typeAmountMap.put("July",20);
+        typeAmountMap.put("Aug",70);
+        typeAmountMap.put("Sept",50);
+        typeAmountMap.put("Oct",30);
+        typeAmountMap.put("Nov",60);
+        typeAmountMap.put("Dec",80);
+
+        //initializing colors for the entries
+        ArrayList<Integer> colors = new ArrayList<>();
+        colors.add(Color.parseColor("#304567"));
+        colors.add(Color.parseColor("#309967"));
+        colors.add(Color.parseColor("#476567"));
+        colors.add(Color.parseColor("#890567"));
+        colors.add(Color.parseColor("#a35567"));
+        colors.add(Color.parseColor("#ff5f67"));
+        colors.add(Color.parseColor("#3ca567"));
+
+        //input data and fit data into pie chart entry
+        for(String type: typeAmountMap.keySet()){
+            pieEntries.add(new PieEntry(typeAmountMap.get(type).floatValue(), type));
+        }
+
+        //collecting the entries with label name
+        PieDataSet pieDataSet = new PieDataSet(pieEntries,label);
+        //setting text size of the value
+        pieDataSet.setValueTextSize(12f);
+        //providing color list for coloring different entries
+        pieDataSet.setColors(colors);
+        //grouping the data set from entry to chart
+        PieData pieData = new PieData(pieDataSet);
+        //showing the value of the entries, default true if not set
+        pieData.setDrawValues(true);
+
+        pieChart.setData(pieData);
+        pieChart.invalidate();
+        //======================================================================================================================================
+
     }
 }
 

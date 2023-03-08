@@ -6,25 +6,66 @@ import comp3350.inba.objects.Transaction;
 import comp3350.inba.objects.Category;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.jjoe64.graphview.DefaultLabelFormatter;
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.GridLabelRenderer;
+import com.jjoe64.graphview.ValueDependentColor;
+import com.jjoe64.graphview.series.BarGraphSeries;
+import com.jjoe64.graphview.series.DataPoint;
 
-import comp3350.inba.R;
+import java.util.List;
 
-public class ProfileActivity extends AppCompatActivity {
 
+
+public class ProfileActivity extends Activity {
+
+    // the transactions database
+    private AccessTransactions accessTransactions;
+    // the adapter to display transactions in a list view
+    private ArrayAdapter<Transaction> transactionArrayAdapter;
+    // the local list of transactions
+    private List<Transaction> transactionList;
+
+    /**
+     * Constructor
+     * @param savedInstanceState Bundle.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        accessTransactions = new AccessTransactions();
+        try {
+            // display transactions in list
+            transactionList = accessTransactions.getTransactions();
+            transactionArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, transactionList);
+            final ListView listView = findViewById(R.id.transaction_list);
+            // adapt the transactions list to the listview
+            listView.setAdapter(transactionArrayAdapter);
+        }
+        catch (final Exception e) {
+            Messages.fatalError(this, e.getMessage());
+        }
+
+        navigationBarInit();
+
+    }//OnCreate
+
+
+    protected void navigationBarInit() {
         // Initialize and assign variable
-        BottomNavigationView bottomNavigationView=findViewById(R.id.bottom_navigation);
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
         // Set profile selected
         bottomNavigationView.setSelectedItemId(R.id.buttonProfile);
@@ -35,26 +76,26 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-                switch(item.getItemId()) // DashboardActivity
+                switch (item.getItemId())
                 {
                     case R.id.home:
-                        startActivity(new Intent(getApplicationContext(),DashboardActivity.class));
-                        overridePendingTransition(0,0);
+                        startActivity(new Intent(getApplicationContext(), DashboardActivity.class));
+                        overridePendingTransition(0, 0);
                         return true;
                     case R.id.buttonViewTransaction:
                         // Intent to start new Activity
-                        startActivity(new Intent(getApplicationContext(), viewTransaction.class)); // Replace ViewActivity with the class used to view the graphs
+                        startActivity(new Intent(getApplicationContext(), ViewTransactionActivity.class)); // Replace ViewActivity with the class used to view the graphs
                         // Can Adjust Transition Speed, both enter and exit
-                        overridePendingTransition(0,0);
+                        overridePendingTransition(0, 0);
                         return true;
                     case R.id.buttonAddTransaction:
-                        startActivity(new Intent(getApplicationContext(),TransactionsActivity.class));
-                        overridePendingTransition(0,0);
+                        startActivity(new Intent(getApplicationContext(), TransactionsActivity.class));
+                        overridePendingTransition(0, 0);
                         return true;
-                    /* case R.id.buttonSettings:
-                        startActivity(new Intent(getApplicationContext(),SettingsActivity.class));
-                        overridePendingTransition(0,0);
-                        return true;*/
+                    case R.id.buttonSettings:
+                        startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
+                        overridePendingTransition(0, 0);
+                        return true;
                     case R.id.buttonProfile:
                         return true;
                 }

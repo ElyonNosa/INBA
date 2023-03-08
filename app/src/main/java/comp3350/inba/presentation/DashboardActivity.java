@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.graphics.Color;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -20,6 +21,7 @@ import com.jjoe64.graphview.DefaultLabelFormatter;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Locale;
 
 
 import comp3350.inba.R;
@@ -61,52 +63,14 @@ public class DashboardActivity extends Activity {
             Messages.fatalError(this, e.getMessage());
         }
 
-        // Code below Allows for Navigation Bar functionality between activities.
+        navigationBarInit();
 
-        // Initialize and assign variable
-        BottomNavigationView bottomNavigationView=findViewById(R.id.bottom_navigation);
-
-        // Set Home selected
-        bottomNavigationView.setSelectedItemId(R.id.home);
-
-        // Perform item selected listener
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
-                switch(item.getItemId()) // DashboardActivity
-                {
-                    case R.id.home:
-                        // true if already on page.
-                        return true;
-                    case R.id.buttonViewTransaction:
-                        // Intent to start new Activity
-                        startActivity(new Intent(getApplicationContext(), viewTransaction.class)); // Replace ViewActivity with the class used to view the graphs
-                        // Can Adjust Transition Speed, both enter and exit
-                        overridePendingTransition(0,0);
-                        return true;
-                    case R.id.buttonAddTransaction:
-                        startActivity(new Intent(getApplicationContext(),TransactionsActivity.class));
-                        overridePendingTransition(0,0);
-                        return true;
-                    /* case R.id.buttonSettings:
-                    startActivity(new Intent(getApplicationContext(),SettingsActivity.class));
-                    overridePendingTransition(0,0);
-                    return true;*/
-                    case R.id.buttonProfile:
-                        startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
-                        overridePendingTransition(0,0);
-                        return true;
-                }
-                return false;
-            }
-        });
     }//onCreate
 
     /**
      * Update the graph that displays transaction totals
      */
-    private void updateGraph() {
+    protected void updateGraph() {
         GraphView graph = (GraphView) findViewById(R.id.graph);
         // add data points to the graph
         BarGraphSeries<DataPoint> series = new BarGraphSeries<>(transactionsToGraphView());
@@ -122,7 +86,7 @@ public class DashboardActivity extends Activity {
 
         // series properties
         series.setDrawValuesOnTop(true);
-        series.setValuesOnTopColor(Color.RED);
+        series.setValuesOnTopColor(0xFFA6ABBD);
 
         // graph label properties
         graph.getGridLabelRenderer().setGridColor(0xFFA6ABBD);
@@ -130,9 +94,12 @@ public class DashboardActivity extends Activity {
         graph.getGridLabelRenderer().setVerticalLabelsColor(0xFFA6ABBD);
         graph.getGridLabelRenderer().setNumHorizontalLabels(Category.getCategorySet().size());
         graph.getGridLabelRenderer().setHorizontalLabelsAngle(90);
+        graph.setTitle("All Time Transactions:");
+        graph.setTitleColor(0xFFA6ABBD);
         graph.getGridLabelRenderer().setGridStyle(GridLabelRenderer.GridStyle.HORIZONTAL);
-        graph.getGridLabelRenderer().setLabelsSpace(40);
-        graph.getGridLabelRenderer().setPadding(40);
+        graph.getGridLabelRenderer().setLabelsSpace(50);
+        graph.getGridLabelRenderer().setTextSize(35);
+        graph.getGridLabelRenderer().setPadding(50);
 
 
         // custom label formatter to show categories
@@ -164,7 +131,6 @@ public class DashboardActivity extends Activity {
      * Convert the total spendings of transactions per category into an array of data points.
      * @return The data points of the total spendings.
      */
-
     protected DataPoint[] transactionsToGraphView() {
         DataPoint[] output = new DataPoint[Category.getCategorySet().size()];
         // the running price totals per category
@@ -198,6 +164,47 @@ public class DashboardActivity extends Activity {
         return output;
     }
 
+    protected void navigationBarInit() {
+        // Initialize and assign variable
+        BottomNavigationView bottomNavigationView=findViewById(R.id.bottom_navigation);
+
+        // Set Home selected
+        bottomNavigationView.setSelectedItemId(R.id.home);
+
+        // Perform item selected listener
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+                switch(item.getItemId()) // DashboardActivity
+                {
+                    case R.id.home:
+                        // true if already on page.
+                        return true;
+                    case R.id.buttonViewTransaction:
+                        // Intent to start new Activity
+                        startActivity(new Intent(getApplicationContext(), ViewTransactionActivity.class)); // Replace ViewActivity with the class used to view the graphs
+                        // Can Adjust Transition Speed, both enter and exit
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.buttonAddTransaction:
+                        startActivity(new Intent(getApplicationContext(),TransactionsActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.buttonSettings:
+                        startActivity(new Intent(getApplicationContext(),SettingsActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.buttonProfile:
+                        startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                }
+                return false;
+            }
+        });
+    }
+
     /**
      * Destructor
      */
@@ -217,10 +224,12 @@ public class DashboardActivity extends Activity {
         transactionArrayAdapter.notifyDataSetChanged();
 
         updateGraph();
+
+        updateMonthlyTotal();
     }
 
     /**
-     * Update the montly total on the dashboard. 
+     * Print total monthly spending on title text.
      */
     private void updateMonthlyTotal() {
         final int SECONDS_PER_MONTH = 2629744;
