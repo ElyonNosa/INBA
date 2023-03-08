@@ -26,16 +26,8 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.GridLabelRenderer;
-import com.jjoe64.graphview.ValueDependentColor;
-import com.jjoe64.graphview.helper.StaticLabelsFormatter;
-import com.jjoe64.graphview.series.BarGraphSeries;
-import com.jjoe64.graphview.series.DataPoint;
-import com.jjoe64.graphview.series.LineGraphSeries;
 
 
 import java.util.ArrayList;
@@ -58,7 +50,6 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
             button3.setOnClickListener(this);
 
             navigationBarInit();
-
             onClick(button1);
         }
 
@@ -101,118 +92,59 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
         });
     }
 
-    /**
-     * @param view
-     */
     @Override
     public void onClick(View view) {
         //Local Variable
         final String[] MONTHS = {"Jan", "Feb", "Mar", "Apr", "May", "June", "July",
                 "Aug", "Sept", "Oct", "Nov", "Dec"};
         //Initializing the graphs
-        GraphView graph = findViewById(R.id.graph);
-//        LineGraphSeries<DataPoint> series1 = new LineGraphSeries<>(getDataPoint());
-        //BarGraphSeries<DataPoint> series2 = new BarGraphSeries<>(getDataPoint());
         LineChart lineChart = findViewById(R.id.line_chart);
         BarChart barChart = findViewById(R.id.bar_chart);
         PieChart pieChart = findViewById(R.id.pie_chart);
 
-        // graph properties
-        graph.getViewport().setXAxisBoundsManual(true);
-        graph.getViewport().setMinX(0);
-        graph.getViewport().setMaxX(12);
-
-        graph.getGridLabelRenderer().setGridColor(0xFFA6ABBD);
-        graph.getGridLabelRenderer().setHorizontalLabelsColor(0xFFA6ABBD);
-        graph.getGridLabelRenderer().setVerticalLabelsColor(0xFFA6ABBD);
-        graph.getGridLabelRenderer().setGridStyle(GridLabelRenderer.GridStyle.HORIZONTAL);
-        graph.setTitleColor(0xFFA6ABBD);
-
         switch (view.getId()) {
             //Line Graph
             case R.id.button:
-//                graph.removeAllSeries();
-//                graph.setVisibility(View.VISIBLE);
-//                graph.addSeries(series1);
-//
-//                StaticLabelsFormatter staticLabelsFormatter = new StaticLabelsFormatter(graph);
-//                staticLabelsFormatter.setHorizontalLabels(MONTHS);
-//                graph.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
 
-                System.out.println("Line Chart in progress");
+                // Hide the other two charts
+                barChart.setVisibility(View.GONE);
+                pieChart.setVisibility(View.GONE);
+                // Show the line chart
+                lineChart.setVisibility(View.VISIBLE);
+
                 showLineChart(lineChart, MONTHS);
-                lineChart.getDescription().setEnabled(false);
-                lineChart.setTouchEnabled(true);
-                lineChart.setDragEnabled(true);
-                lineChart.setScaleEnabled(true);
-                lineChart.setDrawGridBackground(false);
-                lineChart.setPinchZoom(true);
-
-
-
                 break;
+
             //Bar Graph
             case R.id.button2:
-                graph.removeAllSeries();
-                graph.setVisibility(View.VISIBLE);
-//                series2.setValueDependentColor(new ValueDependentColor<DataPoint>() {
-//                    @Override
-//                    public int get(DataPoint data) {
-//                        if (data.getX() % 2 == 0) {
-//                            return Color.GREEN;
-//                        } else {
-//                            return Color.BLUE;
-//                        }
-//                    }
-//                });
-//                graph.addSeries(series2);
-//                StaticLabelsFormatter staticLabelsFormatter2 = new StaticLabelsFormatter(graph);
-//                staticLabelsFormatter2.setHorizontalLabels(MONTHS);
-//                graph.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter2);
-//                series2.setSpacing(0);
-//                series2.setDrawValuesOnTop(true);
-//                series2.setValuesOnTopColor(0xFFA6ABBD);
-//
-//                graph.addSeries(series2);
-                System.out.println("Bar CHART is currently under progress ");
+                // Hide the other two charts
+                lineChart.setVisibility(View.GONE);
+                pieChart.setVisibility(View.GONE);
+
+                // Show the line chart
+                barChart.setVisibility(View.VISIBLE);
+
                 showBarChart(barChart, MONTHS);
-                barChart.setDrawBarShadow(false);
-                barChart.setDrawValueAboveBar(true);
-                barChart.getDescription().setEnabled(false);
-                barChart.setDrawGridBackground(false);
-
-
                 break;
+
             //Pie Chart
             case R.id.button3:
-                graph.removeAllSeries();
-                graph.setVisibility(View.INVISIBLE);
-                 showPieChart(pieChart);
+                // Hide the other two charts
+                barChart.setVisibility(View.GONE);
+                lineChart.setVisibility(View.GONE);
+
+                // Show the line chart
+                pieChart.setVisibility(View.VISIBLE);
+
+                showPieChart(pieChart);
                 break;
+
             default:
                 throw new IllegalStateException("Unexpected value: " + view.getId());
         }
     }
 
-    private DataPoint[] getDataPoint() {
-        DataPoint[] dp = new DataPoint[]{
-                new DataPoint(0, 1),
-                new DataPoint(1, 5),
-                new DataPoint(2, 4),
-                new DataPoint(3, 2),
-                new DataPoint(4, 5),
-                new DataPoint(5, 6),
-                new DataPoint(6, 2),
-                new DataPoint(7, 7),
-                new DataPoint(8, 5),
-                new DataPoint(9, 3),
-                new DataPoint(10, 6),
-                new DataPoint(11, 8)
-        };
-        return dp;
-    }
-    private void showLineChart(LineChart lineChart, String[] months)
-    {
+    private List<Entry> getDataset() {
         List<Entry> entries = new ArrayList<>();
         entries.add(new BarEntry(0f, 10));
         entries.add(new BarEntry(1f, 20));
@@ -227,10 +159,27 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
         entries.add(new BarEntry(10f, 70));
         entries.add(new BarEntry(11f, 60));
 
-        LineDataSet dataSet = new LineDataSet(entries, "Line Data Set");
-        LineData lineData = new LineData(dataSet);
+        return entries;
+    }
 
-        ValueFormatter formatter = new ValueFormatter() {
+    //Converts list<Entry> to list<BarEntry>
+    private  List<BarEntry> cast(List<Entry> entryVal)
+    {
+        // Create a new list of BarEntry objects
+        List<BarEntry> barEntries = new ArrayList<>();
+        // Iterate over the entries list, converting each Entry to a BarEntry
+        for (Entry entry : entryVal) {
+            BarEntry barEntry = new BarEntry(entry.getX(), entry.getY());
+            barEntries.add(barEntry);
+        }
+
+        return barEntries;
+    }
+
+    // Used to add a label to the x axis of Bar and Line graph
+    private ValueFormatter setLabel(String[] months)
+    {
+        return new ValueFormatter() {
             @Override
             public String getAxisLabel(float value, AxisBase axis) {
                 // Convert float value to int index of months array
@@ -243,62 +192,68 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
                 return "";
             }
         };
+    }
+
+    //TODO: Need to resolve the bug in label. It is printing duplicate months.
+    private void showLineChart(LineChart lineChart, String[] months)
+    {
+
+        List<Entry> entries = getDataset();
+        LineDataSet dataSet = new LineDataSet(entries, "Cost");
+        LineData lineData = new LineData(dataSet);
+
+        ValueFormatter formatter = setLabel(months);
 
         XAxis xAxis = lineChart.getXAxis();
         xAxis.setLabelCount(entries.size());
         xAxis.setValueFormatter(formatter);
-//        xAxis.setLabelRotationAngle(0); // Set rotation angle to avoid overlapping labels
-
+//        xAxis.setLabelRotationAngle(0);
 
         // Add data to the chart
         lineChart.setData(lineData);
-
+        modifyLineChart(lineChart);
+    }
+    private void modifyLineChart(LineChart lineChart)
+    {
         // Refresh the chart
         lineChart.invalidate();
+        lineChart.getDescription().setEnabled(false);
+        lineChart.setTouchEnabled(true);
+        lineChart.setDragEnabled(true);
+        lineChart.setScaleEnabled(true);
+        lineChart.setDrawGridBackground(false);
+        lineChart.setPinchZoom(true);
     }
+
+
     private void showBarChart(BarChart barChart, String[] months)
     {
-        ArrayList<BarEntry> entries = new ArrayList<>();
-        entries.add(new BarEntry(0f, 10));
-        entries.add(new BarEntry(1f, 20));
-        entries.add(new BarEntry(2f, 30));
-        entries.add(new BarEntry(3f, 40));
-        entries.add(new BarEntry(4f, 50));
-        entries.add(new BarEntry(5f, 20));
-        entries.add(new BarEntry(6f, 50));
-        entries.add(new BarEntry(7f, 40));
-        entries.add(new BarEntry(8f, 90));
-        entries.add(new BarEntry(9f, 30));
-        entries.add(new BarEntry(10f, 70));
-        entries.add(new BarEntry(11f, 60));
+        List<Entry> entryVal = getDataset();
+        List<BarEntry> entries = cast(entryVal);
 
-        BarDataSet dataSet = new BarDataSet(entries, "Bar Data Set");
-        dataSet.setColor(Color.BLUE);
-        dataSet.setValueTextColor(Color.RED);
+        BarDataSet dataSet = new BarDataSet(entries, "Cost");
+        dataSet.setColor(Color.YELLOW);
+        dataSet.setValueTextColor(Color.WHITE);
+        BarData data = new BarData(dataSet);
 
         // Set the value formatter for the x-axis labels
-        ValueFormatter formatter = new ValueFormatter() {
-            @Override
-            public String getAxisLabel(float value, AxisBase axis) {
-                // Convert float value to int index of months array
-                int index = (int) value;
-                // Check if index is within bounds of months array
-                if (index >= 0 && index < months.length) {
-                    // Return the corresponding month from the array
-                    return months[index];
-                }
-                return "";
-            }
-        };
+        ValueFormatter formatter = setLabel(months);
 
         XAxis xAxis = barChart.getXAxis();
         xAxis.setLabelCount(12);
         xAxis.setValueFormatter(formatter);
 
-        BarData data = new BarData(dataSet);
         barChart.setData(data);
-        barChart.invalidate();
+        modifyBarChart(barChart);
+    }
 
+    private void modifyBarChart(BarChart barChart)
+    {
+        barChart.invalidate();
+        barChart.setDrawBarShadow(false);
+        barChart.setDrawValueAboveBar(true);
+        barChart.getDescription().setEnabled(false);
+        barChart.setDrawGridBackground(false);
     }
     private  void showPieChart(PieChart pieChart){
 
