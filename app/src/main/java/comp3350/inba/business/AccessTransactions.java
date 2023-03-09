@@ -1,6 +1,7 @@
 package comp3350.inba.business;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -132,5 +133,26 @@ public class AccessTransactions
             --i;
         }
         return i;
+    }
+
+    /**
+     * Return the transaction list filtered by category.
+     * @param category The category to filter by.
+     * @return The filtered list.
+     */
+    public ArrayList<Transaction> getTransactionsByCategory(String category)
+    {
+        // the list of transactions obtained from the database
+        List<Transaction> transactions = Service.getTransactionPersistence().getTransactionList();
+        ArrayList<Transaction> output = new ArrayList<>();
+        int i = 0;
+
+        for (i = 0; i < transactions.size(); i++) {
+            if (transactions.get(i).getCategory().equals(category)) {
+                output.add(transactions.get(i));
+            }
+        }
+
+        return output;
     }
 }

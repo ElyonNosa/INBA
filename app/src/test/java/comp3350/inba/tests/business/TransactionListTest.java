@@ -3,11 +3,13 @@ package comp3350.inba.tests.business;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.ArrayList;
 
 import comp3350.inba.application.Service;
 import comp3350.inba.business.AccessTransactions;
@@ -270,9 +272,11 @@ public class TransactionListTest {
         Transaction B = null;
         Transaction C = null;
 
-        System.out.println("\nStarting testGetIndexAfterDate1");
         // transaction access class
-        AccessTransactions access = new AccessTransactions();// add transactions in chronological order
+        AccessTransactions access = new AccessTransactions();
+
+        System.out.println("\nStarting testGetIndexAfterDate1");
+        // add transactions in chronological order
         assertNotNull(access.insertTransaction(A = new Transaction(LocalDateTime.of(1984, 4, 13, 17, 1), 1, "index 0")));
         assertNotNull(access.insertTransaction(new Transaction(LocalDateTime.of(1984, 4, 13, 17, 20), 2, "index 1")));
         assertNotNull(access.insertTransaction(B = new Transaction(LocalDateTime.of(1984, 4, 13, 17, 41), 3, "index 2")));
@@ -306,5 +310,51 @@ public class TransactionListTest {
         assertEquals(access.getIndexAfterDate(LocalDateTime.of(1984,4,13,17,41)), 1, 0);
         assertEquals(access.getIndexAfterDate(LocalDateTime.of(1984,4,13,17,42)), 2, 0);
         assertEquals(access.getIndexAfterDate(LocalDateTime.of(4444,1,1,0,0)), 2, 0);
+
+        System.out.println("Finished testGetIndexAfterDate1");
+    }
+
+    /**
+     * Filter the transaction list by a given category.
+     */
+    @Test
+    public void testGetTransactionsByCategory1() {
+        // prompt transaction persistence to create database and disable example transactions
+        new Service(false);
+
+        Transaction A = null;
+        Transaction B = null;
+        Transaction C = null;
+        Transaction D = null;
+        Transaction E = null;
+        Transaction F = null;
+
+        ArrayList<Transaction> filteredList;
+
+        // transaction access class
+        AccessTransactions access = new AccessTransactions();
+
+        System.out.println("\nStarting testGetTransactionsByCategory1");
+        // add transactions in chronological order
+        assertNotNull(access.insertTransaction(A = new Transaction(LocalDateTime.of(1984, 4, 13, 17, 1), 1, "Rasit")));
+        assertNotNull(access.insertTransaction(B = new Transaction(LocalDateTime.of(1984, 4, 13, 17, 20), 2, "Rob")));
+        assertNotNull(access.insertTransaction(C = new Transaction(LocalDateTime.of(1984, 4, 13, 17, 41), 3, "Rasit")));
+        assertNotNull(access.insertTransaction(D = new Transaction(LocalDateTime.of(1984, 4, 13, 17, 42), 4, "Rasit")));
+        assertNotNull(access.insertTransaction(E = new Transaction(LocalDateTime.of(2005, 8, 22, 3, 22), 5, "Rob")));
+        assertNotNull(access.insertTransaction(F = new Transaction(LocalDateTime.of(2038, 3, 14, 15, 9), 6, "Rob")));
+
+        // check if the correct transactions went into the Rasit list
+        filteredList = access.getTransactionsByCategory("Rasit");
+        assertEquals(filteredList.get(0), A);
+        assertEquals(filteredList.get(1), C);
+        assertEquals(filteredList.get(2), D);
+
+        // check if the correct transactions went into the Rob list
+        filteredList = access.getTransactionsByCategory("Rob");
+        assertEquals(filteredList.get(0), B);
+        assertEquals(filteredList.get(1), E);
+        assertEquals(filteredList.get(2), F);
+
+        System.out.println("Finished testGetTransactionsByCategory1");
     }
 }

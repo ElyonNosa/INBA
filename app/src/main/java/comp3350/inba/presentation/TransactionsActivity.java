@@ -3,16 +3,18 @@ package comp3350.inba.presentation;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.AutoCompleteTextView;
 
@@ -21,6 +23,7 @@ import androidx.annotation.NonNull;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
@@ -35,7 +38,7 @@ import comp3350.inba.objects.Transaction;
  * <p>
  * This class is coupled to activity_transactions.xm
  */
-public class TransactionsActivity extends Activity {
+public class TransactionsActivity extends Activity implements AdapterView.OnItemSelectedListener {
     // the transaction "database"
     private AccessTransactions accessTransactions;
     // the local list of transactions after retrieving from the "database"
@@ -47,93 +50,125 @@ public class TransactionsActivity extends Activity {
     // the LocalDateTime timestamp of the current selected transaction
     private LocalDateTime selectedTransactionTime;
     // the text view for category suggestions
-    private AutoCompleteTextView textView;
+    private AutoCompleteTextView textViewCategories;
     // the list view containing the transactions
-    private ListView listView;
+    private ListView listViewTransactions;
+    // the spinner for the category filter
+    private Spinner spinnerCategories;
+    // string to indicate that no category filer is selected
+    private static final String NO_FILTER = "No filter";
+    // string of the current category filter
+    private String categoryFilter = NO_FILTER;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transactions);
+        // create instance of access transactions
+        accessTransactions = new AccessTransactions();
+
         // disable traditional input for the date input text box
         ((EditText)findViewById(R.id.editTextDate)).setInputType(InputType.TYPE_NULL);
         // Get a reference to the AutoCompleteTextView in the layout
-        textView = (AutoCompleteTextView) findViewById(R.id.editTransactionCategory);
+        textViewCategories = findViewById(R.id.editTransactionCategory);
         // create an adapter from the existing list of categories, assign this to the autocomplete view
-        textView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, Category.getCategorySet()));
-        // create instance of the database
-        accessTransactions = new AccessTransactions();
+        textViewCategories.setAdapter(new ArrayAdapter<String>(
+                this, android.R.layout.simple_list_item_1, Category.getCategorySet()));
+
+        // get a reference to the Spinner in the layout
+        spinnerCategories = findViewById(R.id.spinnerCategoryFilter);
+        // enable listener for spinner
+        spinnerCategories.setOnItemSelectedListener(this);
+        // create an adapter from the existing list of categories, assign this to the autocomplete view
+        spinnerCategories.setAdapter(new ArrayAdapter<String>(
+                this, android.R.layout.simple_list_item_1, getCategoryFilterArray()));
+
+        // get the transaction list from the database
+        transactionList = accessTransactions.getTransactions();
         try {
-            // get the transaction list from the database
-            transactionList = accessTransactions.getTransactions();
-            // create the adapter for the transaction list
-            transactionArrayAdapter = new ArrayAdapter<Transaction>(this,
-                    android.R.layout.simple_list_item_activated_2, android.R.id.text1, transactionList) {
-
-                /**
-                 * Format the transaction list in a certain way.
-                 * @param position index of the selected element in the list.
-                 * @param convertView Convert view.
-                 * @param parent Parent view.
-                 * @return The formatted view.
-                 */
-                @Override
-                public View getView(int position, View convertView, ViewGroup parent) {
-                    View view = super.getView(position, convertView, parent);
-                    TextView text1 = view.findViewById(android.R.id.text1);
-                    TextView text2 = view.findViewById(android.R.id.text2);
-                    // a string containing category, followed by price
-                    String categoryPrice = transactionList.get(position).getCategory() + ": $"
-                            + String.format(Locale.ENGLISH, "%.2f",
-                            transactionList.get(position).getPrice());
-
-                    // the top text is the category and price of the transaction
-                    text1.setText(categoryPrice);
-                    // the bottom text is the timestamp of the transaction
-                    text2.setText(transactionList.get(position).getTime().toString());
-
-                    return view;
-                }
-            };
-
-            // create listview object from the list view in the layout
-            listView = findViewById(R.id.listTransactions);
-            // link the list view with the adapter for the transaction list
-            listView.setAdapter(transactionArrayAdapter);
-
-            listView.setOnItemClickListener((parent, view, position, id) -> {
-                // create objects from the buttons in the layout
-                Button updateButton = findViewById(R.id.buttonTransactionUpdate);
-                Button deleteButton = findViewById(R.id.buttonTransactionDelete);
-
-                // check if a transaction is selected in the list view
-                if (position == selectedTransactionPosition) {
-                    listView.setItemChecked(position, false);
-                    // it should not be possible to update or delete a new transaction
-                    updateButton.setEnabled(false);
-                    deleteButton.setEnabled(false);
-                    // reset values of transaction position and timestamp
-                    selectedTransactionPosition = -1;
-                    selectedTransactionTime = null;
-                }
-                // else a transaction was not selected
-                else {
-                    listView.setItemChecked(position, true);
-                    // allow user to to update or delete the selected transaction
-                    updateButton.setEnabled(true);
-                    deleteButton.setEnabled(true);
-                    // set values of transaction position and timestamp accordingly
-                    selectedTransactionPosition = position;
-                    selectTransactionAtPosition(position);
-                    selectedTransactionTime = transactionList.get(position).getTime();
-                }
-            });
+            updateListView();
         } catch (final Exception e) {
             Messages.fatalError(this, e.getMessage());
         }
 
         navigationBarInit();
+    }
+
+    /**
+     * Update the list view based on the currently saved category filter
+     */
+    private void updateListView() {
+        // check to see if "No filter" is selected
+        if (categoryFilter.equals(NO_FILTER)) {
+            // use the normal list
+            transactionList = accessTransactions.getTransactions();
+        } else {
+            // use the transaction list filtered by the category
+            transactionList = accessTransactions.getTransactionsByCategory(categoryFilter);
+        }
+        // create the adapter for the transaction list
+        transactionArrayAdapter = new ArrayAdapter<Transaction>(this,
+                android.R.layout.simple_list_item_activated_2, android.R.id.text1, transactionList) {
+
+            /**
+             * Format the transaction list in a certain way.
+             * @param position index of the selected element in the list.
+             * @param convertView Convert view.
+             * @param parent Parent view.
+             * @return The formatted view.
+             */
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
+                TextView text1 = view.findViewById(android.R.id.text1);
+                TextView text2 = view.findViewById(android.R.id.text2);
+                // a string containing category, followed by price
+                String categoryPrice = transactionList.get(position).getCategory() + ": $"
+                        + String.format(Locale.ENGLISH, "%.2f",
+                        transactionList.get(position).getPrice());
+
+                // the top text is the category and price of the transaction
+                text1.setText(categoryPrice);
+                // the bottom text is the timestamp of the transaction
+                text2.setText(transactionList.get(position).getTime().toString());
+
+                return view;
+            }
+        };
+
+        // create listview object from the list view in the layout
+        listViewTransactions = findViewById(R.id.listTransactions);
+        // link the list view with the adapter for the transaction list
+        listViewTransactions.setAdapter(transactionArrayAdapter);
+
+        listViewTransactions.setOnItemClickListener((parent, view, position, id) -> {
+            // create objects from the buttons in the layout
+            Button updateButton = findViewById(R.id.buttonTransactionUpdate);
+            Button deleteButton = findViewById(R.id.buttonTransactionDelete);
+
+            // check if a transaction is selected in the list view
+            if (position == selectedTransactionPosition) {
+                listViewTransactions.setItemChecked(position, false);
+                // it should not be possible to update or delete a new transaction
+                updateButton.setEnabled(false);
+                deleteButton.setEnabled(false);
+                // reset values of transaction position and timestamp
+                selectedTransactionPosition = -1;
+                selectedTransactionTime = null;
+            }
+            // else a transaction was not selected
+            else {
+                listViewTransactions.setItemChecked(position, true);
+                // allow user to to update or delete the selected transaction
+                updateButton.setEnabled(true);
+                deleteButton.setEnabled(true);
+                // set values of transaction position and timestamp accordingly
+                selectedTransactionPosition = position;
+                selectTransactionAtPosition(position);
+                selectedTransactionTime = transactionList.get(position).getTime();
+            }
+        });
     }
 
     /**
@@ -185,8 +220,12 @@ public class TransactionsActivity extends Activity {
                         listView.setSelection(pos);
                     }
                     // create an adapter from the existing list of categories, assign this to the autocomplete view
-                    // this is done in case of a new category addition, we want to update the autocomplete list
-                    textView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, Category.getCategorySet()));
+                    textViewCategories.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, Category.getCategorySet()));
+                    // create an adapter from the existing list of categories, assign this to the category filter spinner
+                    spinnerCategories.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, getCategoryFilterArray()));
+                    // these are done in case of a new category addition, we want to update the autocomplete and filter list
+                    // refresh list
+                    updateListView();
                 } catch (final Exception e) {
                     Messages.fatalError(this, e.getMessage());
                 }
@@ -225,7 +264,8 @@ public class TransactionsActivity extends Activity {
                         ListView listView = findViewById(R.id.listTransactions);
                         listView.setSelection(pos);
                     }
-
+                    // refresh list
+                    updateListView();
                 } catch (final Exception e) {
                     Messages.fatalError(this, e.getMessage());
                 }
@@ -259,6 +299,8 @@ public class TransactionsActivity extends Activity {
             transactionList = accessTransactions.getTransactions();
             // refresh the transaction list view
             transactionArrayAdapter.notifyDataSetChanged();
+            // refresh list
+            updateListView();
         } catch (final Exception e) {
             Messages.warning(this, e.getMessage());
         }
@@ -280,7 +322,7 @@ public class TransactionsActivity extends Activity {
                     // create a date using the selected day, month, year.
                     // get the index of the transaction after this date.
                     // use the index to select a position in the list.
-                    listView.smoothScrollToPosition(accessTransactions.getIndexAfterDate(
+                    listViewTransactions.smoothScrollToPosition(accessTransactions.getIndexAfterDate(
                             LocalDateTime.of(year, month+1, day, 0, 0)));
                 }, cldr.get(Calendar.YEAR), cldr.get(Calendar.MONTH), cldr.get(Calendar.DAY_OF_MONTH));
         picker.show();
@@ -340,7 +382,7 @@ public class TransactionsActivity extends Activity {
                         return true;
                     case R.id.buttonViewTransaction:
                         // Intent to start new Activity
-                        startActivity(new Intent(getApplicationContext(), ViewTransactionActivity.class)); // Replace ViewActivity with the class used to view the graphs
+                        startActivity(new Intent(getApplicationContext(), ViewTransactionActivity.class));
                         // Can Adjust Transition Speed, both enter and exit
                         overridePendingTransition(0, 0);
                         return true;
@@ -359,5 +401,39 @@ public class TransactionsActivity extends Activity {
                 return false;
             }
         });
+    }
+
+    /**
+     * Getter for the category string arraylist with an additional "No filter" category.
+     * @return The string arraylist to be used in the category filter spinner.
+     */
+    private ArrayList<String> getCategoryFilterArray() {
+        ArrayList<String> output = Category.getCategorySet();
+        // add the "No filter" category to the filter list
+        output.add(0, NO_FILTER);
+        return output;
+    }
+
+    /**
+     *
+     * @param parent
+     * @param view
+     * @param position
+     * @param id
+     */
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        // change the text color of the spinner to white
+        ((TextView) parent.getChildAt(0)).setTextColor(Color.WHITE);
+        categoryFilter = parent.getItemAtPosition(position).toString();
+        updateListView();
+    }
+
+    /**
+     * @param adapterView
+     */
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+        // implemented function. does nothing
     }
 }
