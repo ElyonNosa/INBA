@@ -18,6 +18,8 @@ import comp3350.inba.persistence.TransactionPersistence;
 public class TransactionPersistenceStub implements TransactionPersistence {
     // the list of transactions
     private final List<Transaction> transactions;
+    // the number of example transactions to create
+    private final int NUM_EXAMPLES = 10;
 
     /**
      * Constructor

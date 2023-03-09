@@ -92,7 +92,44 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
             Messages.fatalError(this, e.getMessage());
         }
 
-        navigationBarInit();
+        // Initialize and assign variable
+        BottomNavigationView bottomNavigationView=findViewById(R.id.bottom_navigation);
+
+        // Set TransactionActivity selected
+        bottomNavigationView.setSelectedItemId(R.id.buttonAddTransaction);
+
+        // Perform item selected listener
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+                switch(item.getItemId()) // DashboardActivity
+                {
+                    case R.id.home:
+                        startActivity(new Intent(getApplicationContext(),DashboardActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.buttonViewTransaction:
+                        // Intent to start new Activity
+                        startActivity(new Intent(getApplicationContext(), ViewTransactionActivity.class)); // Replace ViewActivity with the class used to view the graphs
+                        // Can Adjust Transition Speed, both enter and exit
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.buttonAddTransaction:
+                        // true if already on page.
+                        return true;
+                    case R.id.buttonSettings:
+                        startActivity(new Intent(getApplicationContext(),SettingsActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.buttonProfile:
+                        startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                }
+                return false;
+            }
+        });
     }
 
     /**

@@ -57,7 +57,7 @@ public class SettingsActivity extends Activity {
                         return true;
                     case R.id.buttonViewTransaction:
                         // Intent to start new Activity
-                        startActivity(new Intent(getApplicationContext(), ViewTransactionActivity.class)); // Replace ViewActivity with the class used to view the graphs
+                        startActivity(new Intent(getApplicationContext(), ViewTransactionActivity.class));
                         // Can Adjust Transition Speed, both enter and exit
                         overridePendingTransition(0,0);
                         return true;

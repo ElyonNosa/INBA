@@ -63,7 +63,7 @@ public class DashboardActivity extends Activity {
             Messages.fatalError(this, e.getMessage());
         }
 
-       navigationBarInit();
+        navigationBarInit();
 
     }//onCreate
 
