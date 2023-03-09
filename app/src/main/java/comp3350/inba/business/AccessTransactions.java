@@ -127,8 +127,10 @@ public class AccessTransactions
         for (i = 0; i < transactions.size() && !found; i++) {
             found = transactions.get(i).getTime().isAfter(date);
         }
-        // decrement i upon exiting the for loop
-        --i;
+        // decrement i upon leaving for loop (unless i is 0)
+        if (i > 0) {
+            --i;
+        }
         return i;
     }
 }

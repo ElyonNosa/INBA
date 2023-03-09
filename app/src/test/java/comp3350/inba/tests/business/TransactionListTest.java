@@ -256,4 +256,55 @@ public class TransactionListTest {
 
         System.out.println("Finished testListGetTimeIndex3");
     }
+
+    /**
+     * Get the index of a transaction after a certain date.
+     */
+    @Test
+    public void testGetIndexAfterDate1()
+    {
+        // prompt transaction persistence to create database and disable example transactions
+        new Service(false);
+
+        Transaction A = null;
+        Transaction B = null;
+        Transaction C = null;
+
+        System.out.println("\nStarting testGetIndexAfterDate1");
+        // transaction access class
+        AccessTransactions access = new AccessTransactions();// add transactions in chronological order
+        assertNotNull(access.insertTransaction(A = new Transaction(LocalDateTime.of(1984, 4, 13, 17, 1), 1, "index 0")));
+        assertNotNull(access.insertTransaction(new Transaction(LocalDateTime.of(1984, 4, 13, 17, 20), 2, "index 1")));
+        assertNotNull(access.insertTransaction(B = new Transaction(LocalDateTime.of(1984, 4, 13, 17, 41), 3, "index 2")));
+        assertNotNull(access.insertTransaction(new Transaction(LocalDateTime.of(1984, 4, 13, 17, 42), 4, "index 3")));
+        assertNotNull(access.insertTransaction(C = new Transaction(LocalDateTime.of(2005, 8, 22, 3, 22), 5, "index 4")));
+        assertNotNull(access.insertTransaction(new Transaction(LocalDateTime.of(2038, 3, 14, 15, 9), 6, "index 5")));
+
+        // perform tests on index after date function
+        // input date before all transactions
+        assertEquals(access.getIndexAfterDate(LocalDateTime.of(1,1,1,0,0)), 0, 0);
+        // one minute before the second transaction
+        assertEquals(access.getIndexAfterDate(LocalDateTime.of(1984,4,13,17,19)), 1, 0);
+        // the exact time of the second transaction (will return index of third transaction)
+        assertEquals(access.getIndexAfterDate(LocalDateTime.of(1984,4,13,17,20)), 2, 0);
+        // one minute before the fourth transaction
+        assertEquals(access.getIndexAfterDate(LocalDateTime.of(1984,4,13,17,41)), 3, 0);
+        // the exact time of the fourth transaction (will return index of fifth transaction)
+        assertEquals(access.getIndexAfterDate(LocalDateTime.of(1984,4,13,17,42)), 4, 0);
+        // input date after all transactions
+        assertEquals(access.getIndexAfterDate(LocalDateTime.of(4444,1,1,0,0)), 5, 0);
+
+        // remove some transactions from the list
+        access.deleteTransaction(A);
+        access.deleteTransaction(B);
+        access.deleteTransaction(C);
+
+        // re test the same dates but with updated indices
+        assertEquals(access.getIndexAfterDate(LocalDateTime.of(1,1,1,0,0)), 0, 0);
+        assertEquals(access.getIndexAfterDate(LocalDateTime.of(1984,4,13,17,19)), 0, 0);
+        assertEquals(access.getIndexAfterDate(LocalDateTime.of(1984,4,13,17,20)), 1, 0);
+        assertEquals(access.getIndexAfterDate(LocalDateTime.of(1984,4,13,17,41)), 1, 0);
+        assertEquals(access.getIndexAfterDate(LocalDateTime.of(1984,4,13,17,42)), 2, 0);
+        assertEquals(access.getIndexAfterDate(LocalDateTime.of(4444,1,1,0,0)), 2, 0);
+    }
 }
