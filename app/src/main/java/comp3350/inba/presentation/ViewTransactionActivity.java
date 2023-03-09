@@ -295,17 +295,17 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
         //initializing data
         Map<String, Integer> typeAmountMap = new HashMap<>();
         typeAmountMap.put("Jan",10);
-        typeAmountMap.put("Feb",50);
-        typeAmountMap.put("Mar",40);
-        typeAmountMap.put("Apr",20);
+        typeAmountMap.put("Feb",20);
+        typeAmountMap.put("Mar",30);
+        typeAmountMap.put("Apr",40);
         typeAmountMap.put("May",50);
-        typeAmountMap.put("June",60);
-        typeAmountMap.put("July",20);
-        typeAmountMap.put("Aug",70);
-        typeAmountMap.put("Sept",50);
+        typeAmountMap.put("June",20);
+        typeAmountMap.put("July",50);
+        typeAmountMap.put("Aug",40);
+        typeAmountMap.put("Sept",90);
         typeAmountMap.put("Oct",30);
-        typeAmountMap.put("Nov",60);
-        typeAmountMap.put("Dec",80);
+        typeAmountMap.put("Nov",70);
+        typeAmountMap.put("Dec",60);
 
         return typeAmountMap;
     }
