@@ -1,6 +1,7 @@
 package comp3350.inba.business;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -108,6 +109,50 @@ public class AccessTransactions
         }
         // truncate output to 2 places after decimal
         output = Math.floor(output * 100) / 100;
+        return output;
+    }
+
+    /**
+     * Return the index of the transaction after a given date.
+     * Return the last index if all transactions are before the given date.
+     * This function assumes that transactions are in chronological order!
+     * @param date The date to test.
+     * @return The index of the transaction after the date.
+     */
+    public int getIndexAfterDate(LocalDateTime date) {
+        // the list of transactions obtained from the database
+        List<Transaction> transactions = Service.getTransactionPersistence().getTransactionList();
+        int i = 0;
+        boolean found = false;
+        // loop through all items in the transaction list
+        for (i = 0; i < transactions.size() && !found; i++) {
+            found = transactions.get(i).getTime().isAfter(date);
+        }
+        // decrement i upon leaving for loop (unless i is 0)
+        if (i > 0) {
+            --i;
+        }
+        return i;
+    }
+
+    /**
+     * Return the transaction list filtered by category.
+     * @param category The category to filter by.
+     * @return The filtered list.
+     */
+    public ArrayList<Transaction> getTransactionsByCategory(String category)
+    {
+        // the list of transactions obtained from the database
+        List<Transaction> transactions = Service.getTransactionPersistence().getTransactionList();
+        ArrayList<Transaction> output = new ArrayList<>();
+        int i = 0;
+
+        for (i = 0; i < transactions.size(); i++) {
+            if (transactions.get(i).getCategory().equals(category)) {
+                output.add(transactions.get(i));
+            }
+        }
+
         return output;
     }
 }
