@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.List;
 
 import comp3350.inba.objects.Transaction;
+import comp3350.inba.objects.User;
 import comp3350.inba.persistence.TransactionPersistence;
 
 /**
@@ -18,6 +19,8 @@ import comp3350.inba.persistence.TransactionPersistence;
 public class TransactionPersistenceStub implements TransactionPersistence {
     // the list of transactions
     private final List<Transaction> transactions;
+    // the number of example transactions to create
+    private final int NUM_EXAMPLES = 10;
 
     /**
      * Constructor
@@ -34,7 +37,7 @@ public class TransactionPersistenceStub implements TransactionPersistence {
         // list of example categories to be used in the example transactions
         final String[] EXAMPLE_CATS = {"Amenities", "Education", "Entertainment", "Food",
                 "Hardware", "Hobby", "Medical", "Misc", "Transportation", "Utilities"};
-         LocalDateTime currTime = LocalDateTime.now();
+        LocalDateTime currTime = LocalDateTime.now();
         this.transactions = new ArrayList<>();
         int i = 0;
         LocalDateTime time = null;
@@ -54,7 +57,7 @@ public class TransactionPersistenceStub implements TransactionPersistence {
                 // choose a random category
                 category = EXAMPLE_CATS[(int)(Math.random() * EXAMPLE_CATS.length)];
 
-                insertTransaction(new Transaction(time, Math.random() * MAX_EXAMPLE_PRICE, category));
+                insertTransaction(null, new Transaction(time, Math.random() * MAX_EXAMPLE_PRICE, category));
             }
         }
     }
@@ -64,7 +67,7 @@ public class TransactionPersistenceStub implements TransactionPersistence {
      * @return the list of transactions.
      */
     @Override
-    public List<Transaction> getTransactionList() {
+    public List<Transaction> getTransactionList(User currUser) {
         return Collections.unmodifiableList(transactions);
     }
 
@@ -74,7 +77,7 @@ public class TransactionPersistenceStub implements TransactionPersistence {
      * @return The inserted transaction. Null if the transaction was not chronologically ordered.
      */
     @Override
-    public Transaction insertTransaction(Transaction currentTransaction) {
+    public Transaction insertTransaction(User currUser, Transaction currentTransaction) {
         Transaction output = null;
         // check if timestamp is greater than timestamp of last transaction
         if (transactions.size() == 0 || currentTransaction.getTime().isAfter(
@@ -91,7 +94,7 @@ public class TransactionPersistenceStub implements TransactionPersistence {
      * @return The updated transaction.
      */
     @Override
-    public Transaction updateTransaction(Transaction currentTransaction) {
+    public Transaction updateTransaction(User currUser, Transaction currentTransaction) {
         int index = transactions.indexOf(currentTransaction);
         if (index >= 0)
         {
@@ -105,7 +108,7 @@ public class TransactionPersistenceStub implements TransactionPersistence {
      * @param currentTransaction The transaction to delete.
      */
     @Override
-    public void deleteTransaction(Transaction currentTransaction) {
+    public void deleteTransaction(User currUser, Transaction currentTransaction) {
         int index = transactions.indexOf(currentTransaction);
         if (index >= 0)
         {

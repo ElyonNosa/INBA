@@ -5,7 +5,7 @@ import java.util.TreeSet;
 
 public class Category {
     // an ordered set of category names
-    private static TreeSet<String> categorySet;
+    private static TreeSet<String> categorySet = new TreeSet<>();
     // the name of the current category
     private final String name;
 
@@ -16,10 +16,6 @@ public class Category {
     Category(String name)
     {
         this.name = name;
-        // check for null category set
-        if (categorySet == null) {
-            categorySet = new TreeSet<>();
-        }
         // add the category name to the tree set
         categorySet.add(name);
     }

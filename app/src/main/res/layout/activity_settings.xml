@@ -10,13 +10,31 @@
     android:background="@color/colorPrimary"
     tools:context="comp3350.inba.presentation.SettingsActivity">
 
+
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="197dp"
-        android:text="Not an Iteration 1 Feature, will be implemented in Iteration 2."
+        android:id="@+id/settings_heading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Settings"
         android:textColor="@color/colorAccent"
-        android:textSize="30dp"
-        android:gravity="center"/>
+        android:textSize="36sp"
+        android:textStyle="bold"
+        android:padding="15dp"
+        android:background="@color/colorSecondary"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="16dp" />
+
+
+    <ListView
+        android:id="@+id/listview"
+        android:layout_width="match_parent"
+        android:layout_height="666dp"
+        android:layout_above="@+id/bottom_navigation"
+        android:layout_below="@id/settings_heading"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="88dp"
+        android:background="@color/colorPrimary"
+        android:dividerHeight="20dp" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
@@ -28,4 +46,6 @@
         android:layout_marginBottom="5dp"
         app:menu="@menu/menu_bottom_nav_bar" />
 
+
 </RelativeLayout>
+

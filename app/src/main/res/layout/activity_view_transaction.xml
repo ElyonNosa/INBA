@@ -11,13 +11,36 @@
     tools:context="comp3350.inba.presentation.ViewTransactionActivity">
 
 
+    <!-- Another Graph library. Need to adjust its DPI Later on-->
+    <!-- Need to remove this block of code, (this is implementation of old graph-->
     <com.jjoe64.graphview.GraphView
         android:id="@+id/graph"
-        android:layout_width="wrap_content"
-        android:layout_height="650dp" />
+        android:layout_width="match_parent"
+        android:layout_height="650dp"
+        android:visibility="invisible"
+        />
+
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/line_chart"
+        android:layout_width="match_parent"
+        android:layout_height="650dp"
+        android:layout_above="@+id/button_layout" />
+
+    <com.github.mikephil.charting.charts.BarChart
+        android:id="@+id/bar_chart"
+        android:layout_width="match_parent"
+        android:layout_height="650dp"
+        android:layout_above="@+id/button_layout"/>
+
+    <com.github.mikephil.charting.charts.PieChart
+        android:id="@+id/pie_chart"
+        android:layout_width="match_parent"
+        android:layout_height="650dp"
+        android:layout_above="@+id/button_layout" />
 
 
 <!-- Buttons representing different graphs  -->
+    <!-- Need to change the this line after graph is removed -->
     <LinearLayout
         android:id="@+id/button_layout"
         android:layout_width="match_parent"

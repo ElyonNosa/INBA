@@ -32,6 +32,7 @@ import comp3350.inba.R;
 import comp3350.inba.business.AccessTransactions;
 import comp3350.inba.objects.Category;
 import comp3350.inba.objects.Transaction;
+import comp3350.inba.objects.User;
 
 /**
  * TransactionsActivity.java
@@ -85,14 +86,51 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
                 this, android.R.layout.simple_list_item_1, getCategoryFilterArray()));
 
         // get the transaction list from the database
-        transactionList = accessTransactions.getTransactions();
+        transactionList = accessTransactions.getTransactions(User.currUser);
         try {
             updateListView();
         } catch (final Exception e) {
             Messages.fatalError(this, e.getMessage());
         }
 
-        navigationBarInit();
+        // Initialize and assign variable
+        BottomNavigationView bottomNavigationView=findViewById(R.id.bottom_navigation);
+
+        // Set TransactionActivity selected
+        bottomNavigationView.setSelectedItemId(R.id.buttonAddTransaction);
+
+        // Perform item selected listener
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+                switch(item.getItemId()) // DashboardActivity
+                {
+                    case R.id.home:
+                        startActivity(new Intent(getApplicationContext(),DashboardActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.buttonViewTransaction:
+                        // Intent to start new Activity
+                        startActivity(new Intent(getApplicationContext(), ViewTransactionActivity.class)); // Replace ViewActivity with the class used to view the graphs
+                        // Can Adjust Transition Speed, both enter and exit
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.buttonAddTransaction:
+                        // true if already on page.
+                        return true;
+                    case R.id.buttonSettings:
+                        startActivity(new Intent(getApplicationContext(),SettingsActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.buttonProfile:
+                        startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                }
+                return false;
+            }
+        });
     }
 
     /**
@@ -102,10 +140,10 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
         // check to see if "No filter" is selected
         if (categoryFilter.equals(NO_FILTER)) {
             // use the normal list
-            transactionList = accessTransactions.getTransactions();
+            transactionList = accessTransactions.getTransactions(User.currUser);
         } else {
             // use the transaction list filtered by the category
-            transactionList = accessTransactions.getTransactionsByCategory(categoryFilter);
+            transactionList = accessTransactions.getTransactionsByCategory(User.currUser, categoryFilter);
         }
         // create the adapter for the transaction list
         transactionArrayAdapter = new ArrayAdapter<Transaction>(this,
@@ -208,9 +246,9 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
             if (result == null) {
                 try {
                     // insert the transaction into the database list
-                    transaction = accessTransactions.insertTransaction(transaction);
+                    transaction = accessTransactions.insertTransaction(User.currUser, transaction);
                     // update our local list
-                    transactionList = accessTransactions.getTransactions();
+                    transactionList = accessTransactions.getTransactions(User.currUser);
                     // refresh the transaction list view
                     transactionArrayAdapter.notifyDataSetChanged();
                     // set list position to the new transaction
@@ -253,9 +291,9 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
             if (result == null) {
                 try {
                     // overwrite the given transaction into the database list
-                    transaction = accessTransactions.updateTransaction(transaction);
+                    transaction = accessTransactions.updateTransaction(User.currUser, transaction);
                     // update our local list
-                    transactionList = accessTransactions.getTransactions();
+                    transactionList = accessTransactions.getTransactions(User.currUser);
                     // refresh the transaction list view
                     transactionArrayAdapter.notifyDataSetChanged();
                     // set list position to the updated transaction
@@ -287,7 +325,7 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
 
         try {
             // delete the given transaction into the database list
-            accessTransactions.deleteTransaction(transaction);
+            accessTransactions.deleteTransaction(User.currUser, transaction);
 
             // set list position as the index of the deleted transaction
             int pos = transactionList.indexOf(transaction);
@@ -296,7 +334,7 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
                 listView.setSelection(pos);
             }
             // update our local list
-            transactionList = accessTransactions.getTransactions();
+            transactionList = accessTransactions.getTransactions(User.currUser);
             // refresh the transaction list view
             transactionArrayAdapter.notifyDataSetChanged();
             // refresh list
@@ -322,7 +360,7 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
                     // create a date using the selected day, month, year.
                     // get the index of the transaction after this date.
                     // use the index to select a position in the list.
-                    listViewTransactions.smoothScrollToPosition(accessTransactions.getIndexAfterDate(
+                    listViewTransactions.smoothScrollToPosition(accessTransactions.getIndexAfterDate(User.currUser,
                             LocalDateTime.of(year, month+1, day, 0, 0)));
                 }, cldr.get(Calendar.YEAR), cldr.get(Calendar.MONTH), cldr.get(Calendar.DAY_OF_MONTH));
         picker.show();
