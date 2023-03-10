@@ -78,7 +78,7 @@ public class TransactionPersistenceHSQLDB implements TransactionPersistence {
 
         try (final Connection c = connection()) {
             final PreparedStatement st = c.prepareStatement("INSERT INTO transactions VALUES(?, ?, ?, ?)");
-            st.setString(1, currUser.getUserName() + currentTransaction.getTime().toString());
+            st.setString(1, currUser.getUserID() + currentTransaction.getTime().toString());
             st.setString(2, currentTransaction.getCategory());
             st.setString(3, currentTransaction.getTime().toString());
             st.setString(4, "" + currentTransaction.getPrice());
