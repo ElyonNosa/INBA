@@ -18,6 +18,10 @@ import comp3350.inba.objects.User;
 
 public class TransactionListTest {
     User user = new User("UNIT_TESTING!");
+    // prompt transaction persistence to create database and disable example transactions
+    Service service = new Service(false);
+    // transaction access class
+    AccessTransactions access = new AccessTransactions();
 
     /**
      * Check if list rejects non-chronological transactions
@@ -25,10 +29,6 @@ public class TransactionListTest {
     @Test
     public void testAddChronologically()
     {
-        // prompt transaction persistence to create database and disable example transactions
-        new Service(false);
-        // transaction access class
-        AccessTransactions access = new AccessTransactions();
 
         System.out.println("\nStarting testAddChronologically");
 
@@ -58,10 +58,6 @@ public class TransactionListTest {
     @Test
     public void testGetTimestampIndex1()
     {
-        // prompt transaction persistence to create database and disable example transactions
-        new Service(false);
-        // transaction access class
-        AccessTransactions access = new AccessTransactions();
         // temp index variable
         int index = 0;
 
@@ -99,10 +95,6 @@ public class TransactionListTest {
     @Test
     public void testGetTimestampIndex2()
     {
-        // prompt transaction persistence to create database and disable example transactions
-        new Service(false);
-        // transaction access class
-        AccessTransactions access = new AccessTransactions();
         // temp index variable
         int index = 0;
 
@@ -153,10 +145,6 @@ public class TransactionListTest {
     @Test
     public void testGetTimestampIndex3()
     {
-        // prompt transaction persistence to create database and disable example transactions
-        new Service(false);
-        // transaction access class
-        AccessTransactions access = new AccessTransactions();
         // temp index variable
         int index = 0;
 
@@ -219,10 +207,6 @@ public class TransactionListTest {
     @Test
     public void testGetSumInPeriod1()
     {
-        // prompt transaction persistence to create database and disable example transactions
-        new Service(false);
-        // transaction access class
-        AccessTransactions access = new AccessTransactions();
         // temp index variable
         double sum = 0;
 
@@ -271,15 +255,11 @@ public class TransactionListTest {
     @Test
     public void testGetIndexAfterDate1()
     {
-        // prompt transaction persistence to create database and disable example transactions
-        new Service(false);
 
         Transaction A = null;
         Transaction B = null;
         Transaction C = null;
 
-        // transaction access class
-        AccessTransactions access = new AccessTransactions();
 
         System.out.println("\nStarting testGetIndexAfterDate1");
         // add transactions in chronological order
@@ -326,8 +306,6 @@ public class TransactionListTest {
      */
     @Test
     public void testGetTransactionsByCategory1() {
-        // prompt transaction persistence to create database and disable example transactions
-        new Service(false);
 
         Transaction A = null;
         Transaction B = null;
@@ -337,9 +315,6 @@ public class TransactionListTest {
         Transaction F = null;
 
         ArrayList<Transaction> filteredList;
-
-        // transaction access class
-        AccessTransactions access = new AccessTransactions();
 
         System.out.println("\nStarting testGetTransactionsByCategory1");
         // add transactions in chronological order
