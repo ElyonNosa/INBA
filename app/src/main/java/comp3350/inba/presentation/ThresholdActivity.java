@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-
 import comp3350.inba.R;
 import comp3350.inba.objects.User;
 

@@ -30,6 +30,14 @@ public class SettingsActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
+        Button thresholdButton = findViewById(R.id.threshold);
+        thresholdButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openThresholdActivity();
+            }
+        });
+
         navigationBarInit();
 
         listView = (ListView)findViewById(R.id.listview);
@@ -71,6 +79,11 @@ public class SettingsActivity extends Activity {
     }
 
     protected void openThresholdActivity(){
+        Intent intent = new Intent(this, ThresholdActivity.class);
+        startActivity(intent);
+    }
+
+    public void openThresholdActivity(){
         Intent intent = new Intent(this, ThresholdActivity.class);
         startActivity(intent);
     }

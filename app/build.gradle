@@ -20,6 +20,9 @@ android {
         coreLibraryDesugaringEnabled true
     }
     namespace 'comp3350.inba'
+    buildFeatures {
+        viewBinding true
+    }
 }
 
 repositories {
@@ -33,6 +36,9 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore:24.1.0'
     testImplementation 'junit:junit:4.13.2'
     implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.navigation:navigation-fragment:2.4.1'
+    implementation 'androidx.navigation:navigation-ui:2.4.1'
+    implementation 'androidx.appcompat:appcompat:1.0.0'
     implementation 'com.jjoe64:graphview:4.2.2'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
     implementation group: 'org.hsqldb', name: 'hsqldb', version: '2.4.1'
