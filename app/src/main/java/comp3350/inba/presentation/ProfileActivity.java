@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.github.mikephil.charting.charts.PieChart;
@@ -27,6 +28,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+
+import static comp3350.inba.objects.User.currUser;
 
 
 public class ProfileActivity extends Activity {
@@ -46,6 +50,18 @@ public class ProfileActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
+        // Get all of the text in from the layout
+        TextView monthlySpendingLimit = findViewById(R.id.v_mn_spending_limit);
+        TextView weeklySpendingLimit = findViewById(R.id.v_wk_spending_limit);
+        TextView userName = findViewById(R.id.profile_name);
+        TextView email = findViewById(R.id.email_address);
+
+        // Set the profile tab to take the currUser's data
+        monthlySpendingLimit.setText("$"+String.format("%.2f",currUser.getWkendThresh()));
+        weeklySpendingLimit.setText("$"+String.format("%.2f",currUser.getWkendThresh()));
+        userName.setText(currUser.getUserName());
+        email.setText("Email: "+currUser.getUserName()+"@gmail.com");
 
         accessTransactions = new AccessTransactions();
         try {
@@ -96,8 +112,6 @@ public class ProfileActivity extends Activity {
 
         pieChart.setData(pieData);
         pieChart.invalidate();
-        //======================================================================================================================================
-
     }
 
     public Map<String, Integer> initPieChartData()

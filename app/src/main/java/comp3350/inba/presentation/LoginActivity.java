@@ -1,5 +1,6 @@
 package comp3350.inba.presentation;
 
+import static comp3350.inba.objects.User.currUser;
 import static comp3350.inba.objects.User.isLoggedIn;
 
 import android.app.Activity;
@@ -38,6 +39,9 @@ public class LoginActivity extends Activity {
                     saveLoginStatus();
                     // set current user using credentials
                     User.currUser = new User(username, "", password);
+
+                    // Save the new curr user
+                    currUser = new User(username);
 
                     // Start the MainActivity and finish the LoginActivity
                     Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);

@@ -1,4 +1,3 @@
-package comp3350.inba.objects;
 
 /**
  * This class holds information pertaining to the user
@@ -17,6 +16,12 @@ public class User {
 
     public User(String uid) {
         this(uid, "", "");
+    }
+
+    public User(String userName) {
+        this.userName = userName;
+        wkdayThresh = 0.0;
+        wkendThresh = 0.0;
     }
 
     public User(String uid, String name, String passwd) {
