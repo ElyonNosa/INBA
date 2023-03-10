@@ -17,7 +17,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".presentation.LoginActivity"
+            android:name=".presentation.ThresholdActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustPan" >
             <meta-data

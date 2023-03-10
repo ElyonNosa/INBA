@@ -13,17 +13,31 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="comp3350.inba.presentation.SettingsActivity">
 
+
     <TextView
-        android:id="@+id/textView2"
-        android:layout_width="136dp"
+        android:id="@+id/settings_heading"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:text="Settings"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="@color/colorAccent"
-        android:textSize="30dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:textSize="36sp"
+        android:textStyle="bold"
+        android:padding="15dp"
+        android:background="@color/colorSecondary"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="16dp" />
+
+
+    <ListView
+        android:id="@+id/listview"
+        android:layout_width="584dp"
+        android:layout_height="666dp"
+        android:layout_above="@+id/bottom_navigation"
+        android:layout_below="@id/settings_heading"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="88dp"
+        android:background="@color/colorPrimary"
+        android:dividerHeight="20dp" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
@@ -32,20 +46,8 @@
         android:layout_height="80dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="5dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/menu_bottom_nav_bar" />
+        app:menu="@menu/menu_bottom_nav_bar"  />
 
-    <Button
-        android:id="@+id/threshold"
-        android:layout_width="475dp"
-        android:layout_height="64dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="76dp"
-        android:text="Adjust Spending Threshold"
-        android:textAlignment="viewStart"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>
+

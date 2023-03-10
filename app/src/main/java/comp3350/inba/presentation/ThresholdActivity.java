@@ -30,10 +30,10 @@ public class ThresholdActivity extends Activity {
         EditText wkday = findViewById(R.id.WeekDayThreshold);
 
         try {
-            User.currUser.setWkendThresh(Double.parseDouble(wkend.getText().toString()));
-            User.currUser.setWkdayThresh(Double.parseDouble(wkday.getText().toString()));
+            currUser.setWkendThresh(Double.parseDouble(wkend.getText().toString()));
+            currUser.setWkdayThresh(Double.parseDouble(wkday.getText().toString()));
 
-            System.out.println(User.currUser.getWkdayThresh());
+            System.out.println(currUser.getWkdayThresh());
         }catch (final Exception e) {
             Messages.fatalError(this, "There is an empty entry");
         }
