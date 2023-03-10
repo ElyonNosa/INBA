@@ -45,11 +45,11 @@ public class SettingsActivity extends Activity {
         ArrayList<String> arrayList = new ArrayList<>();
 
         arrayList.add("Set Threshold Limit");
-        arrayList.add("Update Account details");
-        arrayList.add("Change Theme");
-        arrayList.add("Print Monthly Report");
-        arrayList.add("Submit Feedback");
-        arrayList.add("Delete Account");
+        arrayList.add("Update Account details (Iteration 3)");
+        arrayList.add("Change Theme (Iteration 3)");
+        arrayList.add("Print Monthly Report (Iteration 3)");
+        arrayList.add("Submit Feedback (Iteration 3)");
+        arrayList.add("Delete Account (Iteration 3)");
 
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, arrayList) {
             @Override
