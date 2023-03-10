@@ -116,13 +116,15 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/profile_divider2">
 
-        <com.jjoe64.graphview.GraphView
-            android:id="@+id/graph"
-            android:layout_width="250dp"
-            android:layout_height="250dp"
+        <com.github.mikephil.charting.charts.PieChart
+            android:id="@+id/pie_chart"
+            android:layout_width="270dp"
+            android:layout_height="270dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginLeft="20dp"
             android:layout_marginTop="20dp"
-            android:layout_marginLeft="15dp"
-            />
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp" />
 
         <ListView
             android:id="@+id/transaction_list"

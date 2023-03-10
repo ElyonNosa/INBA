@@ -1,5 +1,7 @@
 package comp3350.inba.presentation;
 
+import static comp3350.inba.objects.User.isLoggedIn;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -49,6 +51,14 @@ public class DashboardActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if(!isLoggedIn) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+            return;
+        }
+
         setContentView(R.layout.activity_dashboard);
         accessTransactions = new AccessTransactions();
         try {
@@ -66,6 +76,11 @@ public class DashboardActivity extends Activity {
         navigationBarInit();
 
     }//onCreate
+
+    // will need to ask the DB if we are logged in
+    private boolean isLoggedIn() {
+        return isLoggedIn;
+    }
 
     /**
      * Update the graph that displays transaction totals

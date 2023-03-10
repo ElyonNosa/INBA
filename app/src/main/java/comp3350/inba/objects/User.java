@@ -4,11 +4,15 @@ package comp3350.inba.objects;
  * This class holds information pertaining to the user
 **/
 public class User {
+
+    public static User currUser;
+    public static boolean isLoggedIn = false;
+
     private String userName;
     private double wkdayThresh;
     private double wkendThresh;
 
-    public User(){
+    public User() {
         userName = "";
         wkdayThresh = 0.0;
         wkendThresh = 0.0;

@@ -16,15 +16,16 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.jjoe64.graphview.DefaultLabelFormatter;
-import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.GridLabelRenderer;
-import com.jjoe64.graphview.ValueDependentColor;
-import com.jjoe64.graphview.series.BarGraphSeries;
-import com.jjoe64.graphview.series.DataPoint;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
 
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
+import java.util.Map;
 
 
 public class ProfileActivity extends Activity {
@@ -58,9 +59,82 @@ public class ProfileActivity extends Activity {
             Messages.fatalError(this, e.getMessage());
         }
 
+        onResume();
         navigationBarInit();
 
     }//OnCreate
+
+    // Pie chart setup
+    private  void showPieChart(PieChart pieChart){
+
+        //======================================================================================================================================
+        ArrayList<PieEntry> pieEntries = new ArrayList<>();
+        String label = "type";
+
+        //PieChart Data
+        Map<String, Integer> typeAmountMap = initPieChartData();
+
+        //PieChart Colours
+        ArrayList<Integer> colors = (ArrayList<Integer>) initChartColours();
+
+        //input data and fit data into pie chart entry
+        for(String type: typeAmountMap.keySet()){
+            pieEntries.add(new PieEntry(typeAmountMap.get(type).floatValue(), type));
+        }
+
+        //collecting the entries with label name
+        PieDataSet pieDataSet = new PieDataSet(pieEntries,label);
+        //setting text size of the value
+        pieDataSet.setValueTextSize(12f);
+        //providing color list for coloring different entries
+        pieDataSet.setColors(colors);
+        //grouping the data set from entry to chart
+        PieData pieData = new PieData(pieDataSet);
+        //showing the value of the entries, default true if not set
+        pieData.setDrawValues(true);
+
+        pieChart.setData(pieData);
+        pieChart.invalidate();
+        //======================================================================================================================================
+
+    }
+
+    public Map<String, Integer> initPieChartData()
+    {
+
+        //initializing data
+        Map<String, Integer> typeAmountMap = new HashMap<>();
+        typeAmountMap.put("Jan",10);
+        typeAmountMap.put("Feb",20);
+        typeAmountMap.put("Mar",30);
+        typeAmountMap.put("Apr",40);
+        typeAmountMap.put("May",50);
+        typeAmountMap.put("June",20);
+        typeAmountMap.put("July",50);
+        typeAmountMap.put("Aug",40);
+        typeAmountMap.put("Sept",90);
+        typeAmountMap.put("Oct",30);
+        typeAmountMap.put("Nov",70);
+        typeAmountMap.put("Dec",60);
+
+        return typeAmountMap;
+    }
+
+    //Used to allocate different colours to pirChart
+    public List<Integer> initChartColours()
+    {
+        //initializing colors for the entries
+        ArrayList<Integer> colors = new ArrayList<>();
+        colors.add(Color.parseColor("#304567"));
+        colors.add(Color.parseColor("#309967"));
+        colors.add(Color.parseColor("#476567"));
+        colors.add(Color.parseColor("#890567"));
+        colors.add(Color.parseColor("#a35567"));
+        colors.add(Color.parseColor("#ff5f67"));
+        colors.add(Color.parseColor("#3ca567"));
+
+        return  colors;
+    }
 
 
     protected void navigationBarInit() {
@@ -105,101 +179,6 @@ public class ProfileActivity extends Activity {
     }
 
 
-    protected void updateGraph() {
-        GraphView graph = (GraphView) findViewById(R.id.graph);
-        // add data points to the graph
-        BarGraphSeries<DataPoint> series = new BarGraphSeries<>(transactionsToGraphView());
-        graph.addSeries(series);// styling
-
-        // apply a different color to each category
-        series.setValueDependentColor(new ValueDependentColor<DataPoint>() {
-            @Override
-            public int get(DataPoint data) {
-                return Color.rgb((int) (data.getX()*(122)*Category.getCategorySet().size())%255, 80, 140);
-            }
-        });
-
-        // series properties
-        series.setDrawValuesOnTop(true);
-        series.setValuesOnTopColor(0xFFA6ABBD);
-
-        // graph label properties
-        graph.getGridLabelRenderer().setGridColor(0xFFA6ABBD);
-        graph.getGridLabelRenderer().setHorizontalLabelsColor(0xFFA6ABBD);
-        graph.getGridLabelRenderer().setVerticalLabelsColor(0xFFA6ABBD);
-        graph.getGridLabelRenderer().setNumHorizontalLabels(3);
-        graph.getGridLabelRenderer().setHorizontalLabelsAngle(90);
-
-        graph.getGridLabelRenderer().setGridStyle(GridLabelRenderer.GridStyle.HORIZONTAL);
-        graph.getGridLabelRenderer().setLabelsSpace(50);
-        graph.getGridLabelRenderer().setTextSize(35);
-        graph.getGridLabelRenderer().setPadding(50);
-
-
-        // custom label formatter to show categories
-        graph.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
-            @Override
-            public String formatLabel(double value, boolean isValueX) {
-                final int TRUNCATE_LEN = 9;
-                int index = 0;
-                String output = null;
-                if (isValueX) {
-                    // convert the x value to an index number
-                    index = (int) Double.parseDouble(super.formatLabel(value, isValueX));
-                    // check if category string length is more than desired
-                    if ((output = Category.getCategorySet().get(index)).length() > TRUNCATE_LEN) {
-                        // truncate the string
-                        output = Category.getCategorySet().get(index).substring(0,TRUNCATE_LEN);
-                    }
-                    // return category of a given index
-                    return output;
-                } else {
-                    // show normal y values
-                    return super.formatLabel(value, isValueX);
-                }
-            }
-        });
-    }
-
-    /**
-     * Convert the total spendings of transactions per category into an array of data points.
-     * @return The data points of the total spendings.
-     */
-    private DataPoint[] transactionsToGraphView() {
-        DataPoint[] output = new DataPoint[Category.getCategorySet().size()];
-        // the running price totals per category
-        double[] categoryTotals = new double[Category.getCategorySet().size()];
-        int i = 0;
-        int j = 0;
-        boolean found = false;
-        Transaction temp = null;
-
-        // loop through all transactions
-        for (i = 0; i < transactionList.size(); i++) {
-            temp = transactionList.get(i);
-            found = false;
-            // loop through all predefined categories
-            for (j = 0; j < Category.getCategorySet().size() && !found; j++) {
-                // check if the transaction category matches with a predefined category
-                if(Category.getCategorySet().get(j).equals(temp.getCategory())) {
-                    // increase the total price of this category
-                    categoryTotals[j] += temp.getPrice();
-                    found = true;
-                }
-            }
-        }
-
-        // loop through all predefined categories
-        for (i = 0; i < Category.getCategorySet().size(); i++) {
-            // make a data point per category
-
-            output[i] = new DataPoint(i, categoryTotals[i]);
-        }
-
-        return output;
-    }
-
-
     /**
      * Destructor
      */
@@ -217,6 +196,7 @@ public class ProfileActivity extends Activity {
         transactionList = accessTransactions.getTransactions();
         // update the transaction list
         transactionArrayAdapter.notifyDataSetChanged();
-        updateGraph();
+        PieChart pieChart = findViewById(R.id.pie_chart);
+        showPieChart(pieChart);
     }
 }

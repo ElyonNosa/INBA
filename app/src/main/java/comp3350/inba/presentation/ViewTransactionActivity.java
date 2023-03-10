@@ -310,7 +310,7 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
         return typeAmountMap;
     }
 
-    //Used to allocate different colours to pirChart
+    //Used to allocate different colours to pieChart
     public List<Integer> initChartColours()
     {
         //initializing colors for the entries
