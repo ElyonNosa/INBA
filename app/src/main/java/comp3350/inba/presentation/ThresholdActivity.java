@@ -18,14 +18,11 @@ import comp3350.inba.R;
 import comp3350.inba.objects.User;
 
 public class ThresholdActivity extends Activity {
-    private User currUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_threshold);
-
-        currUser = new User("");
     }
 
     public void onClick(View view) {
@@ -33,10 +30,10 @@ public class ThresholdActivity extends Activity {
         EditText wkday = findViewById(R.id.WeekDayThreshold);
 
         try {
-            currUser.setWkendThresh(Double.parseDouble(wkend.getText().toString()));
-            currUser.setWkdayThresh(Double.parseDouble(wkday.getText().toString()));
+            User.currUser.setWkendThresh(Double.parseDouble(wkend.getText().toString()));
+            User.currUser.setWkdayThresh(Double.parseDouble(wkday.getText().toString()));
 
-            System.out.println(currUser.getWkdayThresh());
+            System.out.println(User.currUser.getWkdayThresh());
         }catch (final Exception e) {
             Messages.fatalError(this, "There is an empty entry");
         }
