@@ -12,7 +12,7 @@ import comp3350.inba.persistence.stubs.TransactionPersistenceStub;
  */
 public class Service {
     // Note for the grader: HSQLDB implementation is present but does not work
-    public static final boolean USE_HSQLDB = false;
+    public static final boolean USE_HSQLDB = true;
     // instance of the transaction persistence
     private static TransactionPersistence transactionPersistence = null;
 

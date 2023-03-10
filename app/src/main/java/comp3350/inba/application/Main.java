@@ -2,7 +2,7 @@ package comp3350.inba.application;
 
 public class Main
 {
-	private static String dbName="INBA_DB";
+	private static String dbName="INBA_DB_TXN";
 
 	public static void main(String[] args)
 	{

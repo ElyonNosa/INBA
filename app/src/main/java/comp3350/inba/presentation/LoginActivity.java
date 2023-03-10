@@ -36,7 +36,7 @@ public class LoginActivity extends Activity {
                 if (isValidCredentials(username, password)) {
                     // Save the user's login status
                     saveLoginStatus();
-
+                    // set current user using credentials
                     User.currUser = new User(username, "", password);
 
                     // Start the MainActivity and finish the LoginActivity

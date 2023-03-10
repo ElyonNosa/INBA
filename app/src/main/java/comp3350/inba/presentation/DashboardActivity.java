@@ -125,30 +125,32 @@ public class DashboardActivity extends Activity {
         graph.getGridLabelRenderer().setTextSize(35);
         graph.getGridLabelRenderer().setPadding(50);
 
-
-        // custom label formatter to show categories
-        graph.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
-            @Override
-            public String formatLabel(double value, boolean isValueX) {
-                final int TRUNCATE_LEN = 9;
-                int index = 0;
-                String output = null;
-                if (isValueX) {
-                    // convert the x value to an index number
-                    index = (int) Double.parseDouble(super.formatLabel(value, isValueX));
-                    // check if category string length is more than desired
-                    if ((output = Category.getCategorySet().get(index)).length() > TRUNCATE_LEN) {
-                        // truncate the string
-                        output = Category.getCategorySet().get(index).substring(0,TRUNCATE_LEN);
+        // check if there are a sufficient number of categories
+        if(Category.getCategorySet().size() > 0) {
+            // custom label formatter to show categories
+            graph.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
+                @Override
+                public String formatLabel(double value, boolean isValueX) {
+                    final int TRUNCATE_LEN = 9;
+                    int index = 0;
+                    String output = null;
+                    if (isValueX) {
+                        // convert the x value to an index number
+                        index = (int) Double.parseDouble(super.formatLabel(value, isValueX));
+                        // check if category string length is more than desired
+                        if ((output = Category.getCategorySet().get(index)).length() > TRUNCATE_LEN) {
+                            // truncate the string
+                            output = Category.getCategorySet().get(index).substring(0, TRUNCATE_LEN);
+                        }
+                        // return category of a given index
+                        return output;
+                    } else {
+                        // show normal y values
+                        return super.formatLabel(value, isValueX);
                     }
-                    // return category of a given index
-                    return output;
-                } else {
-                    // show normal y values
-                    return super.formatLabel(value, isValueX);
                 }
-            }
-        });
+            });
+        }
     }
 
     /**
@@ -171,7 +173,7 @@ public class DashboardActivity extends Activity {
             // loop through all predefined categories
             for (j = 0; j < Category.getCategorySet().size() && !found; j++) {
                 // check if the transaction category matches with a predefined category
-                if(Category.getCategorySet().get(j).equals(temp.getCategory())) {
+                if (Category.getCategorySet().get(j).equals(temp.getCategory())) {
                     // increase the total price of this category
                     categoryTotals[j] += temp.getPrice();
                     found = true;
