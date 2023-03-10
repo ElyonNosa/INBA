@@ -1,3 +1,4 @@
+package comp3350.inba.objects;
 
 /**
  * This class holds information pertaining to the user
@@ -14,12 +15,9 @@ public class User {
     private double wkdayThresh;
     private double wkendThresh;
 
-    public User(String uid) {
-        this(uid, "", "");
-    }
-
     public User(String userName) {
         this.userName = userName;
+        this.userID = userName; // will change with DB integration
         wkdayThresh = 0.0;
         wkendThresh = 0.0;
     }
