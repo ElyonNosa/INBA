@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import comp3350.inba.R;
+import comp3350.inba.objects.User;
 
 public class LoginActivity extends Activity {
     private EditText usernameEditText;
@@ -36,6 +37,8 @@ public class LoginActivity extends Activity {
                     // Save the user's login status
                     saveLoginStatus();
 
+                    User.currUser = new User(username, "", password);
+
                     // Start the MainActivity and finish the LoginActivity
                     Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
                     startActivity(intent);
@@ -56,5 +59,6 @@ public class LoginActivity extends Activity {
     private void saveLoginStatus() {
         // Save the user's login status in shared preferences or local database
         isLoggedIn = true;
+
     }
 }

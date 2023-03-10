@@ -14,8 +14,10 @@ import java.util.ArrayList;
 import comp3350.inba.application.Service;
 import comp3350.inba.business.AccessTransactions;
 import comp3350.inba.objects.Transaction;
+import comp3350.inba.objects.User;
 
 public class TransactionListTest {
+    User user = new User("");
 
     /**
      * Check if list rejects non-chronological transactions
@@ -29,19 +31,19 @@ public class TransactionListTest {
         AccessTransactions access = new AccessTransactions();
 
         // add transactions chronologically
-        assertNotNull(access.insertTransaction(new Transaction(LocalDateTime.of(1984, 4, 13, 17, 1), 3, "index 0")));
-        assertNotNull(access.insertTransaction(new Transaction(LocalDateTime.of(1984, 4, 13, 17, 20), 523, "index 1")));
-        assertNotNull(access.insertTransaction(new Transaction(LocalDateTime.of(1984, 4, 13, 17, 41), 83, "index 2")));
+        assertNotNull(access.insertTransaction(user, new Transaction(LocalDateTime.of(1984, 4, 13, 17, 1), 3, "index 0")));
+        assertNotNull(access.insertTransaction(user, new Transaction(LocalDateTime.of(1984, 4, 13, 17, 20), 523, "index 1")));
+        assertNotNull(access.insertTransaction(user, new Transaction(LocalDateTime.of(1984, 4, 13, 17, 41), 83, "index 2")));
 
         // add transactions not chronologically
-        assertNull(access.insertTransaction(new Transaction(LocalDateTime.of(1984, 4, 13, 17, 20), 3, "should be null")));
-        assertNull(access.insertTransaction(new Transaction(LocalDateTime.of(1984, 4, 13, 17, 30), 523, "should be null")));
-        assertNull(access.insertTransaction(new Transaction(LocalDateTime.of(1984, 4, 13, 17, 40), 83, "should be null")));
+        assertNull(access.insertTransaction(user, new Transaction(LocalDateTime.of(1984, 4, 13, 17, 20), 3, "should be null")));
+        assertNull(access.insertTransaction(user, new Transaction(LocalDateTime.of(1984, 4, 13, 17, 30), 523, "should be null")));
+        assertNull(access.insertTransaction(user, new Transaction(LocalDateTime.of(1984, 4, 13, 17, 40), 83, "should be null")));
 
         // add transactions chronologically
-        assertNotNull(access.insertTransaction(new Transaction(LocalDateTime.of(1984, 4, 13, 17, 42), 3, "index 3")));
-        assertNotNull(access.insertTransaction(new Transaction(LocalDateTime.of(2005, 8, 22, 3, 22), 523, "index 4")));
-        assertNotNull(access.insertTransaction(new Transaction(LocalDateTime.of(2038, 3, 14, 15, 9), 83, "index 5")));
+        assertNotNull(access.insertTransaction(user, new Transaction(LocalDateTime.of(1984, 4, 13, 17, 42), 3, "index 3")));
+        assertNotNull(access.insertTransaction(user, new Transaction(LocalDateTime.of(2005, 8, 22, 3, 22), 523, "index 4")));
+        assertNotNull(access.insertTransaction(user, new Transaction(LocalDateTime.of(2038, 3, 14, 15, 9), 83, "index 5")));
 
         System.out.println("\nStarting testAddChronologically");
 
@@ -66,12 +68,12 @@ public class TransactionListTest {
         System.out.println("\nStarting testListGetTimeIndex1");
 
         // add transactions in chronological order
-        assertNotNull(access.insertTransaction(new Transaction(LocalDateTime.of(1984, 4, 13, 17, 1), 3, "index 0")));
-        assertNotNull(access.insertTransaction(new Transaction(LocalDateTime.of(1984, 4, 13, 17, 20), 523, "index 1")));
-        assertNotNull(access.insertTransaction(new Transaction(LocalDateTime.of(1984, 4, 13, 17, 41), 83, "index 2")));
-        assertNotNull(access.insertTransaction(new Transaction(LocalDateTime.of(1984, 4, 13, 17, 42), 74, "index 3")));
-        assertNotNull(access.insertTransaction(new Transaction(LocalDateTime.of(2005, 8, 22, 3, 22), 432, "index 4")));
-        assertNotNull(access.insertTransaction(new Transaction(LocalDateTime.of(2038, 3, 14, 15, 9), 978, "index 5")));
+        assertNotNull(access.insertTransaction(user, new Transaction(LocalDateTime.of(1984, 4, 13, 17, 1), 3, "index 0")));
+        assertNotNull(access.insertTransaction(user, new Transaction(LocalDateTime.of(1984, 4, 13, 17, 20), 523, "index 1")));
+        assertNotNull(access.insertTransaction(user, new Transaction(LocalDateTime.of(1984, 4, 13, 17, 41), 83, "index 2")));
+        assertNotNull(access.insertTransaction(user, new Transaction(LocalDateTime.of(1984, 4, 13, 17, 42), 74, "index 3")));
+        assertNotNull(access.insertTransaction(user, new Transaction(LocalDateTime.of(2005, 8, 22, 3, 22), 432, "index 4")));
+        assertNotNull(access.insertTransaction(user, new Transaction(LocalDateTime.of(2038, 3, 14, 15, 9), 978, "index 5")));
 
         // check for timestamps within the list
         index = access.getTimestampIndex(LocalDateTime.of(2005, 8, 22, 3, 22));
@@ -106,12 +108,12 @@ public class TransactionListTest {
         System.out.println("\nStarting testListGetTimeIndex2");
 
         // add transactions in chronological order
-        assertNotNull(access.insertTransaction(new Transaction(LocalDateTime.of(1984, 4, 13, 17, 1), 3, "index 0")));
-        assertNotNull(access.insertTransaction(new Transaction(LocalDateTime.of(1984, 4, 13, 17, 20), 523, "index 1")));
-        assertNotNull(access.insertTransaction(new Transaction(LocalDateTime.of(1984, 4, 13, 17, 41), 83, "index 2")));
-        assertNotNull(access.insertTransaction(new Transaction(LocalDateTime.of(1984, 4, 13, 17, 42), 74, "index 3")));
-        assertNotNull(access.insertTransaction(new Transaction(LocalDateTime.of(2005, 8, 22, 3, 22), 432, "index 4")));
-        assertNotNull(access.insertTransaction(new Transaction(LocalDateTime.of(2038, 3, 14, 15, 9), 978, "index 5")));
+        assertNotNull(access.insertTransaction(user, new Transaction(LocalDateTime.of(1984, 4, 13, 17, 1), 3, "index 0")));
+        assertNotNull(access.insertTransaction(user, new Transaction(LocalDateTime.of(1984, 4, 13, 17, 20), 523, "index 1")));
+        assertNotNull(access.insertTransaction(user, new Transaction(LocalDateTime.of(1984, 4, 13, 17, 41), 83, "index 2")));
+        assertNotNull(access.insertTransaction(user, new Transaction(LocalDateTime.of(1984, 4, 13, 17, 42), 74, "index 3")));
+        assertNotNull(access.insertTransaction(user, new Transaction(LocalDateTime.of(2005, 8, 22, 3, 22), 432, "index 4")));
+        assertNotNull(access.insertTransaction(user, new Transaction(LocalDateTime.of(2038, 3, 14, 15, 9), 978, "index 5")));
 
         // check for nonexistent timestamps
         index = access.getTimestampIndex(LocalDateTime.of(1, 1, 1, 1, 1));
@@ -130,9 +132,9 @@ public class TransactionListTest {
         assertEquals(index, -1);
 
         // add transactions and retest previously nonexistent timestamps
-        assertNotNull(access.insertTransaction(new Transaction(LocalDateTime.of(2084, 4, 13, 17, 1), 3, "index 8")));
-        assertNotNull(access.insertTransaction(new Transaction(LocalDateTime.of(2091, 4, 13, 17, 1), 1, "index 9")));
-        assertNotNull(access.insertTransaction(new Transaction(LocalDateTime.of(3000, 4, 13, 17, 1), 2, "index 10")));
+        assertNotNull(access.insertTransaction(user, new Transaction(LocalDateTime.of(2084, 4, 13, 17, 1), 3, "index 8")));
+        assertNotNull(access.insertTransaction(user, new Transaction(LocalDateTime.of(2091, 4, 13, 17, 1), 1, "index 9")));
+        assertNotNull(access.insertTransaction(user, new Transaction(LocalDateTime.of(3000, 4, 13, 17, 1), 2, "index 10")));
         index = access.getTimestampIndex(LocalDateTime.of(2084, 4, 13, 17, 1));
         assertEquals(index, 6);
         index = access.getTimestampIndex(LocalDateTime.of(2091, 4, 13, 17, 1));
@@ -163,12 +165,12 @@ public class TransactionListTest {
         System.out.println("\nStarting testListGetTimeIndex3");
 
         // add transactions in chronological order
-        assertNotNull(access.insertTransaction(A = new Transaction(LocalDateTime.of(1984, 4, 13, 17, 1), 3, "index 0")));
-        assertNotNull(access.insertTransaction(B = new Transaction(LocalDateTime.of(1984, 4, 13, 17, 20), 523, "index 1")));
-        assertNotNull(access.insertTransaction(C = new Transaction(LocalDateTime.of(1984, 4, 13, 17, 41), 83, "index 2")));
-        assertNotNull(access.insertTransaction(new Transaction(LocalDateTime.of(1984, 4, 13, 17, 42), 74, "index 3")));
-        assertNotNull(access.insertTransaction(new Transaction(LocalDateTime.of(2005, 8, 22, 3, 22), 432, "index 4")));
-        assertNotNull(access.insertTransaction(new Transaction(LocalDateTime.of(2038, 3, 14, 15, 9), 978, "index 5")));
+        assertNotNull(access.insertTransaction(user, A = new Transaction(LocalDateTime.of(1984, 4, 13, 17, 1), 3, "index 0")));
+        assertNotNull(access.insertTransaction(user, B = new Transaction(LocalDateTime.of(1984, 4, 13, 17, 20), 523, "index 1")));
+        assertNotNull(access.insertTransaction(user, C = new Transaction(LocalDateTime.of(1984, 4, 13, 17, 41), 83, "index 2")));
+        assertNotNull(access.insertTransaction(user, new Transaction(LocalDateTime.of(1984, 4, 13, 17, 42), 74, "index 3")));
+        assertNotNull(access.insertTransaction(user, new Transaction(LocalDateTime.of(2005, 8, 22, 3, 22), 432, "index 4")));
+        assertNotNull(access.insertTransaction(user, new Transaction(LocalDateTime.of(2038, 3, 14, 15, 9), 978, "index 5")));
 
         // check for timestamps within the list
         index = access.getTimestampIndex(LocalDateTime.of(2005, 8, 22, 3, 22));
@@ -185,9 +187,9 @@ public class TransactionListTest {
         assertEquals(index, 5);
 
         // remove some transactions from the list
-        access.deleteTransaction(A);
-        access.deleteTransaction(B);
-        access.deleteTransaction(C);
+        access.deleteTransaction(user, A);
+        access.deleteTransaction(user, B);
+        access.deleteTransaction(user, C);
 
         // check if their timestamps no longer exist
         index = access.getTimestampIndex(LocalDateTime.of(1984, 4, 13, 17, 1));
@@ -224,12 +226,12 @@ public class TransactionListTest {
         System.out.println("\nStarting testListGetTimeIndex3");
 
         // add transactions in chronological order
-        assertNotNull(access.insertTransaction(new Transaction(LocalDateTime.of(1984, 4, 13, 17, 1), 1, "index 0")));
-        assertNotNull(access.insertTransaction(new Transaction(LocalDateTime.of(1984, 4, 13, 17, 20), 2, "index 1")));
-        assertNotNull(access.insertTransaction(new Transaction(LocalDateTime.of(1984, 4, 13, 17, 41), 3, "index 2")));
-        assertNotNull(access.insertTransaction(new Transaction(LocalDateTime.of(1984, 4, 13, 17, 42), 4, "index 3")));
-        assertNotNull(access.insertTransaction(new Transaction(LocalDateTime.of(2005, 8, 22, 3, 22), 5, "index 4")));
-        assertNotNull(access.insertTransaction(new Transaction(LocalDateTime.of(2038, 3, 14, 15, 9), 6, "index 5")));
+        assertNotNull(access.insertTransaction(user, new Transaction(LocalDateTime.of(1984, 4, 13, 17, 1), 1, "index 0")));
+        assertNotNull(access.insertTransaction(user, new Transaction(LocalDateTime.of(1984, 4, 13, 17, 20), 2, "index 1")));
+        assertNotNull(access.insertTransaction(user, new Transaction(LocalDateTime.of(1984, 4, 13, 17, 41), 3, "index 2")));
+        assertNotNull(access.insertTransaction(user, new Transaction(LocalDateTime.of(1984, 4, 13, 17, 42), 4, "index 3")));
+        assertNotNull(access.insertTransaction(user, new Transaction(LocalDateTime.of(2005, 8, 22, 3, 22), 5, "index 4")));
+        assertNotNull(access.insertTransaction(user, new Transaction(LocalDateTime.of(2038, 3, 14, 15, 9), 6, "index 5")));
 
         // get sum of all transactions
         sum = access.getSumInPeriod(LocalDateTime.of(1984, 1, 1, 0, 0),
@@ -277,12 +279,12 @@ public class TransactionListTest {
 
         System.out.println("\nStarting testGetIndexAfterDate1");
         // add transactions in chronological order
-        assertNotNull(access.insertTransaction(A = new Transaction(LocalDateTime.of(1984, 4, 13, 17, 1), 1, "index 0")));
-        assertNotNull(access.insertTransaction(new Transaction(LocalDateTime.of(1984, 4, 13, 17, 20), 2, "index 1")));
-        assertNotNull(access.insertTransaction(B = new Transaction(LocalDateTime.of(1984, 4, 13, 17, 41), 3, "index 2")));
-        assertNotNull(access.insertTransaction(new Transaction(LocalDateTime.of(1984, 4, 13, 17, 42), 4, "index 3")));
-        assertNotNull(access.insertTransaction(C = new Transaction(LocalDateTime.of(2005, 8, 22, 3, 22), 5, "index 4")));
-        assertNotNull(access.insertTransaction(new Transaction(LocalDateTime.of(2038, 3, 14, 15, 9), 6, "index 5")));
+        assertNotNull(access.insertTransaction(user, A = new Transaction(LocalDateTime.of(1984, 4, 13, 17, 1), 1, "index 0")));
+        assertNotNull(access.insertTransaction(user, new Transaction(LocalDateTime.of(1984, 4, 13, 17, 20), 2, "index 1")));
+        assertNotNull(access.insertTransaction(user, B = new Transaction(LocalDateTime.of(1984, 4, 13, 17, 41), 3, "index 2")));
+        assertNotNull(access.insertTransaction(user, new Transaction(LocalDateTime.of(1984, 4, 13, 17, 42), 4, "index 3")));
+        assertNotNull(access.insertTransaction(user, C = new Transaction(LocalDateTime.of(2005, 8, 22, 3, 22), 5, "index 4")));
+        assertNotNull(access.insertTransaction(user, new Transaction(LocalDateTime.of(2038, 3, 14, 15, 9), 6, "index 5")));
 
         // perform tests on index after date function
         // input date before all transactions
@@ -299,9 +301,9 @@ public class TransactionListTest {
         assertEquals(access.getIndexAfterDate(LocalDateTime.of(4444,1,1,0,0)), 5, 0);
 
         // remove some transactions from the list
-        access.deleteTransaction(A);
-        access.deleteTransaction(B);
-        access.deleteTransaction(C);
+        access.deleteTransaction(user, A);
+        access.deleteTransaction(user, B);
+        access.deleteTransaction(user, C);
 
         // re test the same dates but with updated indices
         assertEquals(access.getIndexAfterDate(LocalDateTime.of(1,1,1,0,0)), 0, 0);
@@ -336,12 +338,12 @@ public class TransactionListTest {
 
         System.out.println("\nStarting testGetTransactionsByCategory1");
         // add transactions in chronological order
-        assertNotNull(access.insertTransaction(A = new Transaction(LocalDateTime.of(1984, 4, 13, 17, 1), 1, "Rasit")));
-        assertNotNull(access.insertTransaction(B = new Transaction(LocalDateTime.of(1984, 4, 13, 17, 20), 2, "Rob")));
-        assertNotNull(access.insertTransaction(C = new Transaction(LocalDateTime.of(1984, 4, 13, 17, 41), 3, "Rasit")));
-        assertNotNull(access.insertTransaction(D = new Transaction(LocalDateTime.of(1984, 4, 13, 17, 42), 4, "Rasit")));
-        assertNotNull(access.insertTransaction(E = new Transaction(LocalDateTime.of(2005, 8, 22, 3, 22), 5, "Rob")));
-        assertNotNull(access.insertTransaction(F = new Transaction(LocalDateTime.of(2038, 3, 14, 15, 9), 6, "Rob")));
+        assertNotNull(access.insertTransaction(user, A = new Transaction(LocalDateTime.of(1984, 4, 13, 17, 1), 1, "Rasit")));
+        assertNotNull(access.insertTransaction(user, B = new Transaction(LocalDateTime.of(1984, 4, 13, 17, 20), 2, "Rob")));
+        assertNotNull(access.insertTransaction(user, C = new Transaction(LocalDateTime.of(1984, 4, 13, 17, 41), 3, "Rasit")));
+        assertNotNull(access.insertTransaction(user, D = new Transaction(LocalDateTime.of(1984, 4, 13, 17, 42), 4, "Rasit")));
+        assertNotNull(access.insertTransaction(user, E = new Transaction(LocalDateTime.of(2005, 8, 22, 3, 22), 5, "Rob")));
+        assertNotNull(access.insertTransaction(user, F = new Transaction(LocalDateTime.of(2038, 3, 14, 15, 9), 6, "Rob")));
 
         // check if the correct transactions went into the Rasit list
         filteredList = access.getTransactionsByCategory("Rasit");

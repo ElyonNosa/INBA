@@ -32,6 +32,7 @@ import comp3350.inba.R;
 import comp3350.inba.business.AccessTransactions;
 import comp3350.inba.objects.Category;
 import comp3350.inba.objects.Transaction;
+import comp3350.inba.objects.User;
 
 /**
  * TransactionsActivity.java
@@ -85,7 +86,7 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
                 this, android.R.layout.simple_list_item_1, getCategoryFilterArray()));
 
         // get the transaction list from the database
-        transactionList = accessTransactions.getTransactions();
+        transactionList = accessTransactions.getTransactions(User.currUser);
         try {
             updateListView();
         } catch (final Exception e) {
@@ -139,7 +140,7 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
         // check to see if "No filter" is selected
         if (categoryFilter.equals(NO_FILTER)) {
             // use the normal list
-            transactionList = accessTransactions.getTransactions();
+            transactionList = accessTransactions.getTransactions(User.currUser);
         } else {
             // use the transaction list filtered by the category
             transactionList = accessTransactions.getTransactionsByCategory(categoryFilter);
@@ -245,9 +246,9 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
             if (result == null) {
                 try {
                     // insert the transaction into the database list
-                    transaction = accessTransactions.insertTransaction(transaction);
+                    transaction = accessTransactions.insertTransaction(User.currUser, transaction);
                     // update our local list
-                    transactionList = accessTransactions.getTransactions();
+                    transactionList = accessTransactions.getTransactions(User.currUser);
                     // refresh the transaction list view
                     transactionArrayAdapter.notifyDataSetChanged();
                     // set list position to the new transaction
@@ -290,9 +291,9 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
             if (result == null) {
                 try {
                     // overwrite the given transaction into the database list
-                    transaction = accessTransactions.updateTransaction(transaction);
+                    transaction = accessTransactions.updateTransaction(User.currUser, transaction);
                     // update our local list
-                    transactionList = accessTransactions.getTransactions();
+                    transactionList = accessTransactions.getTransactions(User.currUser);
                     // refresh the transaction list view
                     transactionArrayAdapter.notifyDataSetChanged();
                     // set list position to the updated transaction
@@ -324,7 +325,7 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
 
         try {
             // delete the given transaction into the database list
-            accessTransactions.deleteTransaction(transaction);
+            accessTransactions.deleteTransaction(User.currUser, transaction);
 
             // set list position as the index of the deleted transaction
             int pos = transactionList.indexOf(transaction);
@@ -333,7 +334,7 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
                 listView.setSelection(pos);
             }
             // update our local list
-            transactionList = accessTransactions.getTransactions();
+            transactionList = accessTransactions.getTransactions(User.currUser);
             // refresh the transaction list view
             transactionArrayAdapter.notifyDataSetChanged();
             // refresh list
