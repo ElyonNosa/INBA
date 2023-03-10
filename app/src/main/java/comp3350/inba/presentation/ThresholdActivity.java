@@ -15,7 +15,7 @@ import android.widget.TextView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import comp3350.inba.R;
-import comp3350.inba.objects.User;
+import static comp3350.inba.objects.User.currUser;
 
 public class ThresholdActivity extends Activity {
 

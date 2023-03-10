@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/relativeLayout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
-    android:orientation="vertical"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
+    android:background="@color/colorPrimary"
     tools:context="comp3350.inba.presentation.SettingsActivity">
 
 
@@ -30,7 +27,7 @@
 
     <ListView
         android:id="@+id/listview"
-        android:layout_width="584dp"
+        android:layout_width="match_parent"
         android:layout_height="666dp"
         android:layout_above="@+id/bottom_navigation"
         android:layout_below="@id/settings_heading"
@@ -44,9 +41,10 @@
         style="@style/nav.Btn"
         android:layout_width="match_parent"
         android:layout_height="80dp"
+        android:layout_alignParentBottom="true"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="5dp"
-        app:menu="@menu/menu_bottom_nav_bar"  />
+        app:menu="@menu/menu_bottom_nav_bar" />
 
 
 </RelativeLayout>
