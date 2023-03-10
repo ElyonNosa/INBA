@@ -7,6 +7,7 @@ import java.util.List;
 
 import comp3350.inba.application.Service;
 import comp3350.inba.objects.Transaction;
+import comp3350.inba.objects.User;
 import comp3350.inba.persistence.TransactionPersistence;
 
 /**
@@ -28,9 +29,9 @@ public class AccessTransactions
      * Obtain transaction list from the database.
      * @return The database's list of transactions.
      */
-    public List<Transaction> getTransactions()
+    public List<Transaction> getTransactions(User currUser)
     {
-        return Collections.unmodifiableList(Service.getTransactionPersistence().getTransactionList());
+        return Collections.unmodifiableList(Service.getTransactionPersistence().getTransactionList(currUser));
     }
 
     /**
@@ -38,9 +39,9 @@ public class AccessTransactions
      * @param currentTransaction the transaction to insert.
      * @return the transaction inserted.
      */
-    public Transaction insertTransaction(Transaction currentTransaction)
+    public Transaction insertTransaction(User currUser, Transaction currentTransaction)
     {
-        return Service.getTransactionPersistence().insertTransaction(currentTransaction);
+        return Service.getTransactionPersistence().insertTransaction(currUser, currentTransaction);
     }
 
     /**
@@ -48,18 +49,18 @@ public class AccessTransactions
      * @param currentTransaction The transaction with updated properties.
      * @return The updated transaction.
      */
-    public Transaction updateTransaction(Transaction currentTransaction)
+    public Transaction updateTransaction(User currUser, Transaction currentTransaction)
     {
-        return Service.getTransactionPersistence().updateTransaction(currentTransaction);
+        return Service.getTransactionPersistence().updateTransaction(currUser, currentTransaction);
     }
 
     /**
      * Remove a transaction from the list.
      * @param currentTransaction The transaction to delete.
      */
-    public void deleteTransaction(Transaction currentTransaction)
+    public void deleteTransaction(User currUser, Transaction currentTransaction)
     {
-        Service.getTransactionPersistence().deleteTransaction(currentTransaction);
+        Service.getTransactionPersistence().deleteTransaction(currUser, currentTransaction);
     }
 
     /**
@@ -69,7 +70,7 @@ public class AccessTransactions
      */
     public int getTimestampIndex(LocalDateTime time) {
         // the list of transactions obtained from the database
-        List<Transaction> transactions = Service.getTransactionPersistence().getTransactionList();
+        List<Transaction> transactions = Service.getTransactionPersistence().getTransactionList(User.currUser);
         int output = -1;
         int i = 0;
         // start at end of array to reduce complexity
@@ -92,7 +93,7 @@ public class AccessTransactions
      */
     public double getSumInPeriod(LocalDateTime start, LocalDateTime end) {
         // the list of transactions obtained from the database
-        List<Transaction> transactions = Service.getTransactionPersistence().getTransactionList();
+        List<Transaction> transactions = Service.getTransactionPersistence().getTransactionList(User.currUser);
         double output = 0;
         int i = 0;
         boolean withinPeriod = true;
@@ -121,7 +122,7 @@ public class AccessTransactions
      */
     public int getIndexAfterDate(LocalDateTime date) {
         // the list of transactions obtained from the database
-        List<Transaction> transactions = Service.getTransactionPersistence().getTransactionList();
+        List<Transaction> transactions = Service.getTransactionPersistence().getTransactionList(User.currUser);
         int i = 0;
         boolean found = false;
         // loop through all items in the transaction list
@@ -143,7 +144,7 @@ public class AccessTransactions
     public ArrayList<Transaction> getTransactionsByCategory(String category)
     {
         // the list of transactions obtained from the database
-        List<Transaction> transactions = Service.getTransactionPersistence().getTransactionList();
+        List<Transaction> transactions = Service.getTransactionPersistence().getTransactionList(User.currUser);
         ArrayList<Transaction> output = new ArrayList<>();
         int i = 0;
 

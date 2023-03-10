@@ -25,7 +25,7 @@ public class ThresholdActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_threshold);
 
-        currUser = new User();
+        currUser = new User("");
     }
 
     public void onClick(View view) {

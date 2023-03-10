@@ -4,6 +4,7 @@ import comp3350.inba.R;
 import comp3350.inba.business.AccessTransactions;
 import comp3350.inba.objects.Transaction;
 import comp3350.inba.objects.Category;
+import comp3350.inba.objects.User;
 
 import androidx.annotation.NonNull;
 
@@ -48,7 +49,7 @@ public class ProfileActivity extends Activity {
         accessTransactions = new AccessTransactions();
         try {
             // display transactions in list
-            transactionList = accessTransactions.getTransactions();
+            transactionList = accessTransactions.getTransactions(User.currUser);
             transactionArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, transactionList);
             final ListView listView = findViewById(R.id.transaction_list);
             // adapt the transactions list to the listview
@@ -214,7 +215,7 @@ public class ProfileActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        transactionList = accessTransactions.getTransactions();
+        transactionList = accessTransactions.getTransactions(User.currUser);
         // update the transaction list
         transactionArrayAdapter.notifyDataSetChanged();
         updateGraph();

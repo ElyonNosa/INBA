@@ -2,16 +2,40 @@ package comp3350.inba.objects;
 
 /**
  * This class holds information pertaining to the user
-**/
+ **/
 public class User {
+    public static User currUser;
+
+    // Class Variables
+    private String userID;
+    private String passwd;
     private String userName;
     private double wkdayThresh;
     private double wkendThresh;
 
-    public User(){
-        userName = "";
+    // Constructor
+    public User(String uid) {
+        this(uid, "", "");
+    }
+
+    public User(String uid, String name, String passwd) {
+        this.userID = uid;
+        this.passwd = passwd;
+        this.userName = name;
         wkdayThresh = 0.0;
         wkendThresh = 0.0;
+    }
+
+    public void setPasswd(String pw) {
+        this.passwd = pw;
+    }
+
+    public String getPasswd() {
+        return this.passwd;
+    }
+
+    public String getUserID() {
+        return this.userID;
     }
 
     public String getUserName() {
