@@ -18,6 +18,12 @@ public class User {
         wkendThresh = 0.0;
     }
 
+    public User(String userName) {
+        this.userName = userName;
+        wkdayThresh = 0.0;
+        wkendThresh = 0.0;
+    }
+
     public String getUserName() {
         return userName;
     }

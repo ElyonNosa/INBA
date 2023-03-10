@@ -1,5 +1,6 @@
 package comp3350.inba.presentation;
 
+import static comp3350.inba.objects.User.currUser;
 import static comp3350.inba.objects.User.isLoggedIn;
 
 import android.app.Activity;
@@ -11,6 +12,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import comp3350.inba.R;
+import comp3350.inba.objects.User;
 
 public class LoginActivity extends Activity {
     private EditText usernameEditText;
@@ -35,6 +37,9 @@ public class LoginActivity extends Activity {
                 if (isValidCredentials(username, password)) {
                     // Save the user's login status
                     saveLoginStatus();
+
+                    // Save the new curr user
+                    currUser = new User(username);
 
                     // Start the MainActivity and finish the LoginActivity
                     Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
