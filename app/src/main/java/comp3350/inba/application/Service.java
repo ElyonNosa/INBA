@@ -11,17 +11,10 @@ import comp3350.inba.persistence.stubs.TransactionPersistenceStub;
  * Ensure that one instance of the database exists at a time.
  */
 public class Service {
-    // Note for the grader: HSQLDB implementation is present but does not work
+    // set to true for hsqldb database
     public static final boolean USE_HSQLDB = true;
     // instance of the transaction persistence
     private static TransactionPersistence transactionPersistence = null;
-
-    /**
-     * Constructor
-     */
-    public Service() {
-        this(true);
-    }
 
     /**
      * Constructor

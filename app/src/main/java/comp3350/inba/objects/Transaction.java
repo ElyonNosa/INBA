@@ -120,7 +120,7 @@ public class Transaction {
         }
 
         // check if transaction already exists
-        if (isNewTransaction && accessTransactions.getTimestampIndex(getTime()) != -1) {
+        if (isNewTransaction && accessTransactions.getTimestampIndex(User.currUser, getTime()) != -1) {
             return "A transaction has already been made within the last second. " +
                     "Please wait 1 second and try again.";
         }

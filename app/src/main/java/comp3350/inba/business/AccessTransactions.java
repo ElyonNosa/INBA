@@ -8,7 +8,6 @@ import java.util.List;
 import comp3350.inba.application.Service;
 import comp3350.inba.objects.Transaction;
 import comp3350.inba.objects.User;
-import comp3350.inba.persistence.TransactionPersistence;
 
 /**
  * AccessTransactions.java
@@ -68,9 +67,9 @@ public class AccessTransactions
      * @param time The timestamp.
      * @return The index of the transaction, or -1 if it doesn't exist.
      */
-    public int getTimestampIndex(LocalDateTime time) {
+    public int getTimestampIndex(User currUser, LocalDateTime time) {
         // the list of transactions obtained from the database
-        List<Transaction> transactions = Service.getTransactionPersistence().getTransactionList(User.currUser);
+        List<Transaction> transactions = Service.getTransactionPersistence().getTransactionList(currUser);
         int output = -1;
         int i = 0;
         // start at end of array to reduce complexity
@@ -91,9 +90,9 @@ public class AccessTransactions
      * @param start The time to start at.
      * @param end   The time to end at.
      */
-    public double getSumInPeriod(LocalDateTime start, LocalDateTime end) {
+    public double getSumInPeriod(User currUser, LocalDateTime start, LocalDateTime end) {
         // the list of transactions obtained from the database
-        List<Transaction> transactions = Service.getTransactionPersistence().getTransactionList(User.currUser);
+        List<Transaction> transactions = Service.getTransactionPersistence().getTransactionList(currUser);
         double output = 0;
         int i = 0;
         boolean withinPeriod = true;
@@ -120,9 +119,9 @@ public class AccessTransactions
      * @param date The date to test.
      * @return The index of the transaction after the date.
      */
-    public int getIndexAfterDate(LocalDateTime date) {
+    public int getIndexAfterDate(User currUser, LocalDateTime date) {
         // the list of transactions obtained from the database
-        List<Transaction> transactions = Service.getTransactionPersistence().getTransactionList(User.currUser);
+        List<Transaction> transactions = Service.getTransactionPersistence().getTransactionList(currUser);
         int i = 0;
         boolean found = false;
         // loop through all items in the transaction list
@@ -141,10 +140,10 @@ public class AccessTransactions
      * @param category The category to filter by.
      * @return The filtered list.
      */
-    public ArrayList<Transaction> getTransactionsByCategory(String category)
+    public ArrayList<Transaction> getTransactionsByCategory(User currUser, String category)
     {
         // the list of transactions obtained from the database
-        List<Transaction> transactions = Service.getTransactionPersistence().getTransactionList(User.currUser);
+        List<Transaction> transactions = Service.getTransactionPersistence().getTransactionList(currUser);
         ArrayList<Transaction> output = new ArrayList<>();
         int i = 0;
 
@@ -155,5 +154,17 @@ public class AccessTransactions
         }
 
         return output;
+    }
+
+    /**
+     * Delete all user transactions. Used during testing.
+     */
+    public void deleteAllTransactions(User currUser) {
+        // the list of transactions obtained from the database
+        List<Transaction> transactions = Service.getTransactionPersistence().getTransactionList(currUser);
+        int i = 0;
+        for (i = 0; i < transactions.size(); i++) {
+            deleteTransaction(currUser, transactions.get(i));
+        }
     }
 }

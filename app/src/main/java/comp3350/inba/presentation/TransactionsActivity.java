@@ -143,7 +143,7 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
             transactionList = accessTransactions.getTransactions(User.currUser);
         } else {
             // use the transaction list filtered by the category
-            transactionList = accessTransactions.getTransactionsByCategory(categoryFilter);
+            transactionList = accessTransactions.getTransactionsByCategory(User.currUser, categoryFilter);
         }
         // create the adapter for the transaction list
         transactionArrayAdapter = new ArrayAdapter<Transaction>(this,
@@ -360,7 +360,7 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
                     // create a date using the selected day, month, year.
                     // get the index of the transaction after this date.
                     // use the index to select a position in the list.
-                    listViewTransactions.smoothScrollToPosition(accessTransactions.getIndexAfterDate(
+                    listViewTransactions.smoothScrollToPosition(accessTransactions.getIndexAfterDate(User.currUser,
                             LocalDateTime.of(year, month+1, day, 0, 0)));
                 }, cldr.get(Calendar.YEAR), cldr.get(Calendar.MONTH), cldr.get(Calendar.DAY_OF_MONTH));
         picker.show();

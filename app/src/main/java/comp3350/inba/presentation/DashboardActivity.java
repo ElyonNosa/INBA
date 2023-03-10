@@ -262,7 +262,7 @@ public class DashboardActivity extends Activity {
         TextView title = findViewById(R.id.textTitle);
         LocalDateTime now = LocalDateTime.now();
         // get sum of transactions between now and 1 month ago
-        double total = accessTransactions.getSumInPeriod(now.minusSeconds(SECONDS_PER_MONTH), now);
+        double total = accessTransactions.getSumInPeriod(User.currUser, now.minusSeconds(SECONDS_PER_MONTH), now);
         String text = "Monthly Total: $" + String.format(Locale.ENGLISH, "%.2f", total);
         title.setText(text);
     }
