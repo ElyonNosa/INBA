@@ -28,11 +28,25 @@ public class SettingsActivity extends Activity {
             }
         });
 
+        Button reportButton = findViewById(R.id.Report);
+        reportButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openReportActivity();
+            }
+        });
+
         navigationBarInit();
     }
 
     public void openThresholdActivity(){
         Intent intent = new Intent(this, ThresholdActivity.class);
+        startActivity(intent);
+    }
+
+    public void openReportActivity()
+    {
+        Intent intent = new Intent( this, ReportActivity.class);
         startActivity(intent);
     }
 

@@ -38,11 +38,25 @@
 
     <Button
         android:id="@+id/threshold"
-        android:layout_width="475dp"
+        android:layout_width="match_parent"
         android:layout_height="64dp"
         android:layout_marginStart="4dp"
         android:layout_marginTop="76dp"
         android:text="Adjust Spending Threshold"
+        android:textAlignment="viewStart"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <Button
+        android:id="@+id/Report"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_below="@+id/threshold"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="148dp"
+        android:text="Report"
         android:textAlignment="viewStart"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
