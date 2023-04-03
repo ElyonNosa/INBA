@@ -8,6 +8,9 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -42,6 +45,40 @@ public class ReportActivity extends Activity {
 
         getList();
         sortListByPrice();
+        displayTable();
+    }
+
+    public void displayTable() {
+        TableLayout tableLayout = findViewById(R.id.table_layout);
+        tableLayout.removeAllViews(); // remove any existing views in the tableLayout
+
+        // Create header row
+        TableRow headerRow = new TableRow(this);
+        TextView headerTransactionTime = new TextView(this);
+        TextView headerCategory = new TextView(this);
+        TextView headerPrice = new TextView(this);
+        headerTransactionTime.setText("Transaction Time");
+        headerCategory.setText("Category");
+        headerPrice.setText("Price");
+        headerRow.addView(headerTransactionTime);
+        headerRow.addView(headerCategory);
+        headerRow.addView(headerPrice);
+        tableLayout.addView(headerRow);
+
+        // Create a row for each transaction in sortedPrice
+        for (int i = 0; i < sortedPrice.size(); i++) {
+            TableRow tableRow = new TableRow(this);
+            TextView transactionTime = new TextView(this);
+            TextView category = new TextView(this);
+            TextView price = new TextView(this);
+            transactionTime.setText(sortedLocalDateTime.get(i).toString());
+            category.setText(sortedCategory.get(i));
+            price.setText("$" + sortedPrice.get(i));
+            tableRow.addView(transactionTime);
+            tableRow.addView(category);
+            tableRow.addView(price);
+            tableLayout.addView(tableRow);
+        }
     }
 
     /**
