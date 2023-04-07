@@ -1,10 +1,12 @@
 package comp3350.inba.presentation;
+
 import androidx.annotation.NonNull;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+
 import comp3350.inba.R;
 
 import android.view.MenuItem;
@@ -35,27 +37,38 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * ViewTransationActivity.java
+ * The page where we see graphs containing transaction data.
+ * This class is coupled with activity_view_transaction.xml.
+ */
 public class ViewTransactionActivity extends Activity implements View.OnClickListener {
 
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_view_transaction);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_view_transaction);
 
-            Button button1 = findViewById(R.id.button);
-            Button button2 = findViewById(R.id.button2);
-            Button button3 = findViewById(R.id.button3);
+        // create the three buttons that switch between graph types
+        Button button1 = findViewById(R.id.button);
+        Button button2 = findViewById(R.id.button2);
+        Button button3 = findViewById(R.id.button3);
 
-            button1.setOnClickListener(this);
-            button2.setOnClickListener(this);
-            button3.setOnClickListener(this);
+        // create listeners for the buttons
+        button1.setOnClickListener(this);
+        button2.setOnClickListener(this);
+        button3.setOnClickListener(this);
 
-            navigationBarInit();
-            onClick(button1);
-        }
+        navigationBarInit();
+        // click button 1 by default
+        onClick(button1);
+    }
 
+    /**
+     * Initialize the navbar for this page.
+     */
     protected void navigationBarInit() {
         // Initialize and assign variable
-        BottomNavigationView bottomNavigationView=findViewById(R.id.bottom_navigation);
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
         // Set View Transaction selected
         bottomNavigationView.setSelectedItemId(R.id.buttonViewTransaction);
@@ -65,26 +78,26 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-                switch(item.getItemId()) // DashboardActivity
+                switch (item.getItemId()) // DashboardActivity
                 {
                     case R.id.home:
-                        startActivity(new Intent(getApplicationContext(),DashboardActivity.class));
-                        overridePendingTransition(0,0);
+                        startActivity(new Intent(getApplicationContext(), DashboardActivity.class));
+                        overridePendingTransition(0, 0);
                         return true;
                     case R.id.buttonViewTransaction:
                         // true if already on page.
                         return true;
                     case R.id.buttonAddTransaction:
-                        startActivity(new Intent(getApplicationContext(),TransactionsActivity.class));
-                        overridePendingTransition(0,0);
+                        startActivity(new Intent(getApplicationContext(), TransactionsActivity.class));
+                        overridePendingTransition(0, 0);
                         return true;
                     case R.id.buttonSettings:
-                        startActivity(new Intent(getApplicationContext(),SettingsActivity.class));
-                        overridePendingTransition(0,0);
+                        startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
+                        overridePendingTransition(0, 0);
                         return true;
                     case R.id.buttonProfile:
                         startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
-                        overridePendingTransition(0,0);
+                        overridePendingTransition(0, 0);
                         return true;
                 }
                 return false;
@@ -92,6 +105,10 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
         });
     }
 
+    /**
+     * onClick(): what happens when you click on the graph buttons.
+     * @param view
+     */
     @Override
     public void onClick(View view) {
         //Local Variable
@@ -144,6 +161,10 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
         }
     }
 
+    /**
+     * Obtain data formatted for the graphs.
+     * @return
+     */
     public List<Entry> getDataset() {
         List<Entry> entries = new ArrayList<>();
         entries.add(new BarEntry(0f, 10));
@@ -163,8 +184,7 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
     }
 
     //Converts list<Entry> to list<BarEntry>
-    private  List<BarEntry> cast(List<Entry> entryVal)
-    {
+    private List<BarEntry> cast(List<Entry> entryVal) {
         // Create a new list of BarEntry objects
         List<BarEntry> barEntries = new ArrayList<>();
         // Iterate over the entries list, converting each Entry to a BarEntry
@@ -177,8 +197,7 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
     }
 
     // Used to add a label to the x axis of Bar and Line graph
-    private ValueFormatter setLabel(String[] months)
-    {
+    private ValueFormatter setLabel(String[] months) {
         return new ValueFormatter() {
             @Override
             public String getAxisLabel(float value, AxisBase axis) {
@@ -195,8 +214,7 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
     }
 
     //TODO: Need to resolve the bug in label. It is printing duplicate months.
-    private void showLineChart(LineChart lineChart, String[] months)
-    {
+    private void showLineChart(LineChart lineChart, String[] months) {
 
         List<Entry> entries = getDataset();
         LineDataSet dataSet = new LineDataSet(entries, "Cost");
@@ -213,8 +231,8 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
         lineChart.setData(lineData);
         modifyLineChart(lineChart);
     }
-    private void modifyLineChart(LineChart lineChart)
-    {
+
+    private void modifyLineChart(LineChart lineChart) {
         // Refresh the chart
         lineChart.invalidate();
         lineChart.getDescription().setEnabled(false);
@@ -226,8 +244,7 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
     }
 
 
-    private void showBarChart(BarChart barChart, String[] months)
-    {
+    private void showBarChart(BarChart barChart, String[] months) {
         List<Entry> entryVal = getDataset();
         List<BarEntry> entries = cast(entryVal);
 
@@ -247,15 +264,15 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
         modifyBarChart(barChart);
     }
 
-    private void modifyBarChart(BarChart barChart)
-    {
+    private void modifyBarChart(BarChart barChart) {
         barChart.invalidate();
         barChart.setDrawBarShadow(false);
         barChart.setDrawValueAboveBar(true);
         barChart.getDescription().setEnabled(false);
         barChart.setDrawGridBackground(false);
     }
-    private  void showPieChart(PieChart pieChart){
+
+    private void showPieChart(PieChart pieChart) {
 
         //======================================================================================================================================
         ArrayList<PieEntry> pieEntries = new ArrayList<>();
@@ -268,12 +285,12 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
         ArrayList<Integer> colors = (ArrayList<Integer>) initChartColours();
 
         //input data and fit data into pie chart entry
-        for(String type: typeAmountMap.keySet()){
+        for (String type : typeAmountMap.keySet()) {
             pieEntries.add(new PieEntry(typeAmountMap.get(type).floatValue(), type));
         }
 
         //collecting the entries with label name
-        PieDataSet pieDataSet = new PieDataSet(pieEntries,label);
+        PieDataSet pieDataSet = new PieDataSet(pieEntries, label);
         //setting text size of the value
         pieDataSet.setValueTextSize(12f);
         //providing color list for coloring different entries
@@ -289,30 +306,28 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
 
     }
 
-    public Map<String, Integer> initPieChartData()
-    {
+    public Map<String, Integer> initPieChartData() {
 
         //initializing data
         Map<String, Integer> typeAmountMap = new HashMap<>();
-        typeAmountMap.put("Jan",10);
-        typeAmountMap.put("Feb",20);
-        typeAmountMap.put("Mar",30);
-        typeAmountMap.put("Apr",40);
-        typeAmountMap.put("May",50);
-        typeAmountMap.put("June",20);
-        typeAmountMap.put("July",50);
-        typeAmountMap.put("Aug",40);
-        typeAmountMap.put("Sept",90);
-        typeAmountMap.put("Oct",30);
-        typeAmountMap.put("Nov",70);
-        typeAmountMap.put("Dec",60);
+        typeAmountMap.put("Jan", 10);
+        typeAmountMap.put("Feb", 20);
+        typeAmountMap.put("Mar", 30);
+        typeAmountMap.put("Apr", 40);
+        typeAmountMap.put("May", 50);
+        typeAmountMap.put("June", 20);
+        typeAmountMap.put("July", 50);
+        typeAmountMap.put("Aug", 40);
+        typeAmountMap.put("Sept", 90);
+        typeAmountMap.put("Oct", 30);
+        typeAmountMap.put("Nov", 70);
+        typeAmountMap.put("Dec", 60);
 
         return typeAmountMap;
     }
 
     //Used to allocate different colours to pieChart
-    public List<Integer> initChartColours()
-    {
+    public List<Integer> initChartColours() {
         //initializing colors for the entries
         ArrayList<Integer> colors = new ArrayList<>();
         colors.add(Color.parseColor("#304567"));
@@ -323,7 +338,7 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
         colors.add(Color.parseColor("#ff5f67"));
         colors.add(Color.parseColor("#3ca567"));
 
-        return  colors;
+        return colors;
     }
 }
 

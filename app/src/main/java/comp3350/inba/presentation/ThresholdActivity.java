@@ -17,6 +17,11 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import comp3350.inba.R;
 import static comp3350.inba.objects.User.currUser;
 
+/**
+ * ThresholdActivity.java
+ * The page where the user adjusts their spending threshold.
+ * This class is coupled with activity_threshold.xml
+ */
 public class ThresholdActivity extends Activity {
 
     @Override
@@ -26,10 +31,12 @@ public class ThresholdActivity extends Activity {
     }
 
     public void onClick(View view) {
+        // text inputs for weekend and weekday
         EditText wkend = findViewById(R.id.WeekEndThreshold);
         EditText wkday = findViewById(R.id.WeekDayThreshold);
 
         try {
+            // save the thresholds in user profile
             currUser.setWkendThresh(Double.parseDouble(wkend.getText().toString()));
             currUser.setWkdayThresh(Double.parseDouble(wkday.getText().toString()));
 
@@ -38,6 +45,7 @@ public class ThresholdActivity extends Activity {
             Messages.fatalError(this, "There is an empty entry");
         }
 
+        // clear the text boxes
         wkend.setText("");
         wkday.setText("");
 

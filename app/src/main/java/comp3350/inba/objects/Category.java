@@ -3,6 +3,10 @@ package comp3350.inba.objects;
 import java.util.ArrayList;
 import java.util.TreeSet;
 
+/**
+ * Category.java
+ * The set of categories that a user has created.
+ */
 public class Category {
     // an ordered set of category names
     private static TreeSet<String> categorySet = new TreeSet<>();

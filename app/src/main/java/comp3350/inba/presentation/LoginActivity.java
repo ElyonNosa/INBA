@@ -14,6 +14,11 @@ import android.widget.Toast;
 import comp3350.inba.R;
 import comp3350.inba.objects.User;
 
+/**
+ * LoginActivity.java
+ * The page where the user logs in.
+ * This class is coupled with activity_login.xml
+ */
 public class LoginActivity extends Activity {
     private EditText usernameEditText;
     private EditText passwordEditText;
@@ -23,6 +28,7 @@ public class LoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        // obtain the text boxes for user credentials
         usernameEditText = findViewById(R.id.username_edit_text);
         passwordEditText = findViewById(R.id.password_edit_text);
 

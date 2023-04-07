@@ -33,6 +33,11 @@ import java.util.Map;
 import static comp3350.inba.objects.User.currUser;
 
 
+/**
+ * ProfileActivity.java
+ * The page where the user browses their profile information.
+ * This class is coupled with activity_profile.xml
+ */
 public class ProfileActivity extends Activity {
 
     // the transactions database

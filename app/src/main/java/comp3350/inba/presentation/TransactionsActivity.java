@@ -36,8 +36,8 @@ import comp3350.inba.objects.User;
 
 /**
  * TransactionsActivity.java
- * <p>
- * This class is coupled to activity_transactions.xm
+ * The page where we create, read, update and delete transactions.
+ * This class is coupled to activity_transactions.xml
  */
 public class TransactionsActivity extends Activity implements AdapterView.OnItemSelectedListener {
     // the transaction "database"
@@ -400,6 +400,9 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
         return output;
     }
 
+    /**
+     * Initialize the nav bar for this page.
+     */
     protected void navigationBarInit() {
         // Initialize and assign variable
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -453,7 +456,7 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
     }
 
     /**
-     *
+     * onItemSelected(): this runs when the user pressed an entry in the spinner.
      * @param parent
      * @param view
      * @param position
@@ -472,6 +475,6 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
      */
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
-        // implemented function. does nothing
+        // do nothing
     }
 }
