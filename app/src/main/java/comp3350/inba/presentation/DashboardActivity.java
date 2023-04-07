@@ -41,7 +41,7 @@ import comp3350.inba.objects.User;
 
 /**
  * DashboardActivity.java
- *
+ * The home page that shows a graph and recent transactions.
  * This class is coupled with activity_dashboard.xml
  */
 public class DashboardActivity extends Activity {

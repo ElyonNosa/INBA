@@ -14,6 +14,11 @@ import comp3350.inba.objects.Transaction;
 import comp3350.inba.objects.User;
 import comp3350.inba.persistence.TransactionPersistence;
 
+/**
+ * TransactionPersistenceHSQLDB.java
+ *
+ * SQL database holding the transactions.
+ */
 public class TransactionPersistenceHSQLDB implements TransactionPersistence {
 
     private final String dbPath;
@@ -42,6 +47,11 @@ public class TransactionPersistenceHSQLDB implements TransactionPersistence {
         return output;
     }
 
+    /**
+     * getTransactionList: obtain a list of transactions belonging to a given user.
+     * @param currUser The user to get the list from.
+     * @return the list of the user's transactions.
+     */
     @Override
     public List<Transaction> getTransactionList(User currUser) {
         final List<Transaction> transactions = new ArrayList<>();
@@ -73,11 +83,18 @@ public class TransactionPersistenceHSQLDB implements TransactionPersistence {
 
     }
 
+    /**
+     * insertTransaction: insert a new transaction for the current user.
+     * @param currUser The user who will obtain this transaction.
+     * @param currentTransaction The transaction to insert.
+     * @return The inserted transaction.
+     */
     @Override
     public Transaction insertTransaction(User currUser, Transaction currentTransaction) {
 
         try (final Connection c = connection()) {
             final PreparedStatement st = c.prepareStatement("INSERT INTO transactions VALUES(?, ?, ?, ?)");
+            // the transaction id is the username + the transaction time
             st.setString(1, currUser.getUserID() + currentTransaction.getTime().toString());
             st.setString(2, currentTransaction.getCategory());
             st.setString(3, currentTransaction.getTime().toString());
@@ -91,6 +108,12 @@ public class TransactionPersistenceHSQLDB implements TransactionPersistence {
         }
     }
 
+    /**
+     * updateTransaction: update a transaction for the current user.
+     * @param currUser The user whose transaction will be updated.
+     * @param currentTransaction The transaction with updated properties.
+     * @return The updated transaction.
+     */
     @Override
     public Transaction updateTransaction(User currUser, Transaction currentTransaction) {
 
@@ -98,6 +121,7 @@ public class TransactionPersistenceHSQLDB implements TransactionPersistence {
             final PreparedStatement st = c.prepareStatement("UPDATE transactions SET price = ?, category = ? WHERE key = ?");
             st.setString(1, "" + currentTransaction.getPrice());
             st.setString(2, currentTransaction.getCategory());
+            // the transaction id is the username + the transaction time
             st.setString(3, currUser.getUserID() + currentTransaction.getTime().toString());
 
             st.executeUpdate();
@@ -108,10 +132,16 @@ public class TransactionPersistenceHSQLDB implements TransactionPersistence {
         }
     }
 
+    /**
+     * deleteTransaction(): delete a transaction from a given user.
+     * @param currUser The user whose transaction will be deleted.
+     * @param currentTransaction The transaction to delete.
+     */
     @Override
     public void deleteTransaction(User currUser, Transaction currentTransaction) {
         try (final Connection c = connection()) {
             final PreparedStatement sc = c.prepareStatement("DELETE FROM transactions WHERE key = ?");
+            // the transaction id is the username + the transaction time
             sc.setString(1, currUser.getUserName() + currentTransaction.getTime().toString());
             sc.executeUpdate();
         } catch (final SQLException e) {

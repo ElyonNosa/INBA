@@ -13,7 +13,7 @@ import comp3350.inba.objects.User;
 public interface TransactionPersistence {
     /**
      * Get list of transactions.
-     * @return Next transaction.
+     * @return the list of transactions.
      */
     List<Transaction> getTransactionList(User currentUser);
 

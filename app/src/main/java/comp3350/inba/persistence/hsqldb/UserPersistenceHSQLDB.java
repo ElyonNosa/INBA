@@ -58,7 +58,8 @@ public class UserPersistenceHSQLDB implements UserPersistence
         {
             final Statement st = c.createStatement();
             final ResultSet rs = st.executeQuery("SELECT * FROM user");
-            
+
+            // loop until all users have been obtained
             while ( rs.next() ) 
             {
                 final User usr = fromResultSet(rs);
@@ -83,7 +84,8 @@ public class UserPersistenceHSQLDB implements UserPersistence
         {
             final PreparedStatement st = c.prepareStatement(
                 "INSERT INTO user VALUES(?, ?, ?)");
-            
+
+            // the user info
             st.setString( 1, usr.getUserID() );
             st.setString( 2, usr.getUserName() );
             st.setString( 3, usr.getPasswd() );
@@ -105,7 +107,8 @@ public class UserPersistenceHSQLDB implements UserPersistence
         {
             final PreparedStatement st = c.prepareStatement(
                 "UPDATE user SET name = ?, passwd = ? WHERE userID = ?");
-            
+
+            // the user info
             st.setString( 1, usr.getUserName() );
             st.setString( 2, usr.getPasswd() );
             st.setString( 3, usr.getUserID() );
