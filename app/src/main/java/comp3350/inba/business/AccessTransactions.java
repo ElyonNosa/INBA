@@ -16,6 +16,14 @@ import comp3350.inba.objects.User;
  */
 public class AccessTransactions
 {
+    // types of transaction errors
+    public enum TransactionError {
+        NONE,
+        CATEGORY_REQUIRED,
+        INVALID_PRICE,
+        OVER_LIMIT,
+        ALREADY_EXISTS
+    }
     /*
      * Constructor
      */
@@ -140,7 +148,7 @@ public class AccessTransactions
      * @param category The category to filter by.
      * @return The filtered list.
      */
-    public ArrayList<Transaction> getTransactionsByCategory(User currUser, String category)
+    public List<Transaction> getTransactionsByCategory(User currUser, String category)
     {
         // the list of transactions obtained from the database
         List<Transaction> transactions = Service.getTransactionPersistence().getTransactionList(currUser);
@@ -166,5 +174,37 @@ public class AccessTransactions
         for (i = 0; i < transactions.size(); i++) {
             deleteTransaction(currUser, transactions.get(i));
         }
+    }
+
+    /**
+     * Ensure the transaction has valid properties.
+     * @param txn The transaction to check.
+     * @param isNewTransaction True if the transaction does not exist in the database.
+     * @return The error message if the transaction is invalid, null string otherwise.
+     */
+    public TransactionError validateTransactionData(Transaction txn, boolean isNewTransaction) {
+        final int LIMIT = 999999999;
+
+        // check for valid category type
+        if (txn.getCategory() == null || txn.getCategory().length() <= 0) {
+            return TransactionError.CATEGORY_REQUIRED;
+        }
+
+        // check for valid price
+        if (txn.getPrice() <= 0) {
+            return TransactionError.INVALID_PRICE;
+        }
+
+        // check for valid price
+        if (txn.getPrice() >= LIMIT) {
+            return TransactionError.OVER_LIMIT;
+        }
+
+        // check if transaction already exists
+        if (isNewTransaction && getTimestampIndex(User.currUser, txn.getTime()) != -1) {
+            return TransactionError.ALREADY_EXISTS;
+        }
+
+        return TransactionError.NONE;
     }
 }

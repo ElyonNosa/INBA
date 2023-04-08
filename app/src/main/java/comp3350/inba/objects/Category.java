@@ -1,6 +1,7 @@
 package comp3350.inba.objects;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.TreeSet;
 
 /**
@@ -33,10 +34,11 @@ public class Category {
     }
 
     /**
-     * Get an arraylist of the names.
-     * @return The category set converted to a string arraylist.
+     * Get an list of the names.
+     * @return The category set converted to a string list.
      */
-    public static ArrayList<String> getCategorySet() {
+    public static List<String> getCategorySet() {
+        // arraylist has a constructor that allows for creation from tree sets
         return new ArrayList<>(categorySet);
     }
 }

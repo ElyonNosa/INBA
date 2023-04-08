@@ -1,3 +1,4 @@
+
 package comp3350.inba.presentation;
 
 import android.app.Activity;
@@ -70,7 +71,7 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
         accessTransactions = new AccessTransactions();
 
         // disable traditional input for the date input text box
-        ((EditText)findViewById(R.id.editTextDate)).setInputType(InputType.TYPE_NULL);
+        ((EditText) findViewById(R.id.editTextDate)).setInputType(InputType.TYPE_NULL);
         // Get a reference to the AutoCompleteTextView in the layout
         textViewCategories = findViewById(R.id.editTransactionCategory);
         // create an adapter from the existing list of categories, assign this to the autocomplete view
@@ -94,7 +95,7 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
         }
 
         // Initialize and assign variable
-        BottomNavigationView bottomNavigationView=findViewById(R.id.bottom_navigation);
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
         // Set TransactionActivity selected
         bottomNavigationView.setSelectedItemId(R.id.buttonAddTransaction);
@@ -104,28 +105,28 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-                switch(item.getItemId()) // DashboardActivity
+                switch (item.getItemId()) // DashboardActivity
                 {
                     case R.id.home:
-                        startActivity(new Intent(getApplicationContext(),DashboardActivity.class));
-                        overridePendingTransition(0,0);
+                        startActivity(new Intent(getApplicationContext(), DashboardActivity.class));
+                        overridePendingTransition(0, 0);
                         return true;
                     case R.id.buttonViewTransaction:
                         // Intent to start new Activity
                         startActivity(new Intent(getApplicationContext(), ViewTransactionActivity.class)); // Replace ViewActivity with the class used to view the graphs
                         // Can Adjust Transition Speed, both enter and exit
-                        overridePendingTransition(0,0);
+                        overridePendingTransition(0, 0);
                         return true;
                     case R.id.buttonAddTransaction:
                         // true if already on page.
                         return true;
                     case R.id.buttonSettings:
-                        startActivity(new Intent(getApplicationContext(),SettingsActivity.class));
-                        overridePendingTransition(0,0);
+                        startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
+                        overridePendingTransition(0, 0);
                         return true;
                     case R.id.buttonProfile:
                         startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
-                        overridePendingTransition(0,0);
+                        overridePendingTransition(0, 0);
                         return true;
                 }
                 return false;
@@ -236,14 +237,13 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
     public void buttonTransactionCreateOnClick(View v) {
         // create a new transaction from the EditText fields
         Transaction transaction = createTransactionFromEditText(true);
-        String result;
+        AccessTransactions.TransactionError status;
 
         // check for non null
         if (transaction != null) {
             // validate the transaction
-            result = transaction.validateTransactionData(accessTransactions, true);
-            // check if return is null (there are no errors)
-            if (result == null) {
+            status = accessTransactions.validateTransactionData(transaction, true);
+            if (parseTransactionStatus(status)) {
                 try {
                     // insert the transaction into the database list
                     transaction = accessTransactions.insertTransaction(User.currUser, transaction);
@@ -267,8 +267,6 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
                 } catch (final Exception e) {
                     Messages.fatalError(this, e.getMessage());
                 }
-            } else {
-                Messages.warning(this, result);
             }
         }
     }
@@ -281,14 +279,13 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
     public void buttonTransactionUpdateOnClick(View v) {
         // create a transaction from the EditText fields
         Transaction transaction = createTransactionFromEditText(false);
-        String result;
+        AccessTransactions.TransactionError status;
 
         // check for non null
         if (transaction != null) {
             // validate the transaction
-            result = transaction.validateTransactionData(accessTransactions, false);
-            // check if return is null (there are no errors)
-            if (result == null) {
+            status = accessTransactions.validateTransactionData(transaction, false);
+            if (parseTransactionStatus(status)) {
                 try {
                     // overwrite the given transaction into the database list
                     transaction = accessTransactions.updateTransaction(User.currUser, transaction);
@@ -307,10 +304,43 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
                 } catch (final Exception e) {
                     Messages.fatalError(this, e.getMessage());
                 }
-            } else {
-                Messages.warning(this, result);
             }
         }
+    }
+
+    /**
+     * Perform actions based on the type of transaction error.
+     * @param status The current transaction error.
+     * @return True if no error.
+     */
+    private boolean parseTransactionStatus(AccessTransactions.TransactionError status) {
+        boolean output = false;
+        switch (status) {
+            case NONE:
+                output = true;
+                break;
+            case CATEGORY_REQUIRED:
+                Messages.warning(this, "Error: category required." +
+                        "\nPlease input a category and try again.");
+                break;
+            case INVALID_PRICE:
+                Messages.warning(this, "Error: price must be positive." +
+                        "\nPlease input a positive price and try again.");
+                break;
+            case OVER_LIMIT:
+                Messages.warning(this, "Error: price is too high." +
+                        "\nPlease input a lower price and try again.");
+                break;
+            case ALREADY_EXISTS:
+                Messages.warning(this, "Error: creating transactions too quickly." +
+                        "\nPlease wait one second and try again.");
+                break;
+            default:
+                Messages.warning(this, "Error: unknown error." +
+                        "\nPlease send a bug report and explain what you were doing when the error occurred.");
+                break;
+        }
+        return output;
     }
 
 
@@ -346,6 +376,7 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
 
     /**
      * After clicking on the date text, show calendar dialog then scroll to the selected date.
+     *
      * @param v The view.
      */
     public void textEnterDateOnClick(View v) {
@@ -361,7 +392,7 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
                     // get the index of the transaction after this date.
                     // use the index to select a position in the list.
                     listViewTransactions.smoothScrollToPosition(accessTransactions.getIndexAfterDate(User.currUser,
-                            LocalDateTime.of(year, month+1, day, 0, 0)));
+                            LocalDateTime.of(year, month + 1, day, 0, 0)));
                 }, cldr.get(Calendar.YEAR), cldr.get(Calendar.MONTH), cldr.get(Calendar.DAY_OF_MONTH));
         picker.show();
     }
@@ -446,10 +477,11 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
 
     /**
      * Getter for the category string arraylist with an additional "No filter" category.
+     *
      * @return The string arraylist to be used in the category filter spinner.
      */
-    private ArrayList<String> getCategoryFilterArray() {
-        ArrayList<String> output = Category.getCategorySet();
+    private List<String> getCategoryFilterArray() {
+        List<String> output = Category.getCategorySet();
         // add the "No filter" category to the filter list
         output.add(0, NO_FILTER);
         return output;
@@ -457,6 +489,7 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
 
     /**
      * onItemSelected(): this runs when the user pressed an entry in the spinner.
+     *
      * @param parent
      * @param view
      * @param position

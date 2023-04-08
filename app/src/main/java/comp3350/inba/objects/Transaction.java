@@ -93,37 +93,4 @@ public class Transaction {
         }
         return equals;
     }
-
-    /**
-     * Ensure the transaction has valid properties.
-     * @param accessTransactions The transaction persistence.
-     * @param isNewTransaction True if the transaction does not exist in the database.
-     * @return The error message if the transaction is invalid, null string otherwise.
-     */
-    public String validateTransactionData(AccessTransactions accessTransactions, boolean isNewTransaction) {
-        final int LIMIT = 1000000000;
-
-        // check for valid category type
-        if (getCategory() == null || getCategory().length() < 1) {
-            return "Transaction Category required";
-        }
-
-        // check for valid price
-        if (getPrice() <= 0) {
-            return "Positive price required";
-        }
-
-        // check for valid price
-        if (getPrice() >= LIMIT) {
-            return "We know you are too poor to afford this!";
-        }
-
-        // check if transaction already exists
-        if (isNewTransaction && accessTransactions.getTimestampIndex(User.currUser, getTime()) != -1) {
-            return "A transaction has already been made within the last second. " +
-                    "Please wait 1 second and try again.";
-        }
-
-        return null;
-    }
 }
