@@ -1,7 +1,5 @@
 package comp3350.inba.presentation;
 
-import static comp3350.inba.objects.User.isLoggedIn;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -34,10 +32,10 @@ import java.util.Locale;
 
 
 import comp3350.inba.R;
-import comp3350.inba.application.Main;
 import comp3350.inba.business.AccessTransactions;
 import comp3350.inba.objects.Transaction;
 import comp3350.inba.objects.User;
+import comp3350.inba.application.Service;
 
 /**
  * DashboardActivity.java
@@ -54,6 +52,8 @@ public class DashboardActivity extends Activity {
     private ArrayAdapter<Transaction> transactionArrayAdapter;
     // the local list of transactions
     private List<Transaction> transactionList;
+    // instance of user
+    private User user;
 
     /**
      * Constructor
@@ -63,7 +63,10 @@ public class DashboardActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(!isLoggedIn) {
+        user = new User(getApplicationContext());
+
+        // login if not currently logged in
+        if(!user.getLoginStatus()) {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
             finish();
@@ -76,7 +79,7 @@ public class DashboardActivity extends Activity {
         accessTransactions = new AccessTransactions(Arrays.asList(PREDEFINED_CATEG_NAMES));
         try {
             // display transactions in list
-            transactionList = accessTransactions.getTransactions(User.currUser);
+            transactionList = accessTransactions.getTransactions(user.getUserID());
             transactionArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, transactionList);
             final ListView listView = findViewById(R.id.transaction_list);
             // adapt the transactions list to the listview
@@ -92,7 +95,7 @@ public class DashboardActivity extends Activity {
 
     // will need to ask the DB if we are logged in
     private boolean isLoggedIn() {
-        return isLoggedIn;
+        return user.getLoginStatus();
     }
 
     /**
@@ -249,7 +252,7 @@ public class DashboardActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        transactionList = accessTransactions.getTransactions(User.currUser);
+        transactionList = accessTransactions.getTransactions(user.getUserid());
         // update the transaction list
         transactionArrayAdapter.notifyDataSetChanged();
 
@@ -266,7 +269,7 @@ public class DashboardActivity extends Activity {
         TextView title = findViewById(R.id.textTitle);
         LocalDateTime now = LocalDateTime.now();
         // get sum of transactions between now and 1 month ago
-        double total = accessTransactions.getSumInPeriod(User.currUser, now.minusSeconds(SECONDS_PER_MONTH), now);
+        double total = accessTransactions.getSumInPeriod(user.getUserid(), now.minusSeconds(SECONDS_PER_MONTH), now);
         String text = "Monthly Total: $" + String.format(Locale.ENGLISH, "%.2f", total);
         title.setText(text);
     }
@@ -289,7 +292,7 @@ public class DashboardActivity extends Activity {
 
             copyAssetsToDirectory(assetNames, dataDirectory);
 
-            Main.setDBPathName(dataDirectory.toString() + "/" + Main.getDBPathName());
+            Service.setDBPathName(dataDirectory.toString() + "/" + Service.getDBPathName());
 
         } catch (final IOException ioe) {
             Messages.warning(this, "Unable to access application data: " + ioe.getMessage());

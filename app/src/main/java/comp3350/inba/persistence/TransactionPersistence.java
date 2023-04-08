@@ -15,25 +15,25 @@ public interface TransactionPersistence {
      * Get list of transactions.
      * @return the list of transactions.
      */
-    List<Transaction> getTransactionList(User currentUser);
+    List<Transaction> getTransactionList(String currentUser);
 
     /**
      * Insert a transaction to the list.
      * @param currentTransaction The transaction to insert.
      * @return The inserted transaction.
      */
-    Transaction insertTransaction(User currentUser, Transaction currentTransaction);
+    Transaction insertTransaction(String currentUser, Transaction currentTransaction);
 
     /**
      * Update a transaction that exists in the list.
      * @param currentTransaction The transaction with updated properties.
      * @return The updated transaction.
      */
-    Transaction updateTransaction(User currentUser, Transaction currentTransaction);
+    Transaction updateTransaction(String currentUser, Transaction currentTransaction);
 
     /**
      * Remove a transaction from the list.
      * @param currentTransaction The transaction to delete.
      */
-    void deleteTransaction(User currentUser, Transaction currentTransaction);
+    void deleteTransaction(String currentUser, Transaction currentTransaction);
 }

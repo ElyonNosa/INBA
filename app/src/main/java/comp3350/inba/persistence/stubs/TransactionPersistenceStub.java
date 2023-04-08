@@ -67,7 +67,7 @@ public class TransactionPersistenceStub implements TransactionPersistence {
      * @return the list of transactions.
      */
     @Override
-    public List<Transaction> getTransactionList(User currUser) {
+    public List<Transaction> getTransactionList(String currUser) {
         return Collections.unmodifiableList(transactions);
     }
 
@@ -77,7 +77,7 @@ public class TransactionPersistenceStub implements TransactionPersistence {
      * @return The inserted transaction. Null if the transaction was not chronologically ordered.
      */
     @Override
-    public Transaction insertTransaction(User currUser, Transaction currentTransaction) {
+    public Transaction insertTransaction(String currUser, Transaction currentTransaction) {
         Transaction output = null;
         // check if timestamp is greater than timestamp of last transaction
         if (transactions.size() == 0 || currentTransaction.getTime().isAfter(
@@ -94,7 +94,7 @@ public class TransactionPersistenceStub implements TransactionPersistence {
      * @return The updated transaction.
      */
     @Override
-    public Transaction updateTransaction(User currUser, Transaction currentTransaction) {
+    public Transaction updateTransaction(String currUser, Transaction currentTransaction) {
         int index = transactions.indexOf(currentTransaction);
         if (index >= 0)
         {
@@ -108,7 +108,7 @@ public class TransactionPersistenceStub implements TransactionPersistence {
      * @param currentTransaction The transaction to delete.
      */
     @Override
-    public void deleteTransaction(User currUser, Transaction currentTransaction) {
+    public void deleteTransaction(String currUser, Transaction currentTransaction) {
         int index = transactions.indexOf(currentTransaction);
         if (index >= 0)
         {

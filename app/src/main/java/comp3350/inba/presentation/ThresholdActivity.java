@@ -15,7 +15,7 @@ import android.widget.TextView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import comp3350.inba.R;
-import static comp3350.inba.objects.User.currUser;
+import comp3350.inba.objects.User;
 
 /**
  * ThresholdActivity.java
@@ -23,11 +23,14 @@ import static comp3350.inba.objects.User.currUser;
  * This class is coupled with activity_threshold.xml
  */
 public class ThresholdActivity extends Activity {
+    // instance of user
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_threshold);
+        user = new User(getApplicationContext());
     }
 
     public void onClick(View view) {
@@ -37,10 +40,10 @@ public class ThresholdActivity extends Activity {
 
         try {
             // save the thresholds in user profile
-            currUser.setWkendThresh(Double.parseDouble(wkend.getText().toString()));
-            currUser.setWkdayThresh(Double.parseDouble(wkday.getText().toString()));
+            user.setWkendThresh(Double.parseDouble(wkend.getText().toString()));
+            user.setWkdayThresh(Double.parseDouble(wkday.getText().toString()));
 
-            System.out.println(currUser.getWkdayThresh());
+            System.out.println(user.getWkdayThresh());
         }catch (final Exception e) {
             Messages.fatalError(this, "There is an empty entry");
         }

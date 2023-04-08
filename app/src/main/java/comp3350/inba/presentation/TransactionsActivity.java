@@ -61,6 +61,8 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
     private static final String NO_FILTER = "No filter";
     // string of the current category filter
     private String categoryFilter = NO_FILTER;
+    // instance of user
+    private User user;
 
 
     @Override
@@ -69,6 +71,8 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
         setContentView(R.layout.activity_transactions);
         // create instance of access transactions
         accessTransactions = new AccessTransactions();
+
+        user = new User(getApplicationContext());
 
         // disable traditional input for the date input text box
         ((EditText) findViewById(R.id.editTextDate)).setInputType(InputType.TYPE_NULL);
@@ -87,7 +91,7 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
                 this, android.R.layout.simple_list_item_1, getCategoryFilterArray()));
 
         // get the transaction list from the database
-        transactionList = accessTransactions.getTransactions(User.currUser);
+        transactionList = accessTransactions.getTransactions(user.getUserid());
         try {
             updateListView();
         } catch (final Exception e) {
@@ -141,10 +145,10 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
         // check to see if "No filter" is selected
         if (categoryFilter.equals(NO_FILTER)) {
             // use the normal list
-            transactionList = accessTransactions.getTransactions(User.currUser);
+            transactionList = accessTransactions.getTransactions(user.getUserid());
         } else {
             // use the transaction list filtered by the category
-            transactionList = accessTransactions.getTransactionsByCategory(User.currUser, categoryFilter);
+            transactionList = accessTransactions.getTransactionsByCategory(user.getUserid(), categoryFilter);
         }
         // create the adapter for the transaction list
         transactionArrayAdapter = new ArrayAdapter<Transaction>(this,
@@ -242,13 +246,13 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
         // check for non null
         if (transaction != null) {
             // validate the transaction
-            status = accessTransactions.validateTransactionData(transaction, true);
+            status = accessTransactions.validateTransactionData(transaction, user.getUserID(), true);
             if (parseTransactionStatus(status)) {
                 try {
                     // insert the transaction into the database list
-                    transaction = accessTransactions.insertTransaction(User.currUser, transaction);
+                    transaction = accessTransactions.insertTransaction(user.getUserid(), transaction);
                     // update our local list
-                    transactionList = accessTransactions.getTransactions(User.currUser);
+                    transactionList = accessTransactions.getTransactions(user.getUserid());
                     // refresh the transaction list view
                     transactionArrayAdapter.notifyDataSetChanged();
                     // set list position to the new transaction
@@ -284,13 +288,13 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
         // check for non null
         if (transaction != null) {
             // validate the transaction
-            status = accessTransactions.validateTransactionData(transaction, false);
+            status = accessTransactions.validateTransactionData(transaction, user.getUserid(), false);
             if (parseTransactionStatus(status)) {
                 try {
                     // overwrite the given transaction into the database list
-                    transaction = accessTransactions.updateTransaction(User.currUser, transaction);
+                    transaction = accessTransactions.updateTransaction(user.getUserid(), transaction);
                     // update our local list
-                    transactionList = accessTransactions.getTransactions(User.currUser);
+                    transactionList = accessTransactions.getTransactions(user.getUserid());
                     // refresh the transaction list view
                     transactionArrayAdapter.notifyDataSetChanged();
                     // set list position to the updated transaction
@@ -356,7 +360,7 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
 
         try {
             // delete the given transaction into the database list
-            accessTransactions.deleteTransaction(User.currUser, transaction);
+            accessTransactions.deleteTransaction(user.getUserid(), transaction);
 
             // set list position as the index of the deleted transaction
             int pos = transactionList.indexOf(transaction);
@@ -365,7 +369,7 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
                 listView.setSelection(pos);
             }
             // update our local list
-            transactionList = accessTransactions.getTransactions(User.currUser);
+            transactionList = accessTransactions.getTransactions(user.getUserid());
             // refresh the transaction list view
             transactionArrayAdapter.notifyDataSetChanged();
             // refresh list
@@ -392,7 +396,7 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
                     // create a date using the selected day, month, year.
                     // get the index of the transaction after this date.
                     // use the index to select a position in the list.
-                    listViewTransactions.smoothScrollToPosition(accessTransactions.getIndexAfterDate(User.currUser,
+                    listViewTransactions.smoothScrollToPosition(accessTransactions.getIndexAfterDate(user.getUserid(),
                             LocalDateTime.of(year, month + 1, day, 0, 0)));
                 }, cldr.get(Calendar.YEAR), cldr.get(Calendar.MONTH), cldr.get(Calendar.DAY_OF_MONTH));
         picker.show();

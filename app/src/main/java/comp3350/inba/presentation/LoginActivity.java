@@ -1,8 +1,5 @@
 package comp3350.inba.presentation;
 
-import static comp3350.inba.objects.User.currUser;
-import static comp3350.inba.objects.User.isLoggedIn;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,11 +19,14 @@ import comp3350.inba.objects.User;
 public class LoginActivity extends Activity {
     private EditText usernameEditText;
     private EditText passwordEditText;
+    // instance of user
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        user = new User(getApplicationContext());
 
         // obtain the text boxes for user credentials
         usernameEditText = findViewById(R.id.username_edit_text);
@@ -44,10 +44,8 @@ public class LoginActivity extends Activity {
                     // Save the user's login status
                     saveLoginStatus();
                     // set current user using credentials
-                    User.currUser = new User(username, "", password);
-
-                    // Save the new curr user
-                    currUser = new User(username);
+                    user.setUserid(username);
+                    user.setUserName(username);
 
                     // Start the MainActivity and finish the LoginActivity
                     Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
@@ -68,7 +66,6 @@ public class LoginActivity extends Activity {
 
     private void saveLoginStatus() {
         // Save the user's login status in shared preferences or local database
-        isLoggedIn = true;
-
+        user.setLoginStatus(true);
     }
 }

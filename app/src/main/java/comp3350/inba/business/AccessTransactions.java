@@ -10,6 +10,7 @@ import java.util.TreeSet;
 import comp3350.inba.application.Service;
 import comp3350.inba.objects.Transaction;
 import comp3350.inba.objects.User;
+import comp3350.inba.persistence.TransactionPersistence;
 
 /**
  * AccessTransactions.java
@@ -19,7 +20,7 @@ import comp3350.inba.objects.User;
 public class AccessTransactions
 {
     // an ordered set of category names
-    private final TreeSet<String> categNames = new TreeSet<>();
+    private static final TreeSet<String> categNames = new TreeSet<>();
     // types of transaction errors
     public enum TransactionError {
         NONE,
@@ -28,6 +29,8 @@ public class AccessTransactions
         OVER_LIMIT,
         ALREADY_EXISTS
     }
+    // the instance of the transaction persistence
+    TransactionPersistence txnPersistance;
 
     /**
      * Constructor
@@ -43,9 +46,10 @@ public class AccessTransactions
      */
     public AccessTransactions(List<String> categNames)
     {
+        txnPersistance = Service.getTransactionPersistence();
         if(categNames != null)
         {
-            this.categNames.addAll(categNames);
+            AccessTransactions.categNames.addAll(categNames);
         }
     }
 
@@ -53,9 +57,9 @@ public class AccessTransactions
      * Obtain transaction list from the database.
      * @return The database's list of transactions.
      */
-    public List<Transaction> getTransactions(User currUser)
+    public List<Transaction> getTransactions(String currUser)
     {
-        List<Transaction> output = Collections.unmodifiableList(Service.getTransactionPersistence().getTransactionList(currUser));
+        List<Transaction> output = Collections.unmodifiableList(txnPersistance.getTransactionList(currUser));
         // upon retrieving the list, update the set of category names
         for (Transaction txn : output) {
             categNames.add(txn.getCategoryName());
@@ -68,11 +72,11 @@ public class AccessTransactions
      * @param currentTransaction the transaction to insert.
      * @return the transaction inserted.
      */
-    public Transaction insertTransaction(User currUser, Transaction currentTransaction)
+    public Transaction insertTransaction(String currUser, Transaction currentTransaction)
     {
         // add the category name to the tree set
         categNames.add(currentTransaction.getCategoryName());
-        return Service.getTransactionPersistence().insertTransaction(currUser, currentTransaction);
+        return txnPersistance.insertTransaction(currUser, currentTransaction);
     }
 
     /**
@@ -80,18 +84,18 @@ public class AccessTransactions
      * @param currentTransaction The transaction with updated properties.
      * @return The updated transaction.
      */
-    public Transaction updateTransaction(User currUser, Transaction currentTransaction)
+    public Transaction updateTransaction(String currUser, Transaction currentTransaction)
     {
-        return Service.getTransactionPersistence().updateTransaction(currUser, currentTransaction);
+        return txnPersistance.updateTransaction(currUser, currentTransaction);
     }
 
     /**
      * Remove a transaction from the list.
      * @param currentTransaction The transaction to delete.
      */
-    public void deleteTransaction(User currUser, Transaction currentTransaction)
+    public void deleteTransaction(String currUser, Transaction currentTransaction)
     {
-        Service.getTransactionPersistence().deleteTransaction(currUser, currentTransaction);
+        txnPersistance.deleteTransaction(currUser, currentTransaction);
     }
 
     /**
@@ -99,9 +103,9 @@ public class AccessTransactions
      * @param time The timestamp.
      * @return The index of the transaction, or -1 if it doesn't exist.
      */
-    public int getTimestampIndex(User currUser, LocalDateTime time) {
+    public int getTimestampIndex(String currUser, LocalDateTime time) {
         // the list of transactions obtained from the database
-        List<Transaction> transactions = Service.getTransactionPersistence().getTransactionList(currUser);
+        List<Transaction> transactions = txnPersistance.getTransactionList(currUser);
         int output = -1;
         int i = 0;
         // start at end of array to reduce complexity
@@ -122,9 +126,9 @@ public class AccessTransactions
      * @param start The time to start at.
      * @param end   The time to end at.
      */
-    public double getSumInPeriod(User currUser, LocalDateTime start, LocalDateTime end) {
+    public double getSumInPeriod(String currUser, LocalDateTime start, LocalDateTime end) {
         // the list of transactions obtained from the database
-        List<Transaction> transactions = Service.getTransactionPersistence().getTransactionList(currUser);
+        List<Transaction> transactions = txnPersistance.getTransactionList(currUser);
         double output = 0;
         int i = 0;
         boolean withinPeriod = true;
@@ -151,9 +155,9 @@ public class AccessTransactions
      * @param date The date to test.
      * @return The index of the transaction after the date.
      */
-    public int getIndexAfterDate(User currUser, LocalDateTime date) {
+    public int getIndexAfterDate(String currUser, LocalDateTime date) {
         // the list of transactions obtained from the database
-        List<Transaction> transactions = Service.getTransactionPersistence().getTransactionList(currUser);
+        List<Transaction> transactions = txnPersistance.getTransactionList(currUser);
         int i = 0;
         boolean found = false;
         // loop through all items in the transaction list
@@ -172,10 +176,10 @@ public class AccessTransactions
      * @param category The category to filter by.
      * @return The filtered list.
      */
-    public List<Transaction> getTransactionsByCategory(User currUser, String category)
+    public List<Transaction> getTransactionsByCategory(String currUser, String category)
     {
         // the list of transactions obtained from the database
-        List<Transaction> transactions = Service.getTransactionPersistence().getTransactionList(currUser);
+        List<Transaction> transactions = txnPersistance.getTransactionList(currUser);
         ArrayList<Transaction> output = new ArrayList<>();
         int i = 0;
 
@@ -191,9 +195,9 @@ public class AccessTransactions
     /**
      * Delete all user transactions. Used during testing.
      */
-    public void deleteAllTransactions(User currUser) {
+    public void deleteAllTransactions(String currUser) {
         // the list of transactions obtained from the database
-        List<Transaction> transactions = Service.getTransactionPersistence().getTransactionList(currUser);
+        List<Transaction> transactions = txnPersistance.getTransactionList(currUser);
         int i = 0;
         for (i = 0; i < transactions.size(); i++) {
             deleteTransaction(currUser, transactions.get(i));
@@ -206,7 +210,7 @@ public class AccessTransactions
      * @param isNewTransaction True if the transaction does not exist in the database.
      * @return The error message if the transaction is invalid, null string otherwise.
      */
-    public TransactionError validateTransactionData(Transaction txn, boolean isNewTransaction) {
+    public TransactionError validateTransactionData(Transaction txn, String userid, boolean isNewTransaction) {
         final int LIMIT = 999999999;
 
         // check for valid category type
@@ -225,7 +229,7 @@ public class AccessTransactions
         }
 
         // check if transaction already exists
-        if (isNewTransaction && getTimestampIndex(User.currUser, txn.getTime()) != -1) {
+        if (isNewTransaction && getTimestampIndex(userid, txn.getTime()) != -1) {
             return TransactionError.ALREADY_EXISTS;
         }
 
