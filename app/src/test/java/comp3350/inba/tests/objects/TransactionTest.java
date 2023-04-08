@@ -10,7 +10,6 @@ import android.annotation.SuppressLint;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 public class TransactionTest
 {
@@ -25,7 +24,7 @@ public class TransactionTest
         // non null test
         assertNotNull(transaction);
         // category test
-        assertEquals("Education", transaction.getCategory());
+        assertEquals("Education", transaction.getCategoryName());
         // price test
         assertEquals(12.34, transaction.getPrice(), 0.0);
 

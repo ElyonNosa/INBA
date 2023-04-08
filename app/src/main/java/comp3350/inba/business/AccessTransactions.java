@@ -2,8 +2,10 @@ package comp3350.inba.business;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.TreeSet;
 
 import comp3350.inba.application.Service;
 import comp3350.inba.objects.Transaction;
@@ -16,6 +18,8 @@ import comp3350.inba.objects.User;
  */
 public class AccessTransactions
 {
+    // an ordered set of category names
+    private final TreeSet<String> categNames = new TreeSet<>();
     // types of transaction errors
     public enum TransactionError {
         NONE,
@@ -24,12 +28,25 @@ public class AccessTransactions
         OVER_LIMIT,
         ALREADY_EXISTS
     }
-    /*
+
+    /**
      * Constructor
      */
     public AccessTransactions()
     {
-        // do nothing
+        this(null);
+    }
+
+    /**
+     * Constructor that allows for predefined category names.
+     * @param categNames The predefined list of category names.
+     */
+    public AccessTransactions(List<String> categNames)
+    {
+        if(categNames != null)
+        {
+            this.categNames.addAll(categNames);
+        }
     }
 
     /**
@@ -38,7 +55,12 @@ public class AccessTransactions
      */
     public List<Transaction> getTransactions(User currUser)
     {
-        return Collections.unmodifiableList(Service.getTransactionPersistence().getTransactionList(currUser));
+        List<Transaction> output = Collections.unmodifiableList(Service.getTransactionPersistence().getTransactionList(currUser));
+        // upon retrieving the list, update the set of category names
+        for (Transaction txn : output) {
+            categNames.add(txn.getCategoryName());
+        }
+        return output;
     }
 
     /**
@@ -48,6 +70,8 @@ public class AccessTransactions
      */
     public Transaction insertTransaction(User currUser, Transaction currentTransaction)
     {
+        // add the category name to the tree set
+        categNames.add(currentTransaction.getCategoryName());
         return Service.getTransactionPersistence().insertTransaction(currUser, currentTransaction);
     }
 
@@ -156,7 +180,7 @@ public class AccessTransactions
         int i = 0;
 
         for (i = 0; i < transactions.size(); i++) {
-            if (transactions.get(i).getCategory().equals(category)) {
+            if (transactions.get(i).getCategoryName().equals(category)) {
                 output.add(transactions.get(i));
             }
         }
@@ -186,7 +210,7 @@ public class AccessTransactions
         final int LIMIT = 999999999;
 
         // check for valid category type
-        if (txn.getCategory() == null || txn.getCategory().length() <= 0) {
+        if (txn.getCategoryName() == null || txn.getCategoryName().length() <= 0) {
             return TransactionError.CATEGORY_REQUIRED;
         }
 
@@ -206,5 +230,14 @@ public class AccessTransactions
         }
 
         return TransactionError.NONE;
+    }
+
+    /**
+     * Get a list of the names.
+     * @return The category set converted to a string list.
+     */
+    public List<String> getCategNames() {
+        // arraylist has a constructor that allows for creation from tree sets
+        return new ArrayList<>(categNames);
     }
 }

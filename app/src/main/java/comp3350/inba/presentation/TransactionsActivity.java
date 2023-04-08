@@ -24,14 +24,13 @@ import androidx.annotation.NonNull;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
 import comp3350.inba.R;
 import comp3350.inba.business.AccessTransactions;
-import comp3350.inba.objects.Category;
 import comp3350.inba.objects.Transaction;
 import comp3350.inba.objects.User;
 
@@ -41,6 +40,7 @@ import comp3350.inba.objects.User;
  * This class is coupled to activity_transactions.xml
  */
 public class TransactionsActivity extends Activity implements AdapterView.OnItemSelectedListener {
+
     // the transaction "database"
     private AccessTransactions accessTransactions;
     // the local list of transactions after retrieving from the "database"
@@ -76,7 +76,7 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
         textViewCategories = findViewById(R.id.editTransactionCategory);
         // create an adapter from the existing list of categories, assign this to the autocomplete view
         textViewCategories.setAdapter(new ArrayAdapter<String>(
-                this, android.R.layout.simple_list_item_1, Category.getCategorySet()));
+                this, android.R.layout.simple_list_item_1, accessTransactions.getCategNames()));
 
         // get a reference to the Spinner in the layout
         spinnerCategories = findViewById(R.id.spinnerCategoryFilter);
@@ -163,7 +163,7 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
                 TextView text1 = view.findViewById(android.R.id.text1);
                 TextView text2 = view.findViewById(android.R.id.text2);
                 // a string containing category, followed by price
-                String categoryPrice = transactionList.get(position).getCategory() + ": $"
+                String categoryPrice = transactionList.get(position).getCategoryName() + ": $"
                         + String.format(Locale.ENGLISH, "%.2f",
                         transactionList.get(position).getPrice());
 
@@ -225,7 +225,7 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
         EditText editPrice = findViewById(R.id.editTransactionPrice);
 
         // update EditTexts with information of the transaction.
-        editCategory.setText(selected.getCategory());
+        editCategory.setText(selected.getCategoryName());
         editPrice.setText(String.format(Locale.ENGLISH, "%.2f", selected.getPrice()));
     }
 
@@ -258,7 +258,7 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
                         listView.setSelection(pos);
                     }
                     // create an adapter from the existing list of categories, assign this to the autocomplete view
-                    textViewCategories.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, Category.getCategorySet()));
+                    textViewCategories.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, accessTransactions.getCategNames()));
                     // create an adapter from the existing list of categories, assign this to the category filter spinner
                     spinnerCategories.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, getCategoryFilterArray()));
                     // these are done in case of a new category addition, we want to update the autocomplete and filter list
@@ -310,6 +310,7 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
 
     /**
      * Perform actions based on the type of transaction error.
+     *
      * @param status The current transaction error.
      * @return True if no error.
      */
@@ -481,7 +482,7 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
      * @return The string arraylist to be used in the category filter spinner.
      */
     private List<String> getCategoryFilterArray() {
-        List<String> output = Category.getCategorySet();
+        List<String> output = accessTransactions.getCategNames();
         // add the "No filter" category to the filter list
         output.add(0, NO_FILTER);
         return output;

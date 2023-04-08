@@ -96,7 +96,7 @@ public class TransactionPersistenceHSQLDB implements TransactionPersistence {
             final PreparedStatement st = c.prepareStatement("INSERT INTO transactions VALUES(?, ?, ?, ?)");
             // the transaction id is the username + the transaction time
             st.setString(1, currUser.getUserID() + currentTransaction.getTime().toString());
-            st.setString(2, currentTransaction.getCategory());
+            st.setString(2, currentTransaction.getCategoryName());
             st.setString(3, currentTransaction.getTime().toString());
             st.setString(4, "" + currentTransaction.getPrice());
 
@@ -120,7 +120,7 @@ public class TransactionPersistenceHSQLDB implements TransactionPersistence {
         try (final Connection c = connection()) {
             final PreparedStatement st = c.prepareStatement("UPDATE transactions SET price = ?, category = ? WHERE key = ?");
             st.setString(1, "" + currentTransaction.getPrice());
-            st.setString(2, currentTransaction.getCategory());
+            st.setString(2, currentTransaction.getCategoryName());
             // the transaction id is the username + the transaction time
             st.setString(3, currUser.getUserID() + currentTransaction.getTime().toString());
 

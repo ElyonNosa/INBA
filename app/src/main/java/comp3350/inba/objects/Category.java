@@ -8,9 +8,7 @@ import java.util.TreeSet;
  * Category.java
  * The set of categories that a user has created.
  */
-public class Category {
-    // an ordered set of category names
-    private static TreeSet<String> categorySet = new TreeSet<>();
+public class Category implements Comparable<Category> {
     // the name of the current category
     private final String name;
 
@@ -21,8 +19,6 @@ public class Category {
     Category(String name)
     {
         this.name = name;
-        // add the category name to the tree set
-        categorySet.add(name);
     }
 
     /**
@@ -34,11 +30,12 @@ public class Category {
     }
 
     /**
-     * Get an list of the names.
-     * @return The category set converted to a string list.
+     * Compare two categories.
+     * @param category The category to compare to.
+     * @return Positive int if this is greater than the other category. Zero if equal.
      */
-    public static List<String> getCategorySet() {
-        // arraylist has a constructor that allows for creation from tree sets
-        return new ArrayList<>(categorySet);
+    @Override
+    public int compareTo(Category category) {
+        return this.name.compareTo(category.getName());
     }
 }

@@ -7,8 +7,6 @@ import java.util.Locale;
 import java.util.Objects;
 import java.text.SimpleDateFormat;
 
-import comp3350.inba.business.AccessTransactions;
-
 /**
  * Transaction()
  * <p>
@@ -50,7 +48,7 @@ public class Transaction {
      *
      * @return category
      */
-    public String getCategory() {
+    public String getCategoryName() {
         return category.getName();
     }
 

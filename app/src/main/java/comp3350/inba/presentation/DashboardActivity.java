@@ -28,6 +28,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -35,7 +36,6 @@ import java.util.Locale;
 import comp3350.inba.R;
 import comp3350.inba.application.Main;
 import comp3350.inba.business.AccessTransactions;
-import comp3350.inba.objects.Category;
 import comp3350.inba.objects.Transaction;
 import comp3350.inba.objects.User;
 
@@ -45,6 +45,9 @@ import comp3350.inba.objects.User;
  * This class is coupled with activity_dashboard.xml
  */
 public class DashboardActivity extends Activity {
+    // predefined category names to put on the graph and serve as suggestions for the user
+    static final String[] PREDEFINED_CATEG_NAMES = {"Amenities", "Education", "Entertainment",
+            "Food", "Hardware", "Hobby", "Medical", "Misc", "Transportation", "Utilities"};
     // the transactions database
     private AccessTransactions accessTransactions;
     // the adapter to display transactions in a list view
@@ -69,7 +72,8 @@ public class DashboardActivity extends Activity {
 
         setContentView(R.layout.activity_dashboard);
         copyDatabaseToDevice();
-        accessTransactions = new AccessTransactions();
+        // create instance of accessTransactions using the predefined list of category names
+        accessTransactions = new AccessTransactions(Arrays.asList(PREDEFINED_CATEG_NAMES));
         try {
             // display transactions in list
             transactionList = accessTransactions.getTransactions(User.currUser);
@@ -104,7 +108,7 @@ public class DashboardActivity extends Activity {
         series.setValueDependentColor(new ValueDependentColor<DataPoint>() {
             @Override
             public int get(DataPoint data) {
-                return Color.rgb((int) (data.getX()*(122)* Category.getCategorySet().size())%255, 80, 140);
+                return Color.rgb((int) (data.getX()*(122)* accessTransactions.getCategNames().size())%255, 80, 140);
             }
         });
 
@@ -116,7 +120,7 @@ public class DashboardActivity extends Activity {
         graph.getGridLabelRenderer().setGridColor(0xFFA6ABBD);
         graph.getGridLabelRenderer().setHorizontalLabelsColor(0xFFA6ABBD);
         graph.getGridLabelRenderer().setVerticalLabelsColor(0xFFA6ABBD);
-        graph.getGridLabelRenderer().setNumHorizontalLabels(Category.getCategorySet().size());
+        graph.getGridLabelRenderer().setNumHorizontalLabels(accessTransactions.getCategNames().size());
         graph.getGridLabelRenderer().setHorizontalLabelsAngle(90);
         graph.setTitle("All Time Transactions:");
         graph.setTitleColor(0xFFA6ABBD);
@@ -126,7 +130,7 @@ public class DashboardActivity extends Activity {
         graph.getGridLabelRenderer().setPadding(50);
 
         // check if there are a sufficient number of categories
-        if(Category.getCategorySet().size() > 0) {
+        if(accessTransactions.getCategNames().size() > 0) {
             // custom label formatter to show categories
             graph.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
                 @Override
@@ -138,9 +142,9 @@ public class DashboardActivity extends Activity {
                         // convert the x value to an index number
                         index = (int) Double.parseDouble(super.formatLabel(value, isValueX));
                         // check if category string length is more than desired
-                        if ((output = Category.getCategorySet().get(index)).length() > TRUNCATE_LEN) {
+                        if ((output = accessTransactions.getCategNames().get(index)).length() > TRUNCATE_LEN) {
                             // truncate the string
-                            output = Category.getCategorySet().get(index).substring(0, TRUNCATE_LEN);
+                            output = accessTransactions.getCategNames().get(index).substring(0, TRUNCATE_LEN);
                         }
                         // return category of a given index
                         return output;
@@ -158,9 +162,9 @@ public class DashboardActivity extends Activity {
      * @return The data points of the total spendings.
      */
     protected DataPoint[] transactionsToGraphView() {
-        DataPoint[] output = new DataPoint[Category.getCategorySet().size()];
+        DataPoint[] output = new DataPoint[accessTransactions.getCategNames().size()];
         // the running price totals per category
-        double[] categoryTotals = new double[Category.getCategorySet().size()];
+        double[] categoryTotals = new double[accessTransactions.getCategNames().size()];
         int i = 0;
         int j = 0;
         boolean found = false;
@@ -171,9 +175,9 @@ public class DashboardActivity extends Activity {
             temp = transactionList.get(i);
             found = false;
             // loop through all predefined categories
-            for (j = 0; j < Category.getCategorySet().size() && !found; j++) {
+            for (j = 0; j < accessTransactions.getCategNames().size() && !found; j++) {
                 // check if the transaction category matches with a predefined category
-                if (Category.getCategorySet().get(j).equals(temp.getCategory())) {
+                if (accessTransactions.getCategNames().get(j).equals(temp.getCategoryName())) {
                     // increase the total price of this category
                     categoryTotals[j] += temp.getPrice();
                     found = true;
