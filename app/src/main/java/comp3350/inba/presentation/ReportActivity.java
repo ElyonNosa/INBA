@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.PopupMenu;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.time.format.DateTimeFormatter;
 
 import comp3350.inba.R;
 import comp3350.inba.business.AccessTransactions;
@@ -38,17 +40,58 @@ public class ReportActivity extends Activity {
 
     private ArrayList<Double> sortedPrice = new ArrayList<>();
 
+    PopupMenu popupMenu;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_report);
+        List<Transaction> transactionList =  getTransaction();
+        addList(transactionList);
 
-        getList();
-        sortListByPrice();
-        displayTable();
+        Button sortButton = findViewById(R.id.sort_button);
+
+        //Set an OnClickListener to show the popup menu when the button is clicked
+        sortButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showPopupMenu(view);
+            }
+        });
+
+        //Define the popup menu options
+        popupMenu = new PopupMenu(this, sortButton);
+        popupMenu.getMenuInflater().inflate(R.menu.sort_options, popupMenu.getMenu());
+        //Handle the sort when clicked on popup.
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.sort_by_time:
+                        sortListByTime();
+                        createTable();
+                        return true;
+                    case R.id.sort_by_price:
+                        sortListByPrice();
+                        createTable();
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+        });
     }
 
-    public void displayTable() {
+    /**
+     * Shows the popup menu anchored to the specified view.
+     */
+    private void showPopupMenu(View view) {
+        popupMenu.show();
+    }
+
+    /**
+     *   Creates a table using the sorted arraylist and display the contents
+     */
+    public void createTable() {
         TableLayout tableLayout = findViewById(R.id.table_layout);
         tableLayout.removeAllViews(); // remove any existing views in the tableLayout
 
@@ -71,7 +114,9 @@ public class ReportActivity extends Activity {
             TextView transactionTime = new TextView(this);
             TextView category = new TextView(this);
             TextView price = new TextView(this);
-            transactionTime.setText(sortedLocalDateTime.get(i).toString());
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            String formatDataTime = sortedLocalDateTime.get(i).format(formatter);
+            transactionTime.setText(formatDataTime);
             category.setText(sortedCategory.get(i));
             price.setText("$" + sortedPrice.get(i));
             tableRow.addView(transactionTime);
@@ -82,12 +127,22 @@ public class ReportActivity extends Activity {
     }
 
     /**
-     * Gets the transaction list from AccessTransaction and separates the content of that transaction
+     * Gets the transaction from the accessTransaction class
+     * @return the transaction
      */
-    public void getList()
+    public List<Transaction> getTransaction()
     {
         AccessTransactions accessTransactions = new AccessTransactions();
         List<Transaction> transactionList = accessTransactions.getTransactions(User.currUser);
+        return transactionList;
+    }
+
+    /**
+     * Gets the transaction list from AccessTransaction and separates the content of that transaction
+     */
+    public void addList(List<Transaction> transactionList)
+    {
+
         for (int i =0; i < transactionList.size(); i++) {
             Transaction transaction = transactionList.get(i);
             localDateTime.add(transaction.getTime());
@@ -101,11 +156,29 @@ public class ReportActivity extends Activity {
      */
     public void sortListByPrice()
     {
+        sortedLocalDateTime.clear();
+        sortedCategory.clear();
         // Assign the sorted ArrayLists to new variables
         sortedPrice = sortByPrice(price);
         for (int i = 0; i < sortedPrice.size(); i++) {
             int index = price.indexOf(sortedPrice.get(i));
             sortedLocalDateTime.add(localDateTime.get(index));
+            sortedCategory.add(category.get(index));
+        }
+    }
+
+    /**
+     * Sorts the other lists according to the time.
+     */
+    public void sortListByTime()
+    {
+        sortedPrice.clear();
+        sortedCategory.clear();
+        // Assign the sorted ArrayLists to new variables
+        sortedLocalDateTime = sortByTime(localDateTime);
+        for (int i = 0; i < sortedLocalDateTime.size(); i++) {
+            int index = localDateTime.indexOf(sortedLocalDateTime.get(i));
+            sortedPrice.add(price.get(index));
             sortedCategory.add(category.get(index));
         }
     }
@@ -120,6 +193,18 @@ public class ReportActivity extends Activity {
         ArrayList<Double> sortedPrice = new ArrayList<>(price);
         Collections.sort(sortedPrice, Collections.reverseOrder());
         return sortedPrice;
+    }
+
+    /**
+     * Gets unsorted time list and sorts it.
+     * @param localDateTime Price of the transaction
+     * @return The sorted ArrayList of prices
+     */
+    public ArrayList<LocalDateTime> sortByTime(ArrayList<LocalDateTime> localDateTime)
+    {
+        ArrayList<LocalDateTime> sortedLocalDateTime = new ArrayList<>(localDateTime);
+        Collections.sort(sortedLocalDateTime, Collections.reverseOrder());
+        return sortedLocalDateTime;
     }
 
 }
