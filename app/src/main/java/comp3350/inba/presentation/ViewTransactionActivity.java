@@ -46,6 +46,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * ViewTransationActivity.java
+ * The page where we see graphs containing transaction data.
+ * This class is coupled with activity_view_transaction.xml.
+ */
 public class ViewTransactionActivity extends Activity implements View.OnClickListener {
 
     private ArrayList<LocalDateTime> localDateTime = new ArrayList<>();
@@ -76,11 +81,13 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
         button3.setOnClickListener(this);
 
         navigationBarInit();
+        // click button 1 by default
         onClick(button1);
-
-
     }
 
+    /**
+     * Initialize the navbar for this page.
+     */
     protected void navigationBarInit() {
         // Initialize and assign variable
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -120,6 +127,10 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
         });
     }
 
+    /**
+     * onClick(): what happens when you click on the graph buttons.
+     * @param view
+     */
     @Override
     public void onClick(View view) {
         //Local Variable
@@ -233,7 +244,10 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
         return monthlyPriceMap;
     }
 
-    //get the Dataset for Line and Bar graph
+    /** 
+     * Obtain data formatted for the graphs.
+     * @return
+     */
     public List<Entry> getDataset() {
         List<Entry> entries = new ArrayList<>();
         for (Map.Entry<String, Double> entry : monthlyPriceMap.entrySet()) {

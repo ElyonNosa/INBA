@@ -2,13 +2,11 @@ package comp3350.inba.objects;
 
 import android.annotation.SuppressLint;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Locale;
 import java.util.Objects;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import comp3350.inba.business.AccessTransactions;
 
 /**
  * Transaction()
@@ -19,7 +17,7 @@ public class Transaction {
     // unix timestamp of the transaction
     private final LocalDateTime time;
     // the money spend in the transaction
-    private final double price;
+    private final BigDecimal price;
     // the type of transaction
     private final Category category;
 
@@ -30,11 +28,11 @@ public class Transaction {
      * @param newCategory The category of the transaction.
      */
     @SuppressLint("NewApi")
-    public Transaction(final LocalDateTime time, double newPrice, final String newCategory) {
+    public Transaction(final LocalDateTime time, BigDecimal newPrice, final String newCategory) {
         this.time = time;
         category = new Category(newCategory);
         // truncate the price (2 decimal places)
-        price = Math.floor(newPrice * 100) / 100;
+        price = newPrice;
     }
 
     /**
@@ -51,7 +49,7 @@ public class Transaction {
      *
      * @return category
      */
-    public String getCategory() {
+    public String getCategoryName() {
         return category.getName();
     }
 
@@ -60,7 +58,7 @@ public class Transaction {
      *
      * @return price
      */
-    public double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
@@ -93,38 +91,5 @@ public class Transaction {
             equals = Objects.equals(this.time, otherTransaction.time);
         }
         return equals;
-    }
-
-    /**
-     * Ensure the transaction has valid properties.
-     * @param accessTransactions The transaction persistence.
-     * @param isNewTransaction True if the transaction does not exist in the database.
-     * @return The error message if the transaction is invalid, null string otherwise.
-     */
-    public String validateTransactionData(AccessTransactions accessTransactions, boolean isNewTransaction) {
-        final int LIMIT = 1000000000;
-
-        // check for valid category type
-        if (getCategory() == null || getCategory().length() < 1) {
-            return "Transaction Category required";
-        }
-
-        // check for valid price
-        if (getPrice() <= 0) {
-            return "Positive price required";
-        }
-
-        // check for valid price
-        if (getPrice() >= LIMIT) {
-            return "We know you are too poor to afford this!";
-        }
-
-        // check if transaction already exists
-        if (isNewTransaction && accessTransactions.getTimestampIndex(User.currUser, getTime()) != -1) {
-            return "A transaction has already been made within the last second. " +
-                    "Please wait 1 second and try again.";
-        }
-
-        return null;
     }
 }

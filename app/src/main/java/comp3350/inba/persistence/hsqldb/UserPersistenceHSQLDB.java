@@ -38,30 +38,32 @@ public class UserPersistenceHSQLDB implements UserPersistence
             "");
     }
 
+
     // ###################### Class method ############################
-    private User fromResultSet(final ResultSet rs) throws SQLException 
+    private String[] fromResultSet(final ResultSet rs) throws SQLException
     {
         final String User_ID = rs.getString("userID");
         final String User_Name = rs.getString("name");
         final String  User_pass = rs.getString("passwd");
 
-        return new User(User_ID, User_Name, User_pass);
+        return new String[]{User_ID, User_Name, User_pass};
     }
 
     // ############### returns list of all users ######################
     @Override
-    public List<User> get_user_list() 
+    public List<String[]> get_user_list()
     {
-        final List<User> users = new ArrayList<>();
+        final List<String[]> users = new ArrayList<>();
         
         try (final Connection c = connection()) 
         {
             final Statement st = c.createStatement();
             final ResultSet rs = st.executeQuery("SELECT * FROM user");
-            
+
+            // loop until all users have been obtained
             while ( rs.next() ) 
             {
-                final User usr = fromResultSet(rs);
+                final String[] usr = fromResultSet(rs);
                 users.add(usr);
             }
             rs.close();
@@ -77,16 +79,17 @@ public class UserPersistenceHSQLDB implements UserPersistence
 
     // ################ Insert new User into db ####################### 
     @Override
-    public User insert_user( User usr ) 
+    public String[] insert_user( String[] usr )
     {
         try (final Connection c = connection()) 
         {
             final PreparedStatement st = c.prepareStatement(
                 "INSERT INTO user VALUES(?, ?, ?)");
-            
-            st.setString( 1, usr.getUserID() );
-            st.setString( 2, usr.getUserName() );
-            st.setString( 3, usr.getPasswd() );
+
+            // the user info
+            st.setString( 1, usr[0] );
+            st.setString( 2, usr[1] );
+            st.setString( 3, usr[2] );
             st.executeUpdate();
             
             return usr;
@@ -99,16 +102,17 @@ public class UserPersistenceHSQLDB implements UserPersistence
 
     // ####################### Update User ############################
     @Override
-    public User update_user(User usr) 
+    public String[] update_user(String[] usr)
     {
         try (final Connection c = connection()) 
         {
             final PreparedStatement st = c.prepareStatement(
                 "UPDATE user SET name = ?, passwd = ? WHERE userID = ?");
-            
-            st.setString( 1, usr.getUserName() );
-            st.setString( 2, usr.getPasswd() );
-            st.setString( 3, usr.getUserID() );
+
+            // the user info
+            st.setString( 1, usr[0] );
+            st.setString( 2, usr[1] );
+            st.setString( 3, usr[2] );
             st.executeUpdate();
             
             return usr;
@@ -122,14 +126,14 @@ public class UserPersistenceHSQLDB implements UserPersistence
 
     // ##################### Delete User ##############################
     @Override
-    public void delete_user(User usr)
+    public void delete_user(String[] usr)
     {
         try ( final Connection c = connection() ) 
         {
             final PreparedStatement sc = c.prepareStatement(
                 "DELETE FROM user WHERE userID = ?");
             
-            sc.setString( 1, usr.getUserID() );
+            sc.setString( 1, usr[0] );
             sc.executeUpdate();
         } 
         catch (final SQLException e) 

@@ -159,6 +159,7 @@
     </RelativeLayout>
 
 
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
         style="@style/nav.Btn"
@@ -168,7 +169,6 @@
         android:layout_marginTop="10dp"
         android:layout_marginBottom="5dp"
         app:menu="@menu/menu_bottom_nav_bar" />
-
 
 
 </RelativeLayout>
