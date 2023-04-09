@@ -1,5 +1,6 @@
 package comp3350.inba.persistence.hsqldb;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -11,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import comp3350.inba.objects.Transaction;
-import comp3350.inba.objects.User;
 import comp3350.inba.persistence.TransactionPersistence;
 
 /**
@@ -35,7 +35,6 @@ public class TransactionPersistenceHSQLDB implements TransactionPersistence {
      * Get information from a transaction.
      * @param rs ResultSet
      * @return String array of information.
-     * @throws SQLException
      */
     private String[] fromResultSet(final ResultSet rs) throws SQLException {
         String[] output = new String[4];
@@ -49,7 +48,7 @@ public class TransactionPersistenceHSQLDB implements TransactionPersistence {
 
     /**
      * getTransactionList: obtain a list of transactions belonging to a given user.
-     * @param currString The user to get the list from.
+     * @param currUser The user to get the list from.
      * @return the list of the user's transactions.
      */
     @Override
@@ -70,7 +69,7 @@ public class TransactionPersistenceHSQLDB implements TransactionPersistence {
                 if (currUser.equals(keyUserID)) {
                     // add the transaction to the list
                     transactions.add(new Transaction(LocalDateTime.parse(args[1]),
-                            Double.parseDouble(args[2]), args[3]));
+                            new BigDecimal(args[2]), args[3]));
                 }
             }
             rs.close();
@@ -85,7 +84,7 @@ public class TransactionPersistenceHSQLDB implements TransactionPersistence {
 
     /**
      * insertTransaction: insert a new transaction for the current user.
-     * @param currString The user who will obtain this transaction.
+     * @param currUser The user who will obtain this transaction.
      * @param currentTransaction The transaction to insert.
      * @return The inserted transaction.
      */
@@ -110,7 +109,7 @@ public class TransactionPersistenceHSQLDB implements TransactionPersistence {
 
     /**
      * updateTransaction: update a transaction for the current user.
-     * @param currString The user whose transaction will be updated.
+     * @param currUser The user whose transaction will be updated.
      * @param currentTransaction The transaction with updated properties.
      * @return The updated transaction.
      */
@@ -134,7 +133,7 @@ public class TransactionPersistenceHSQLDB implements TransactionPersistence {
 
     /**
      * deleteTransaction(): delete a transaction from a given user.
-     * @param currString The user whose transaction will be deleted.
+     * @param currUser The user whose transaction will be deleted.
      * @param currentTransaction The transaction to delete.
      */
     @Override

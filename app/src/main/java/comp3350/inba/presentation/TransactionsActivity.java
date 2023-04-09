@@ -23,6 +23,7 @@ import androidx.annotation.NonNull;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -415,10 +416,10 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
         // transaction properties
         Transaction output = null;
         LocalDateTime time;
-        double price = 0;
+        BigDecimal price = BigDecimal.ZERO;
         try {
             // attempt to parse transaction price to double
-            price = Double.parseDouble(editPrice.getText().toString());
+            price = new BigDecimal(editPrice.getText().toString());
             // check if this transaction does not yet exist
             if (isNewTransaction) {
                 // set timestamp to current time

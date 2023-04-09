@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -167,12 +168,14 @@ public class DashboardActivity extends Activity {
     protected DataPoint[] transactionsToGraphView() {
         DataPoint[] output = new DataPoint[accessTransactions.getCategNames().size()];
         // the running price totals per category
-        double[] categoryTotals = new double[accessTransactions.getCategNames().size()];
+        BigDecimal[] categoryTotals = new BigDecimal[accessTransactions.getCategNames().size()];
         int i = 0;
         int j = 0;
         boolean found = false;
         Transaction temp = null;
 
+        // fill the BigDecimal array with zeros
+        Arrays.fill(categoryTotals, BigDecimal.ZERO);
         // loop through all transactions
         for (i = 0; i < transactionList.size(); i++) {
             temp = transactionList.get(i);
@@ -182,7 +185,7 @@ public class DashboardActivity extends Activity {
                 // check if the transaction category matches with a predefined category
                 if (accessTransactions.getCategNames().get(j).equals(temp.getCategoryName())) {
                     // increase the total price of this category
-                    categoryTotals[j] += temp.getPrice();
+                    categoryTotals[j] = categoryTotals[j].add(temp.getPrice());
                     found = true;
                 }
             }
@@ -191,7 +194,7 @@ public class DashboardActivity extends Activity {
         // loop through all predefined categories
         for (i = 0; i < categoryTotals.length; i++) {
             // make a data point per category
-            output[i] = new DataPoint(i, categoryTotals[i]);
+            output[i] = new DataPoint(i, categoryTotals[i].doubleValue());
         }
 
         return output;
@@ -269,7 +272,7 @@ public class DashboardActivity extends Activity {
         TextView title = findViewById(R.id.textTitle);
         LocalDateTime now = LocalDateTime.now();
         // get sum of transactions between now and 1 month ago
-        double total = accessTransactions.getSumInPeriod(user.getUserid(), now.minusSeconds(SECONDS_PER_MONTH), now);
+        BigDecimal total = accessTransactions.getSumInPeriod(user.getUserid(), now.minusSeconds(SECONDS_PER_MONTH), now);
         String text = "Monthly Total: $" + String.format(Locale.ENGLISH, "%.2f", total);
         title.setText(text);
     }

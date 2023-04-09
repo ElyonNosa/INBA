@@ -1,5 +1,6 @@
 package comp3350.inba.business;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -126,10 +127,10 @@ public class AccessTransactions
      * @param start The time to start at.
      * @param end   The time to end at.
      */
-    public double getSumInPeriod(String currUser, LocalDateTime start, LocalDateTime end) {
+    public BigDecimal getSumInPeriod(String currUser, LocalDateTime start, LocalDateTime end) {
         // the list of transactions obtained from the database
         List<Transaction> transactions = txnPersistance.getTransactionList(currUser);
-        double output = 0;
+        BigDecimal output = BigDecimal.ZERO;
         int i = 0;
         boolean withinPeriod = true;
         // loop through all transactions
@@ -139,12 +140,10 @@ public class AccessTransactions
                 // check if transaction is before or at the end time
                 withinPeriod = transactions.get(i).getTime().isBefore(end.plusSeconds(1));
                 if(withinPeriod) {
-                    output += transactions.get(i).getPrice();
+                    output = output.add(transactions.get(i).getPrice());
                 }
             }
         }
-        // truncate output to 2 places after decimal
-        output = Math.floor(output * 100) / 100;
         return output;
     }
 
@@ -219,12 +218,12 @@ public class AccessTransactions
         }
 
         // check for valid price
-        if (txn.getPrice() <= 0) {
+        if (txn.getPrice().compareTo(BigDecimal.ZERO) <= 0) {
             return TransactionError.INVALID_PRICE;
         }
 
         // check for valid price
-        if (txn.getPrice() >= LIMIT) {
+        if (txn.getPrice().compareTo(BigDecimal.valueOf(LIMIT)) > 0) {
             return TransactionError.OVER_LIMIT;
         }
 

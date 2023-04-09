@@ -2,6 +2,7 @@ package comp3350.inba.persistence.stubs;
 
 import android.annotation.SuppressLint;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -57,7 +58,7 @@ public class TransactionPersistenceStub implements TransactionPersistence {
                 // choose a random category
                 category = EXAMPLE_CATS[(int)(Math.random() * EXAMPLE_CATS.length)];
 
-                insertTransaction(null, new Transaction(time, Math.random() * MAX_EXAMPLE_PRICE, category));
+                insertTransaction(null, new Transaction(time, BigDecimal.valueOf(Math.random() * MAX_EXAMPLE_PRICE), category));
             }
         }
     }

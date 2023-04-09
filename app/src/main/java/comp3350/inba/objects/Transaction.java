@@ -2,6 +2,7 @@ package comp3350.inba.objects;
 
 import android.annotation.SuppressLint;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Locale;
 import java.util.Objects;
@@ -16,7 +17,7 @@ public class Transaction {
     // unix timestamp of the transaction
     private final LocalDateTime time;
     // the money spend in the transaction
-    private final double price;
+    private final BigDecimal price;
     // the type of transaction
     private final Category category;
 
@@ -27,11 +28,11 @@ public class Transaction {
      * @param newCategory The category of the transaction.
      */
     @SuppressLint("NewApi")
-    public Transaction(final LocalDateTime time, double newPrice, final String newCategory) {
+    public Transaction(final LocalDateTime time, BigDecimal newPrice, final String newCategory) {
         this.time = time;
         category = new Category(newCategory);
         // truncate the price (2 decimal places)
-        price = Math.floor(newPrice * 100) / 100;
+        price = newPrice;
     }
 
     /**
@@ -57,7 +58,7 @@ public class Transaction {
      *
      * @return price
      */
-    public double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
