@@ -12,6 +12,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,21 +28,24 @@ import comp3350.inba.objects.User;
 public class ReportActivity extends Activity {
 
 
-    private ArrayList<LocalDateTime> localDateTime = new ArrayList<>();
-    private ArrayList<String> category = new ArrayList<>();
-    private ArrayList<Double> price = new ArrayList<>();
+    private final ArrayList<LocalDateTime> localDateTime = new ArrayList<>();
+    private final ArrayList<String> category = new ArrayList<>();
+    private final ArrayList<BigDecimal> price = new ArrayList<>();
 
     private ArrayList<LocalDateTime> sortedLocalDateTime = new ArrayList<>();
-    private ArrayList<String> sortedCategory = new ArrayList<>();
+    private final ArrayList<String> sortedCategory = new ArrayList<>();
 
-    private ArrayList<Double> sortedPrice = new ArrayList<>();
+    private ArrayList<BigDecimal> sortedPrice = new ArrayList<>();
 
     PopupMenu popupMenu;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_report);
-        List<Transaction> transactionList =  getTransaction();
+        // user instance
+        User user = new User(getApplicationContext());
+        AccessTransactions accessTransactions = new AccessTransactions();
+        List<Transaction> transactionList = accessTransactions.getTransactions(user.getUserID());
         addList(transactionList);
 
         Button sortButton = findViewById(R.id.sort_button);
@@ -75,6 +79,9 @@ public class ReportActivity extends Activity {
                 }
             }
         });
+        // sort by time by default
+        sortListByTime();
+        createTable();
     }
 
     /**
@@ -122,27 +129,16 @@ public class ReportActivity extends Activity {
         }
     }
 
-    /**
-     * Gets the transaction from the accessTransaction class
-     * @return the transaction
-     */
-    public List<Transaction> getTransaction()
-    {
-        AccessTransactions accessTransactions = new AccessTransactions();
-        List<Transaction> transactionList = accessTransactions.getTransactions(User.currUser);
-        return transactionList;
-    }
 
     /**
      * Adds the content of the transaction to a list
      */
     public void addList(List<Transaction> transactionList)
     {
-
         for (int i =0; i < transactionList.size(); i++) {
             Transaction transaction = transactionList.get(i);
             localDateTime.add(transaction.getTime());
-            category.add(transaction.getCategory());
+            category.add(transaction.getCategoryName());
             price.add(transaction.getPrice());
         }
     }
@@ -184,9 +180,9 @@ public class ReportActivity extends Activity {
      * @param price Price of the transaction
      * @return The sorted ArrayList of prices
      */
-    public ArrayList<Double> sortByPrice(ArrayList<Double> price)
+    public ArrayList<BigDecimal> sortByPrice(ArrayList<BigDecimal> price)
     {
-        ArrayList<Double> sortedPrice = new ArrayList<>(price);
+        ArrayList<BigDecimal> sortedPrice = new ArrayList<>(price);
         Collections.sort(sortedPrice, Collections.reverseOrder());
         return sortedPrice;
     }

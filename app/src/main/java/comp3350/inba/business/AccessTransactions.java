@@ -162,7 +162,7 @@ public class AccessTransactions {
         BigDecimal[] output = new BigDecimal[Month.values().length];
         Arrays.fill(output, BigDecimal.ZERO);
         // start at the first day of the year
-        LocalDateTime start = LocalDateTime.of(year, Month.JANUARY, 0, 0, 0);
+        LocalDateTime start = LocalDateTime.of(year, Month.JANUARY, 1, 0, 0);
         int i = 0;
         // calculate sums for every month in the given year
         for (i = 0; i < Month.values().length; ++i) {
