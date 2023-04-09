@@ -1,7 +1,9 @@
 package comp3350.inba.application;
 
 import comp3350.inba.persistence.TransactionPersistence;
+import comp3350.inba.persistence.UserPersistence;
 import comp3350.inba.persistence.hsqldb.TransactionPersistenceHSQLDB;
+import comp3350.inba.persistence.hsqldb.UserPersistenceHSQLDB;
 import comp3350.inba.persistence.stubs.TransactionPersistenceStub;
 
 
@@ -15,6 +17,7 @@ public class Service {
     public static final boolean USE_HSQLDB = false;
     // instance of the transaction persistence
     private static TransactionPersistence transactionPersistence = null;
+    private static UserPersistence userPersistence = null;
 
     /**
      * Constructor
@@ -23,8 +26,10 @@ public class Service {
     public Service(boolean generateExamples) {
         if (USE_HSQLDB) {
             transactionPersistence = new TransactionPersistenceHSQLDB(Main.getDBPathName());
+            userPersistence = new UserPersistenceHSQLDB(Main.getDBPathName());
         } else {
             transactionPersistence = new TransactionPersistenceStub(generateExamples);
+
         }
     }
 
@@ -46,4 +51,20 @@ public class Service {
 
         return transactionPersistence;
     }
+
+    /**
+     * getUserPersistence(): Ensure that only one instance of the
+     * users database exists at a time.
+     *
+     * @return The database instance.
+     */
+    public static synchronized UserPersistence getUserPersistence() {
+        // create one if it doesn't exist
+        if (userPersistence == null) {
+            userPersistence = new UserPersistenceHSQLDB(Main.getDBPathName());
+        }
+
+        return userPersistence;
+    }
+
 }

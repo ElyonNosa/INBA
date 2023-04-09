@@ -11,10 +11,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.List;
+
 import comp3350.inba.R;
+import comp3350.inba.business.AccessUsers;
+import comp3350.inba.objects.Transaction;
 import comp3350.inba.objects.User;
 
 public class LoginActivity extends Activity {
+    //the users "database"
+    private AccessUsers accessUsers;
+    // the local list of users after retrieving from the "database"
+    private List<User> usersList;
     private EditText usernameEditText;
     private EditText passwordEditText;
 
@@ -25,6 +33,9 @@ public class LoginActivity extends Activity {
 
         usernameEditText = findViewById(R.id.username_edit_text);
         passwordEditText = findViewById(R.id.password_edit_text);
+
+        accessUsers = new AccessUsers();
+        usersList = accessUsers.getUsers();
 
         Button loginButton = findViewById(R.id.login_button);
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -54,10 +65,22 @@ public class LoginActivity extends Activity {
         });
     }
 
+    /**
+     * validate the login credentials of an existing user
+     * @param username The username to be validated.
+     * @param password The password to be validated
+     * @return true if the username and password are correct, false otherwise.
+     */
     private boolean isValidCredentials(String username, String password) {
-        // Validate the user's credentials
-        // Return true if the username and password are correct, false otherwise
-        return true;
+
+        for(User currUser : usersList){
+            if(currUser.getUserName().equals(username) && currUser.getPasswd().equals(password)){
+                return true;
+            }
+        }
+
+
+        return false;
     }
 
     private void saveLoginStatus() {
