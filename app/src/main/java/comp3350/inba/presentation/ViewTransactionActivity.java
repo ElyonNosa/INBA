@@ -6,6 +6,9 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import comp3350.inba.R;
+import comp3350.inba.business.AccessTransactions;
+import comp3350.inba.objects.Transaction;
+import comp3350.inba.objects.User;
 
 import android.view.MenuItem;
 import android.view.View;
@@ -30,28 +33,44 @@ import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 
+import java.text.DecimalFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 public class ViewTransactionActivity extends Activity implements View.OnClickListener {
 
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_view_transaction);
+    private ArrayList<LocalDateTime> localDateTime = new ArrayList<>();
+    private ArrayList<Double> price = new ArrayList<>();
 
-            Button button1 = findViewById(R.id.button);
-            Button button2 = findViewById(R.id.button2);
-            Button button3 = findViewById(R.id.button3);
+    private Map<String, Double> monthlyPriceMap = new HashMap<>();
 
-            button1.setOnClickListener(this);
-            button2.setOnClickListener(this);
-            button3.setOnClickListener(this);
+    final String[] MONTHS = {"Jan", "Feb", "Mar", "Apr", "May", "June", "July",
+            "Aug", "Sept", "Oct", "Nov", "Dec"};
 
-            navigationBarInit();
-            onClick(button1);
-        }
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_view_transaction);
+
+        Button button1 = findViewById(R.id.button);
+        Button button2 = findViewById(R.id.button2);
+        Button button3 = findViewById(R.id.button3);
+
+        button1.setOnClickListener(this);
+        button2.setOnClickListener(this);
+        button3.setOnClickListener(this);
+
+        navigationBarInit();
+        onClick(button1);
+
+
+    }
 
     protected void navigationBarInit() {
         // Initialize and assign variable
@@ -95,12 +114,17 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
     @Override
     public void onClick(View view) {
         //Local Variable
-        final String[] MONTHS = {"Jan", "Feb", "Mar", "Apr", "May", "June", "July",
-                "Aug", "Sept", "Oct", "Nov", "Dec"};
+
         //Initializing the graphs
         LineChart lineChart = findViewById(R.id.line_chart);
         BarChart barChart = findViewById(R.id.bar_chart);
         PieChart pieChart = findViewById(R.id.pie_chart);
+
+        //Fetching the data
+        List<Transaction> transactionList = getTransaction();
+        addList(transactionList);
+        sumPriceByMonth(transactionList);
+        sortedMap();
 
         switch (view.getId()) {
             //Line Graph
@@ -112,7 +136,7 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
                 // Show the line chart
                 lineChart.setVisibility(View.VISIBLE);
 
-                showLineChart(lineChart, MONTHS);
+                showLineChart(lineChart);
                 break;
 
             //Bar Graph
@@ -124,7 +148,7 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
                 // Show the line chart
                 barChart.setVisibility(View.VISIBLE);
 
-                showBarChart(barChart, MONTHS);
+                showBarChart(barChart);
                 break;
 
             //Pie Chart
@@ -144,20 +168,82 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
         }
     }
 
+    /**
+     * Gets the transaction from the accessTransaction class
+     * @return the transaction
+     */
+    public List<Transaction> getTransaction()
+    {
+        AccessTransactions accessTransactions = new AccessTransactions();
+        List<Transaction> transactionList = accessTransactions.getTransactions(User.currUser);
+        return transactionList;
+    }
+
+    /**
+     * Adds the content of the transaction to a list
+     */
+    public void addList(List<Transaction> transactionList)
+    {
+
+        for (int i =0; i < transactionList.size(); i++) {
+            Transaction transaction = transactionList.get(i);
+            localDateTime.add(transaction.getTime());
+            price.add(transaction.getPrice());
+        }
+    }
+
+    /**
+     * Sums the transaction based on month
+     * @param transactionList The list which requires to be summed.
+     */
+    public void sumPriceByMonth(List<Transaction> transactionList) {
+        monthlyPriceMap.clear();
+        DecimalFormat df = new DecimalFormat("#.00");
+        for (Transaction transaction : transactionList) {
+            String monthYear = transaction.getTime().format(DateTimeFormatter.ofPattern("MM"));
+            double price = transaction.getPrice();
+            if (monthlyPriceMap.containsKey(monthYear)) {
+                double updatedPrice = Double.parseDouble(df.format(monthlyPriceMap.get(monthYear) + price));
+                monthlyPriceMap.put(monthYear, updatedPrice);
+            } else {
+                double formattedPrice = Double.parseDouble(df.format(price));
+                monthlyPriceMap.put(monthYear, formattedPrice);
+            }
+        }
+
+    }
+
+    /**
+     * Sort the Map list in ascending.
+     * @return The sorted list
+     */
+    public Map<String, Double> sortedMap()
+    {
+        List<Map.Entry<String, Double>> sortedList = new ArrayList<>(monthlyPriceMap.entrySet());
+        Collections.sort(sortedList, new Comparator<Map.Entry<String, Double>>() {
+            @Override
+            public int compare(Map.Entry<String, Double> o1, Map.Entry<String, Double> o2) {
+                return o1.getKey().compareTo(o2.getKey());
+            }
+        });
+        monthlyPriceMap = new LinkedHashMap<>();
+        for (Map.Entry<String, Double> entry : sortedList) {
+            String formattedPrice = String.format("%.2f", entry.getValue());
+            monthlyPriceMap.put(entry.getKey(), Double.parseDouble(formattedPrice));
+        }
+
+
+        return monthlyPriceMap;
+    }
+
+    //get the Dataset for Line and Bar graph
     public List<Entry> getDataset() {
         List<Entry> entries = new ArrayList<>();
-        entries.add(new BarEntry(0f, 10));
-        entries.add(new BarEntry(1f, 20));
-        entries.add(new BarEntry(2f, 30));
-        entries.add(new BarEntry(3f, 40));
-        entries.add(new BarEntry(4f, 50));
-        entries.add(new BarEntry(5f, 20));
-        entries.add(new BarEntry(6f, 50));
-        entries.add(new BarEntry(7f, 40));
-        entries.add(new BarEntry(8f, 90));
-        entries.add(new BarEntry(9f, 30));
-        entries.add(new BarEntry(10f, 70));
-        entries.add(new BarEntry(11f, 60));
+        for (Map.Entry<String, Double> entry : monthlyPriceMap.entrySet()) {
+            String month = entry.getKey();
+            Double price = entry.getValue();
+            entries.add(new Entry(Float.parseFloat(month), price.floatValue()));
+        }
 
         return entries;
     }
@@ -194,25 +280,37 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
         };
     }
 
-    //TODO: Need to resolve the bug in label. It is printing duplicate months.
-    private void showLineChart(LineChart lineChart, String[] months)
+    /**
+     * Display the line chart and its properties.
+     * @param lineChart Object used to modify the chart
+     */
+    private void showLineChart(LineChart lineChart)
     {
 
         List<Entry> entries = getDataset();
         LineDataSet dataSet = new LineDataSet(entries, "Cost");
         LineData lineData = new LineData(dataSet);
 
-        ValueFormatter formatter = setLabel(months);
+        ValueFormatter formatter = setLabel(MONTHS);
 
         XAxis xAxis = lineChart.getXAxis();
         xAxis.setLabelCount(entries.size());
         xAxis.setValueFormatter(formatter);
-//        xAxis.setLabelRotationAngle(0);
+
+        dataSet.setColor(Color.parseColor("#80FF7F50"));
+        dataSet.setCircleColor(Color.BLUE);
+        dataSet.setDrawValues(true);
+        dataSet.setValueTextColor(Color.WHITE);
 
         // Add data to the chart
         lineChart.setData(lineData);
         modifyLineChart(lineChart);
     }
+
+    /**
+     * Align the line chart
+     * @param lineChart Object used to modify the chart
+     */
     private void modifyLineChart(LineChart lineChart)
     {
         // Refresh the chart
@@ -225,8 +323,11 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
         lineChart.setPinchZoom(true);
     }
 
-
-    private void showBarChart(BarChart barChart, String[] months)
+    /**
+     * Display the bar chart and its properties.
+     * @param barChart Object used to modify the chart
+     */
+    private void showBarChart(BarChart barChart)
     {
         List<Entry> entryVal = getDataset();
         List<BarEntry> entries = cast(entryVal);
@@ -237,7 +338,7 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
         BarData data = new BarData(dataSet);
 
         // Set the value formatter for the x-axis labels
-        ValueFormatter formatter = setLabel(months);
+        ValueFormatter formatter = setLabel(MONTHS);
 
         XAxis xAxis = barChart.getXAxis();
         xAxis.setLabelCount(12);
@@ -247,6 +348,10 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
         modifyBarChart(barChart);
     }
 
+    /**
+     * Align the bar chart
+     * @param barChart Object used to modify the chart
+     */
     private void modifyBarChart(BarChart barChart)
     {
         barChart.invalidate();
@@ -255,27 +360,32 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
         barChart.getDescription().setEnabled(false);
         barChart.setDrawGridBackground(false);
     }
+
+    /**
+     * TO display the pieChart
+     * @param pieChart Object used to modify the pieChart
+     */
     private  void showPieChart(PieChart pieChart){
 
-        //======================================================================================================================================
         ArrayList<PieEntry> pieEntries = new ArrayList<>();
         String label = "type";
 
         //PieChart Data
-        Map<String, Integer> typeAmountMap = initPieChartData();
+        Map<String, Float> typeAmountMap = initPieChartData();
 
         //PieChart Colours
         ArrayList<Integer> colors = (ArrayList<Integer>) initChartColours();
 
         //input data and fit data into pie chart entry
         for(String type: typeAmountMap.keySet()){
-            pieEntries.add(new PieEntry(typeAmountMap.get(type).floatValue(), type));
+            pieEntries.add(new PieEntry(typeAmountMap.get(type), type));
         }
 
         //collecting the entries with label name
         PieDataSet pieDataSet = new PieDataSet(pieEntries,label);
-        //setting text size of the value
-        pieDataSet.setValueTextSize(12f);
+        //setting text size and color of the label
+        pieDataSet.setValueTextSize(16f);
+        pieDataSet.setValueTextColor(Color.BLACK);
         //providing color list for coloring different entries
         pieDataSet.setColors(colors);
         //grouping the data set from entry to chart
@@ -285,32 +395,27 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
 
         pieChart.setData(pieData);
         pieChart.invalidate();
-        //======================================================================================================================================
 
     }
 
-    public Map<String, Integer> initPieChartData()
+    //Initializing the data for PieChart
+    public Map<String, Float> initPieChartData()
     {
 
         //initializing data
-        Map<String, Integer> typeAmountMap = new HashMap<>();
-        typeAmountMap.put("Jan",10);
-        typeAmountMap.put("Feb",20);
-        typeAmountMap.put("Mar",30);
-        typeAmountMap.put("Apr",40);
-        typeAmountMap.put("May",50);
-        typeAmountMap.put("June",20);
-        typeAmountMap.put("July",50);
-        typeAmountMap.put("Aug",40);
-        typeAmountMap.put("Sept",90);
-        typeAmountMap.put("Oct",30);
-        typeAmountMap.put("Nov",70);
-        typeAmountMap.put("Dec",60);
+        Map<String, Float> entries = new HashMap<>();
+        int i = 0;
+        for (Map.Entry<String, Double> entry : monthlyPriceMap.entrySet()) {
+            String month = MONTHS[i];
+            Double price = entry.getValue();
+            entries.put(month, price.floatValue());
+            i++;
+        }
 
-        return typeAmountMap;
+        return entries;
     }
 
-    //Used to allocate different colours to pieChart
+    //Initializing the colours for PieChart
     public List<Integer> initChartColours()
     {
         //initializing colors for the entries

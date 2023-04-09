@@ -3,7 +3,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,12 +12,9 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.time.format.DateTimeFormatter;
 
@@ -138,7 +134,7 @@ public class ReportActivity extends Activity {
     }
 
     /**
-     * Gets the transaction list from AccessTransaction and separates the content of that transaction
+     * Adds the content of the transaction to a list
      */
     public void addList(List<Transaction> transactionList)
     {
