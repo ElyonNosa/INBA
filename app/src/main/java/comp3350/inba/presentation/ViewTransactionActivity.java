@@ -1,10 +1,12 @@
 package comp3350.inba.presentation;
+
 import androidx.annotation.NonNull;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+
 import comp3350.inba.R;
 import comp3350.inba.business.AccessTransactions;
 import comp3350.inba.objects.Transaction;
@@ -54,9 +56,16 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
     final String[] MONTHS = {"Jan", "Feb", "Mar", "Apr", "May", "June", "July",
             "Aug", "Sept", "Oct", "Nov", "Dec"};
 
+    // instance of AccessTransactions
+    private AccessTransactions accessTransactions;
+    // the local list of transactions
+    private List<Transaction> transactionList;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_transaction);
+        accessTransactions = new AccessTransactions();
+        transactionList = accessTransactions.getTransactions(User.currUser);
 
         Button button1 = findViewById(R.id.button);
         Button button2 = findViewById(R.id.button2);
@@ -74,7 +83,7 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
 
     protected void navigationBarInit() {
         // Initialize and assign variable
-        BottomNavigationView bottomNavigationView=findViewById(R.id.bottom_navigation);
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
         // Set View Transaction selected
         bottomNavigationView.setSelectedItemId(R.id.buttonViewTransaction);
@@ -84,26 +93,26 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-                switch(item.getItemId()) // DashboardActivity
+                switch (item.getItemId()) // DashboardActivity
                 {
                     case R.id.home:
-                        startActivity(new Intent(getApplicationContext(),DashboardActivity.class));
-                        overridePendingTransition(0,0);
+                        startActivity(new Intent(getApplicationContext(), DashboardActivity.class));
+                        overridePendingTransition(0, 0);
                         return true;
                     case R.id.buttonViewTransaction:
                         // true if already on page.
                         return true;
                     case R.id.buttonAddTransaction:
-                        startActivity(new Intent(getApplicationContext(),TransactionsActivity.class));
-                        overridePendingTransition(0,0);
+                        startActivity(new Intent(getApplicationContext(), TransactionsActivity.class));
+                        overridePendingTransition(0, 0);
                         return true;
                     case R.id.buttonSettings:
-                        startActivity(new Intent(getApplicationContext(),SettingsActivity.class));
-                        overridePendingTransition(0,0);
+                        startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
+                        overridePendingTransition(0, 0);
                         return true;
                     case R.id.buttonProfile:
                         startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
-                        overridePendingTransition(0,0);
+                        overridePendingTransition(0, 0);
                         return true;
                 }
                 return false;
@@ -121,7 +130,6 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
         PieChart pieChart = findViewById(R.id.pie_chart);
 
         //Fetching the data
-        List<Transaction> transactionList = getTransaction();
         addList(transactionList);
         sumPriceByMonth(transactionList);
         sortedMap();
@@ -169,23 +177,11 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
     }
 
     /**
-     * Gets the transaction from the accessTransaction class
-     * @return the transaction
-     */
-    public List<Transaction> getTransaction()
-    {
-        AccessTransactions accessTransactions = new AccessTransactions();
-        List<Transaction> transactionList = accessTransactions.getTransactions(User.currUser);
-        return transactionList;
-    }
-
-    /**
      * Adds the content of the transaction to a list
      */
-    public void addList(List<Transaction> transactionList)
-    {
+    public void addList(List<Transaction> transactionList) {
 
-        for (int i =0; i < transactionList.size(); i++) {
+        for (int i = 0; i < transactionList.size(); i++) {
             Transaction transaction = transactionList.get(i);
             localDateTime.add(transaction.getTime());
             price.add(transaction.getPrice());
@@ -194,6 +190,7 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
 
     /**
      * Sums the transaction based on month
+     *
      * @param transactionList The list which requires to be summed.
      */
     public void sumPriceByMonth(List<Transaction> transactionList) {
@@ -215,10 +212,10 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
 
     /**
      * Sort the Map list in ascending.
+     *
      * @return The sorted list
      */
-    public Map<String, Double> sortedMap()
-    {
+    public Map<String, Double> sortedMap() {
         List<Map.Entry<String, Double>> sortedList = new ArrayList<>(monthlyPriceMap.entrySet());
         Collections.sort(sortedList, new Comparator<Map.Entry<String, Double>>() {
             @Override
@@ -249,8 +246,7 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
     }
 
     //Converts list<Entry> to list<BarEntry>
-    private  List<BarEntry> cast(List<Entry> entryVal)
-    {
+    private List<BarEntry> cast(List<Entry> entryVal) {
         // Create a new list of BarEntry objects
         List<BarEntry> barEntries = new ArrayList<>();
         // Iterate over the entries list, converting each Entry to a BarEntry
@@ -263,8 +259,7 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
     }
 
     // Used to add a label to the x axis of Bar and Line graph
-    private ValueFormatter setLabel(String[] months)
-    {
+    private ValueFormatter setLabel(String[] months) {
         return new ValueFormatter() {
             @Override
             public String getAxisLabel(float value, AxisBase axis) {
@@ -282,10 +277,10 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
 
     /**
      * Display the line chart and its properties.
+     *
      * @param lineChart Object used to modify the chart
      */
-    private void showLineChart(LineChart lineChart)
-    {
+    private void showLineChart(LineChart lineChart) {
 
         List<Entry> entries = getDataset();
         LineDataSet dataSet = new LineDataSet(entries, "Cost");
@@ -309,10 +304,10 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
 
     /**
      * Align the line chart
+     *
      * @param lineChart Object used to modify the chart
      */
-    private void modifyLineChart(LineChart lineChart)
-    {
+    private void modifyLineChart(LineChart lineChart) {
         // Refresh the chart
         lineChart.invalidate();
         lineChart.getDescription().setEnabled(false);
@@ -325,10 +320,10 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
 
     /**
      * Display the bar chart and its properties.
+     *
      * @param barChart Object used to modify the chart
      */
-    private void showBarChart(BarChart barChart)
-    {
+    private void showBarChart(BarChart barChart) {
         List<Entry> entryVal = getDataset();
         List<BarEntry> entries = cast(entryVal);
 
@@ -350,10 +345,10 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
 
     /**
      * Align the bar chart
+     *
      * @param barChart Object used to modify the chart
      */
-    private void modifyBarChart(BarChart barChart)
-    {
+    private void modifyBarChart(BarChart barChart) {
         barChart.invalidate();
         barChart.setDrawBarShadow(false);
         barChart.setDrawValueAboveBar(true);
@@ -363,9 +358,10 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
 
     /**
      * TO display the pieChart
+     *
      * @param pieChart Object used to modify the pieChart
      */
-    private  void showPieChart(PieChart pieChart){
+    private void showPieChart(PieChart pieChart) {
 
         ArrayList<PieEntry> pieEntries = new ArrayList<>();
         String label = "type";
@@ -377,12 +373,12 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
         ArrayList<Integer> colors = (ArrayList<Integer>) initChartColours();
 
         //input data and fit data into pie chart entry
-        for(String type: typeAmountMap.keySet()){
+        for (String type : typeAmountMap.keySet()) {
             pieEntries.add(new PieEntry(typeAmountMap.get(type), type));
         }
 
         //collecting the entries with label name
-        PieDataSet pieDataSet = new PieDataSet(pieEntries,label);
+        PieDataSet pieDataSet = new PieDataSet(pieEntries, label);
         //setting text size and color of the label
         pieDataSet.setValueTextSize(16f);
         pieDataSet.setValueTextColor(Color.BLACK);
@@ -399,9 +395,7 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
     }
 
     //Initializing the data for PieChart
-    public Map<String, Float> initPieChartData()
-    {
-
+    public Map<String, Float> initPieChartData() {
         //initializing data
         Map<String, Float> entries = new HashMap<>();
         int i = 0;
@@ -416,8 +410,7 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
     }
 
     //Initializing the colours for PieChart
-    public List<Integer> initChartColours()
-    {
+    public List<Integer> initChartColours() {
         //initializing colors for the entries
         ArrayList<Integer> colors = new ArrayList<>();
         colors.add(Color.parseColor("#304567"));
@@ -428,7 +421,7 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
         colors.add(Color.parseColor("#ff5f67"));
         colors.add(Color.parseColor("#3ca567"));
 
-        return  colors;
+        return colors;
     }
 }
 
