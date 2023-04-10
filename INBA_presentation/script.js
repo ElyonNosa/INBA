@@ -1,4 +1,6 @@
 
+let currentBlockIndex = 0; // Initialize CurrentBlockIndex
+
 window.smoothScroll = function(target) {
   var scrollContainer = target;
   do { //find scroll container
@@ -7,6 +9,14 @@ window.smoothScroll = function(target) {
       if (!scrollContainer) return;
       scrollContainer.scrollTop += 1;
   } while (scrollContainer.scrollTop == 0);
+
+  var blocks = target.parentElement.children; // get all child elements of parent element
+  for (var i = 0; i < blocks.length; i++) { // loop through all child elements
+    if (blocks[i] === target) { // check if child element is target
+      CurrentBlockIndex = i; // set current block index
+      break;
+    }
+  }
   
   var targetY = 0;
   do { //find the top of target relatively to the container
@@ -17,39 +27,17 @@ window.smoothScroll = function(target) {
   scroll = function(c, a, b, i) {
       i++; if (i > 30) return;
       c.scrollTop = a + (b - a) / 30 * i;
-      setTimeout(function(){ scroll(c, a, b, i); }, 5);
+      setTimeout(function(){ 
+        scroll(c, a, b, i);
+        var newBlockIndex = Math.round(c.scrollTop / (c.scrollHeight / blocks.length)); // calculate new block index
+        if (newBlockIndex !== currentBlockIndex) { // check if current block index has changed
+          currentBlockIndex = newBlockIndex; // update current block index
+        }
+      }, 5);
   }
   // start scrolling
   scroll(scrollContainer, scrollContainer.scrollTop, targetY, 0);
 }
-
-// sub-block shifter
-
-const scrollingWrapper = document.querySelector('.sub-block-container');
-const cards = document.querySelectorAll('.sub-block');
-const prevBtn = document.getElementById('prevBtn');
-const nextBtn = document.getElementById('nextBtn');
-const cardWidth = $(document).width();
-const numCards = cards.length;
-let currentPosition = 0;
-
-function scrollCards(direction) {
-  currentPosition += direction * cardWidth;
-  currentPosition = Math.max(currentPosition, 0);
-  currentPosition = Math.min(currentPosition, (numCards - 1) * cardWidth);
-  scrollingWrapper.scrollTo(currentPosition, 0);
-}
-
-prevBtn.disabled = true;
-if (numCards <= 1) {
-  nextBtn.disabled = true;
-}
-
-scrollingWrapper.addEventListener('scroll', function() {
-  currentPosition = scrollingWrapper.scrollLeft;
-  prevBtn.disabled = currentPosition === 0;
-  nextBtn.disabled = currentPosition === (numCards - 1) * cardWidth;
-});
 
 const md = new markdownit();
 
@@ -76,6 +64,7 @@ $.ajax({
       const content = html.slice(start, end);
 
       sections[title] = content;
+      console.log(sections)
     }
 
     for (const [title, content] of Object.entries(sections)) {

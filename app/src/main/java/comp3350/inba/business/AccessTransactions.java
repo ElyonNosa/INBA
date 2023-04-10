@@ -11,7 +11,6 @@ import java.util.TreeSet;
 
 import comp3350.inba.application.Service;
 import comp3350.inba.objects.Transaction;
-import comp3350.inba.objects.User;
 import comp3350.inba.persistence.TransactionPersistence;
 
 /**
@@ -33,13 +32,21 @@ public class AccessTransactions {
     }
 
     // the instance of the transaction persistence
-    TransactionPersistence txnPersistance;
+    TransactionPersistence txnPersistence;
 
     /**
      * Constructor
      */
     public AccessTransactions() {
-        this(null);
+        this(null, Service.getTransactionPersistence());
+    }
+
+    public AccessTransactions(List<String> categNames) {
+        this(categNames, Service.getTransactionPersistence());
+    }
+
+    public AccessTransactions(TransactionPersistence persistence) {
+        this(null, persistence);
     }
 
     /**
@@ -47,8 +54,8 @@ public class AccessTransactions {
      *
      * @param categNames The predefined list of category names.
      */
-    public AccessTransactions(List<String> categNames) {
-        txnPersistance = Service.getTransactionPersistence();
+    public AccessTransactions(List<String> categNames, TransactionPersistence persistence) {
+        txnPersistence = persistence;
         if (categNames != null) {
             AccessTransactions.categNames.addAll(categNames);
         }
@@ -60,7 +67,7 @@ public class AccessTransactions {
      * @return The database's list of transactions.
      */
     public List<Transaction> getTransactions(String currUser) {
-        List<Transaction> output = Collections.unmodifiableList(txnPersistance.getTransactionList(currUser));
+        List<Transaction> output = Collections.unmodifiableList(txnPersistence.getTransactionList(currUser));
         // upon retrieving the list, update the set of category names
         for (Transaction txn : output) {
             categNames.add(txn.getCategoryName());
@@ -77,7 +84,7 @@ public class AccessTransactions {
     public Transaction insertTransaction(String currUser, Transaction currentTransaction) {
         // add the category name to the tree set
         categNames.add(currentTransaction.getCategoryName());
-        return txnPersistance.insertTransaction(currUser, currentTransaction);
+        return txnPersistence.insertTransaction(currUser, currentTransaction);
     }
 
     /**
@@ -87,7 +94,7 @@ public class AccessTransactions {
      * @return The updated transaction.
      */
     public Transaction updateTransaction(String currUser, Transaction currentTransaction) {
-        return txnPersistance.updateTransaction(currUser, currentTransaction);
+        return txnPersistence.updateTransaction(currUser, currentTransaction);
     }
 
     /**
@@ -96,7 +103,7 @@ public class AccessTransactions {
      * @param currentTransaction The transaction to delete.
      */
     public void deleteTransaction(String currUser, Transaction currentTransaction) {
-        txnPersistance.deleteTransaction(currUser, currentTransaction);
+        txnPersistence.deleteTransaction(currUser, currentTransaction);
     }
 
     /**
@@ -107,7 +114,7 @@ public class AccessTransactions {
      */
     public int getTimestampIndex(String currUser, LocalDateTime time) {
         // the list of transactions obtained from the database
-        List<Transaction> transactions = txnPersistance.getTransactionList(currUser);
+        List<Transaction> transactions = txnPersistence.getTransactionList(currUser);
         int output = -1;
         int i = 0;
         // start at end of array to reduce complexity
@@ -130,7 +137,7 @@ public class AccessTransactions {
      */
     public BigDecimal getSumInPeriod(String currUser, LocalDateTime start, LocalDateTime end) {
         // the list of transactions obtained from the database
-        List<Transaction> transactions = txnPersistance.getTransactionList(currUser);
+        List<Transaction> transactions = txnPersistence.getTransactionList(currUser);
         BigDecimal output = BigDecimal.ZERO;
         int i = 0;
         boolean withinPeriod = true;
@@ -157,7 +164,7 @@ public class AccessTransactions {
      */
     public BigDecimal[] getSumByMonth(String currUser, int year) {
         // the list of transactions obtained from the database
-        List<Transaction> transactions = txnPersistance.getTransactionList(currUser);
+        List<Transaction> transactions = txnPersistence.getTransactionList(currUser);
         // create the the array of sums (one element per month)
         BigDecimal[] output = new BigDecimal[Month.values().length];
         Arrays.fill(output, BigDecimal.ZERO);
@@ -182,7 +189,7 @@ public class AccessTransactions {
      */
     public int getIndexAfterDate(String currUser, LocalDateTime date) {
         // the list of transactions obtained from the database
-        List<Transaction> transactions = txnPersistance.getTransactionList(currUser);
+        List<Transaction> transactions = txnPersistence.getTransactionList(currUser);
         int i = 0;
         boolean found = false;
         // loop through all items in the transaction list
@@ -204,7 +211,7 @@ public class AccessTransactions {
      */
     public List<Transaction> getTransactionsByCategory(String currUser, String category) {
         // the list of transactions obtained from the database
-        List<Transaction> transactions = txnPersistance.getTransactionList(currUser);
+        List<Transaction> transactions = txnPersistence.getTransactionList(currUser);
         ArrayList<Transaction> output = new ArrayList<>();
         int i = 0;
 
@@ -222,7 +229,7 @@ public class AccessTransactions {
      */
     public void deleteAllTransactions(String currUser) {
         // the list of transactions obtained from the database
-        List<Transaction> transactions = txnPersistance.getTransactionList(currUser);
+        List<Transaction> transactions = txnPersistence.getTransactionList(currUser);
         int i = 0;
         for (i = 0; i < transactions.size(); i++) {
             deleteTransaction(currUser, transactions.get(i));
