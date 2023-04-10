@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
@@ -115,7 +116,8 @@ public class SettingsActivity extends AppCompatActivity {
                         openReportActivity();
                         break;
                     case "Logout":
-                        // TODO: log out the user
+                        startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                        finish();
                         break;
                 }
                 // Perform other actions based on the clicked item
