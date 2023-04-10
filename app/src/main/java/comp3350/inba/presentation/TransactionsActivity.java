@@ -1,7 +1,6 @@
 
 package comp3350.inba.presentation;
 
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Color;
@@ -20,6 +19,7 @@ import android.widget.TextView;
 import android.widget.AutoCompleteTextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -40,8 +40,7 @@ import comp3350.inba.objects.User;
  * The page where we create, read, update and delete transactions.
  * This class is coupled to activity_transactions.xml
  */
-public class TransactionsActivity extends Activity implements AdapterView.OnItemSelectedListener {
-
+public class TransactionsActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     // the transaction "database"
     private AccessTransactions accessTransactions;
     // the local list of transactions after retrieving from the "database"
@@ -465,12 +464,14 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
                     case R.id.home:
                         startActivity(new Intent(getApplicationContext(), DashboardActivity.class));
                         overridePendingTransition(0, 0);
+                        finish();
                         return true;
                     case R.id.buttonViewTransaction:
                         // Intent to start new Activity
                         startActivity(new Intent(getApplicationContext(), ViewTransactionActivity.class));
                         // Can Adjust Transition Speed, both enter and exit
                         overridePendingTransition(0, 0);
+                        finish();
                         return true;
                     case R.id.buttonAddTransaction:
                         // true if already on page.
@@ -478,10 +479,12 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
                     case R.id.buttonSettings:
                         startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
                         overridePendingTransition(0, 0);
+                        finish();
                         return true;
                     case R.id.buttonProfile:
                         startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
                         overridePendingTransition(0, 0);
+                        finish();
                         return true;
                 }
                 return false;
@@ -512,7 +515,6 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         // change the text color of the spinner to white
-        ((TextView) parent.getChildAt(0)).setTextColor(Color.WHITE);
         categoryFilter = parent.getItemAtPosition(position).toString();
         updateListView();
     }

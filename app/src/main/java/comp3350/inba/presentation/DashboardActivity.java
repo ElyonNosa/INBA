@@ -12,6 +12,8 @@ import android.graphics.Color;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import com.jjoe64.graphview.GraphView;
@@ -43,7 +45,7 @@ import comp3350.inba.application.Service;
  * The home page that shows a graph and recent transactions.
  * This class is coupled with activity_dashboard.xml
  */
-public class DashboardActivity extends Activity {
+public class DashboardActivity extends AppCompatActivity {
     // predefined category names to put on the graph and serve as suggestions for the user
     static final String[] PREDEFINED_CATEG_NAMES = {"Amenities", "Education", "Entertainment",
             "Food", "Hardware", "Hobby", "Medical", "Misc", "Transportation", "Utilities"};
@@ -213,18 +215,22 @@ public class DashboardActivity extends Activity {
                         startActivity(new Intent(getApplicationContext(), ViewTransactionActivity.class)); // Replace ViewActivity with the class used to view the graphs
                         // Can Adjust Transition Speed, both enter and exit
                         overridePendingTransition(0,0);
+                        finish();
                         return true;
                     case R.id.buttonAddTransaction:
                         startActivity(new Intent(getApplicationContext(),TransactionsActivity.class));
                         overridePendingTransition(0,0);
+                        finish();
                         return true;
                     case R.id.buttonSettings:
                         startActivity(new Intent(getApplicationContext(),SettingsActivity.class));
                         overridePendingTransition(0,0);
+                        finish();
                         return true;
                     case R.id.buttonProfile:
                         startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
                         overridePendingTransition(0,0);
+                        finish();
                         return true;
                 }
                 return false;

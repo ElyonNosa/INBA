@@ -2,11 +2,15 @@ package comp3350.inba.presentation;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import comp3350.inba.R;
 import comp3350.inba.objects.User;
@@ -16,17 +20,26 @@ import comp3350.inba.objects.User;
  * The page where the user logs in.
  * This class is coupled with activity_login.xml
  */
-public class LoginActivity extends Activity {
+public class LoginActivity extends AppCompatActivity {
     private EditText usernameEditText;
     private EditText passwordEditText;
     // instance of user
     private User user;
+
+    SharedPreferences sharePrefs = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         user = new User(getApplicationContext());
+
+        sharePrefs = getSharedPreferences("night", 0);
+
+        Boolean booleanValue = sharePrefs.getBoolean("night_mode",true);
+        if (booleanValue){
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        }
 
         // obtain the text boxes for user credentials
         usernameEditText = findViewById(R.id.username_edit_text);
