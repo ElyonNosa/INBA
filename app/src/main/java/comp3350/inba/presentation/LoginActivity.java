@@ -1,12 +1,10 @@
 package comp3350.inba.presentation;
 
-import static comp3350.inba.objects.User.currUser;
-import static comp3350.inba.objects.User.isLoggedIn;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -19,18 +17,29 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import comp3350.inba.R;
-import comp3350.inba.application.Main;
+import comp3350.inba.application.Service;
 import comp3350.inba.business.AccessUsers;
 import comp3350.inba.objects.Transaction;
 import comp3350.inba.objects.User;
 
-public class LoginActivity extends Activity {
+/**
+ * LoginActivity.java
+ * The page where the user logs in.
+ * This class is coupled with activity_login.xml
+ */
+public class LoginActivity extends AppCompatActivity {
     // the local list of users after retrieving from the "database"
-    private List<User> usersList;
+    private List<String[]> usersList;
     private EditText usernameEditText;
     private EditText passwordEditText;
+    // instance of user
+    private User user;
+
+    SharedPreferences sharePrefs = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +49,16 @@ public class LoginActivity extends Activity {
         //the users "database"
         AccessUsers accessUsers = new AccessUsers();
         usersList = accessUsers.getUsers();
+        user = new User(getApplicationContext());
 
+        sharePrefs = getSharedPreferences("night", 0);
+
+        boolean booleanValue = sharePrefs.getBoolean("night_mode",true);
+        if (booleanValue){
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        }
+
+        // obtain the text boxes for user credentials
         usernameEditText = findViewById(R.id.username_edit_text);
         passwordEditText = findViewById(R.id.password_edit_text);
 
@@ -56,10 +74,8 @@ public class LoginActivity extends Activity {
                     // Save the user's login status
                     saveLoginStatus();
                     // set current user using credentials
-                    User.currUser = new User(username, "", password);
-
-                    // Save the new curr user
-                    currUser = new User(username);
+                    user.setUserid(username);
+                    user.setUserName(username);
 
                     // Start the MainActivity and finish the LoginActivity
                     Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
@@ -80,10 +96,10 @@ public class LoginActivity extends Activity {
      */
     private boolean isValidCredentials(String userid, String password) {
         boolean returnVal = false;
-        for(User currUser : usersList){
-            if (currUser.getUserID().equals(userid) && currUser.getPasswd().equals(password)) {
+        int i = 0;
+        for(i = 0; i < usersList.size() && !returnVal; ++i){
+            if (usersList.get(i)[0].equals(userid) && usersList.get(i)[2].equals(password)) {
                 returnVal = true;
-                break;
             }
 
         }
@@ -93,8 +109,7 @@ public class LoginActivity extends Activity {
 
     private void saveLoginStatus() {
         // Save the user's login status in shared preferences or local database
-        isLoggedIn = true;
-
+        user.setLoginStatus(true);
     }
     private void copyDatabaseToDevice() {
         final String DB_PATH = "db";
@@ -113,7 +128,7 @@ public class LoginActivity extends Activity {
 
             copyAssetsToDirectory(assetNames, dataDirectory);
 
-            Main.setDBPathName(dataDirectory.toString() + "/" + Main.getDBPathName());
+            Service.setDBPathName(dataDirectory.toString() + "/" + Service.getDBPathName());
 
         } catch (final IOException ioe) {
             Messages.warning(this, "Unable to access application data: " + ioe.getMessage());

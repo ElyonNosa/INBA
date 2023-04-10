@@ -23,6 +23,7 @@
 
     <style name="transactionList" parent="Theme.AppCompat.DayNight.DarkActionBar">
         <item name="android:radius">20dp</item>
+        <item name="android:textColor">@color/colorPrimaryDark</item>
         <item name="android:background">@drawable/list_item</item>
     </style>
 

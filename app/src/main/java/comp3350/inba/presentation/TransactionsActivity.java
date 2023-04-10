@@ -1,6 +1,6 @@
+
 package comp3350.inba.presentation;
 
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Color;
@@ -19,27 +19,28 @@ import android.widget.TextView;
 import android.widget.AutoCompleteTextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
 import comp3350.inba.R;
 import comp3350.inba.business.AccessTransactions;
-import comp3350.inba.objects.Category;
 import comp3350.inba.objects.Transaction;
 import comp3350.inba.objects.User;
 
 /**
  * TransactionsActivity.java
- * <p>
- * This class is coupled to activity_transactions.xm
+ * The page where we create, read, update and delete transactions.
+ * This class is coupled to activity_transactions.xml
  */
-public class TransactionsActivity extends Activity implements AdapterView.OnItemSelectedListener {
+public class TransactionsActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     // the transaction "database"
     private AccessTransactions accessTransactions;
     // the local list of transactions after retrieving from the "database"
@@ -60,6 +61,8 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
     private static final String NO_FILTER = "No filter";
     // string of the current category filter
     private String categoryFilter = NO_FILTER;
+    // instance of user
+    private User user;
 
 
     @Override
@@ -69,13 +72,15 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
         // create instance of access transactions
         accessTransactions = new AccessTransactions();
 
+        user = new User(getApplicationContext());
+
         // disable traditional input for the date input text box
-        ((EditText)findViewById(R.id.editTextDate)).setInputType(InputType.TYPE_NULL);
+        ((EditText) findViewById(R.id.editTextDate)).setInputType(InputType.TYPE_NULL);
         // Get a reference to the AutoCompleteTextView in the layout
         textViewCategories = findViewById(R.id.editTransactionCategory);
         // create an adapter from the existing list of categories, assign this to the autocomplete view
         textViewCategories.setAdapter(new ArrayAdapter<String>(
-                this, android.R.layout.simple_list_item_1, Category.getCategorySet()));
+                this, android.R.layout.simple_list_item_1, accessTransactions.getCategNames()));
 
         // get a reference to the Spinner in the layout
         spinnerCategories = findViewById(R.id.spinnerCategoryFilter);
@@ -86,7 +91,7 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
                 this, android.R.layout.simple_list_item_1, getCategoryFilterArray()));
 
         // get the transaction list from the database
-        transactionList = accessTransactions.getTransactions(User.currUser);
+        transactionList = accessTransactions.getTransactions(user.getUserid());
         try {
             updateListView();
         } catch (final Exception e) {
@@ -94,7 +99,7 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
         }
 
         // Initialize and assign variable
-        BottomNavigationView bottomNavigationView=findViewById(R.id.bottom_navigation);
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
         // Set TransactionActivity selected
         bottomNavigationView.setSelectedItemId(R.id.buttonAddTransaction);
@@ -104,28 +109,28 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-                switch(item.getItemId()) // DashboardActivity
+                switch (item.getItemId()) // DashboardActivity
                 {
                     case R.id.home:
-                        startActivity(new Intent(getApplicationContext(),DashboardActivity.class));
-                        overridePendingTransition(0,0);
+                        startActivity(new Intent(getApplicationContext(), DashboardActivity.class));
+                        overridePendingTransition(0, 0);
                         return true;
                     case R.id.buttonViewTransaction:
                         // Intent to start new Activity
                         startActivity(new Intent(getApplicationContext(), ViewTransactionActivity.class)); // Replace ViewActivity with the class used to view the graphs
                         // Can Adjust Transition Speed, both enter and exit
-                        overridePendingTransition(0,0);
+                        overridePendingTransition(0, 0);
                         return true;
                     case R.id.buttonAddTransaction:
                         // true if already on page.
                         return true;
                     case R.id.buttonSettings:
-                        startActivity(new Intent(getApplicationContext(),SettingsActivity.class));
-                        overridePendingTransition(0,0);
+                        startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
+                        overridePendingTransition(0, 0);
                         return true;
                     case R.id.buttonProfile:
                         startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
-                        overridePendingTransition(0,0);
+                        overridePendingTransition(0, 0);
                         return true;
                 }
                 return false;
@@ -140,10 +145,10 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
         // check to see if "No filter" is selected
         if (categoryFilter.equals(NO_FILTER)) {
             // use the normal list
-            transactionList = accessTransactions.getTransactions(User.currUser);
+            transactionList = accessTransactions.getTransactions(user.getUserid());
         } else {
             // use the transaction list filtered by the category
-            transactionList = accessTransactions.getTransactionsByCategory(User.currUser, categoryFilter);
+            transactionList = accessTransactions.getTransactionsByCategory(user.getUserid(), categoryFilter);
         }
         // create the adapter for the transaction list
         transactionArrayAdapter = new ArrayAdapter<Transaction>(this,
@@ -162,7 +167,7 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
                 TextView text1 = view.findViewById(android.R.id.text1);
                 TextView text2 = view.findViewById(android.R.id.text2);
                 // a string containing category, followed by price
-                String categoryPrice = transactionList.get(position).getCategory() + ": $"
+                String categoryPrice = transactionList.get(position).getCategoryName() + ": $"
                         + String.format(Locale.ENGLISH, "%.2f",
                         transactionList.get(position).getPrice());
 
@@ -224,7 +229,7 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
         EditText editPrice = findViewById(R.id.editTransactionPrice);
 
         // update EditTexts with information of the transaction.
-        editCategory.setText(selected.getCategory());
+        editCategory.setText(selected.getCategoryName());
         editPrice.setText(String.format(Locale.ENGLISH, "%.2f", selected.getPrice()));
     }
 
@@ -236,19 +241,18 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
     public void buttonTransactionCreateOnClick(View v) {
         // create a new transaction from the EditText fields
         Transaction transaction = createTransactionFromEditText(true);
-        String result;
+        AccessTransactions.TransactionError status;
 
         // check for non null
         if (transaction != null) {
             // validate the transaction
-            result = transaction.validateTransactionData(accessTransactions, true);
-            // check if return is null (there are no errors)
-            if (result == null) {
+            status = accessTransactions.validateTransactionData(transaction, user.getUserID(), true);
+            if (parseTransactionStatus(status)) {
                 try {
                     // insert the transaction into the database list
-                    transaction = accessTransactions.insertTransaction(User.currUser, transaction);
+                    transaction = accessTransactions.insertTransaction(user.getUserid(), transaction);
                     // update our local list
-                    transactionList = accessTransactions.getTransactions(User.currUser);
+                    transactionList = accessTransactions.getTransactions(user.getUserid());
                     // refresh the transaction list view
                     transactionArrayAdapter.notifyDataSetChanged();
                     // set list position to the new transaction
@@ -258,17 +262,17 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
                         listView.setSelection(pos);
                     }
                     // create an adapter from the existing list of categories, assign this to the autocomplete view
-                    textViewCategories.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, Category.getCategorySet()));
+                    textViewCategories.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, accessTransactions.getCategNames()));
                     // create an adapter from the existing list of categories, assign this to the category filter spinner
                     spinnerCategories.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, getCategoryFilterArray()));
                     // these are done in case of a new category addition, we want to update the autocomplete and filter list
                     // refresh list
                     updateListView();
+                    selectedTransactionPosition = -1;
+                    selectedTransactionTime = null;
                 } catch (final Exception e) {
                     Messages.fatalError(this, e.getMessage());
                 }
-            } else {
-                Messages.warning(this, result);
             }
         }
     }
@@ -281,19 +285,18 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
     public void buttonTransactionUpdateOnClick(View v) {
         // create a transaction from the EditText fields
         Transaction transaction = createTransactionFromEditText(false);
-        String result;
+        AccessTransactions.TransactionError status;
 
         // check for non null
         if (transaction != null) {
             // validate the transaction
-            result = transaction.validateTransactionData(accessTransactions, false);
-            // check if return is null (there are no errors)
-            if (result == null) {
+            status = accessTransactions.validateTransactionData(transaction, user.getUserid(), false);
+            if (parseTransactionStatus(status)) {
                 try {
                     // overwrite the given transaction into the database list
-                    transaction = accessTransactions.updateTransaction(User.currUser, transaction);
+                    transaction = accessTransactions.updateTransaction(user.getUserid(), transaction);
                     // update our local list
-                    transactionList = accessTransactions.getTransactions(User.currUser);
+                    transactionList = accessTransactions.getTransactions(user.getUserid());
                     // refresh the transaction list view
                     transactionArrayAdapter.notifyDataSetChanged();
                     // set list position to the updated transaction
@@ -304,13 +307,49 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
                     }
                     // refresh list
                     updateListView();
+                    selectedTransactionPosition = -1;
+                    selectedTransactionTime = null;
                 } catch (final Exception e) {
                     Messages.fatalError(this, e.getMessage());
                 }
-            } else {
-                Messages.warning(this, result);
             }
         }
+    }
+
+    /**
+     * Perform actions based on the type of transaction error.
+     *
+     * @param status The current transaction error.
+     * @return True if no error.
+     */
+    private boolean parseTransactionStatus(AccessTransactions.TransactionError status) {
+        boolean output = false;
+        switch (status) {
+            case NONE:
+                output = true;
+                break;
+            case CATEGORY_REQUIRED:
+                Messages.warning(this, "Error: category required." +
+                        "\nPlease input a category and try again.");
+                break;
+            case INVALID_PRICE:
+                Messages.warning(this, "Error: price must be positive." +
+                        "\nPlease input a positive price and try again.");
+                break;
+            case OVER_LIMIT:
+                Messages.warning(this, "Error: price is too high." +
+                        "\nPlease input a lower price and try again.");
+                break;
+            case ALREADY_EXISTS:
+                Messages.warning(this, "Error: creating transactions too quickly." +
+                        "\nPlease wait one second and try again.");
+                break;
+            default:
+                Messages.warning(this, "Error: unknown error." +
+                        "\nPlease send a bug report and explain what you were doing when the error occurred.");
+                break;
+        }
+        return output;
     }
 
 
@@ -325,7 +364,7 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
 
         try {
             // delete the given transaction into the database list
-            accessTransactions.deleteTransaction(User.currUser, transaction);
+            accessTransactions.deleteTransaction(user.getUserid(), transaction);
 
             // set list position as the index of the deleted transaction
             int pos = transactionList.indexOf(transaction);
@@ -334,11 +373,13 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
                 listView.setSelection(pos);
             }
             // update our local list
-            transactionList = accessTransactions.getTransactions(User.currUser);
+            transactionList = accessTransactions.getTransactions(user.getUserid());
             // refresh the transaction list view
             transactionArrayAdapter.notifyDataSetChanged();
             // refresh list
             updateListView();
+            selectedTransactionPosition = -1;
+            selectedTransactionTime = null;
         } catch (final Exception e) {
             Messages.warning(this, e.getMessage());
         }
@@ -346,6 +387,7 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
 
     /**
      * After clicking on the date text, show calendar dialog then scroll to the selected date.
+     *
      * @param v The view.
      */
     public void textEnterDateOnClick(View v) {
@@ -360,8 +402,8 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
                     // create a date using the selected day, month, year.
                     // get the index of the transaction after this date.
                     // use the index to select a position in the list.
-                    listViewTransactions.smoothScrollToPosition(accessTransactions.getIndexAfterDate(User.currUser,
-                            LocalDateTime.of(year, month+1, day, 0, 0)));
+                    listViewTransactions.smoothScrollToPosition(accessTransactions.getIndexAfterDate(user.getUserid(),
+                            LocalDateTime.of(year, month + 1, day, 0, 0)));
                 }, cldr.get(Calendar.YEAR), cldr.get(Calendar.MONTH), cldr.get(Calendar.DAY_OF_MONTH));
         picker.show();
     }
@@ -379,10 +421,10 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
         // transaction properties
         Transaction output = null;
         LocalDateTime time;
-        double price = 0;
+        BigDecimal price = BigDecimal.ZERO;
         try {
             // attempt to parse transaction price to double
-            price = Double.parseDouble(editPrice.getText().toString());
+            price = new BigDecimal(editPrice.getText().toString());
             // check if this transaction does not yet exist
             if (isNewTransaction) {
                 // set timestamp to current time
@@ -397,9 +439,14 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
             // Messages.warning(this, e.getMessage());
             // parsing error occurred, leave the transaction as null
         }
+        editCategory.setText("");
+        editPrice.setText("");
         return output;
     }
 
+    /**
+     * Initialize the nav bar for this page.
+     */
     protected void navigationBarInit() {
         // Initialize and assign variable
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -417,12 +464,14 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
                     case R.id.home:
                         startActivity(new Intent(getApplicationContext(), DashboardActivity.class));
                         overridePendingTransition(0, 0);
+                        finish();
                         return true;
                     case R.id.buttonViewTransaction:
                         // Intent to start new Activity
                         startActivity(new Intent(getApplicationContext(), ViewTransactionActivity.class));
                         // Can Adjust Transition Speed, both enter and exit
                         overridePendingTransition(0, 0);
+                        finish();
                         return true;
                     case R.id.buttonAddTransaction:
                         // true if already on page.
@@ -430,10 +479,12 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
                     case R.id.buttonSettings:
                         startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
                         overridePendingTransition(0, 0);
+                        finish();
                         return true;
                     case R.id.buttonProfile:
                         startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
                         overridePendingTransition(0, 0);
+                        finish();
                         return true;
                 }
                 return false;
@@ -443,16 +494,18 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
 
     /**
      * Getter for the category string arraylist with an additional "No filter" category.
+     *
      * @return The string arraylist to be used in the category filter spinner.
      */
-    private ArrayList<String> getCategoryFilterArray() {
-        ArrayList<String> output = Category.getCategorySet();
+    private List<String> getCategoryFilterArray() {
+        List<String> output = accessTransactions.getCategNames();
         // add the "No filter" category to the filter list
         output.add(0, NO_FILTER);
         return output;
     }
 
     /**
+     * onItemSelected(): this runs when the user pressed an entry in the spinner.
      *
      * @param parent
      * @param view
@@ -462,7 +515,6 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         // change the text color of the spinner to white
-        ((TextView) parent.getChildAt(0)).setTextColor(Color.WHITE);
         categoryFilter = parent.getItemAtPosition(position).toString();
         updateListView();
     }
@@ -472,6 +524,6 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
      */
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
-        // implemented function. does nothing
+        // do nothing
     }
 }

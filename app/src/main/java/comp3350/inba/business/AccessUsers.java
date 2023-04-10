@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.List;
 
 import comp3350.inba.application.Service;
-import comp3350.inba.objects.Transaction;
 import comp3350.inba.objects.User;
 
 /**
@@ -23,9 +22,9 @@ public class AccessUsers {
      * Obtain list of users from the database.
      * @return The database's list of users.
      */
-    public List<User> getUsers()
+    public List<String[]> getUsers()
     {
-        return Collections.unmodifiableList(Service.getUserPersistence().get_user_list());
+        return Collections.unmodifiableList(Service.getUserPersistence().getUsers());
     }
 
     /**
@@ -33,9 +32,9 @@ public class AccessUsers {
      * @param currUser the user to insert.
      * @return the user inserted.
      */
-    public User insertUser(User currUser)
+    public String[] insertUser(String[] currUser)
     {
-        return Service.getUserPersistence().insert_user(currUser);
+        return Service.getUserPersistence().insertUser(currUser);
     }
 
     /**
@@ -43,17 +42,17 @@ public class AccessUsers {
      * @param currUser The user with updated properties.
      * @return The updated user.
      */
-    public User updateUser(User currUser)
+    public String[] updateUser(String[] currUser)
     {
-        return Service.getUserPersistence().update_user(currUser);
+        return Service.getUserPersistence().updateUser(currUser);
     }
 
     /**
      * Remove a user from the list.
      * @param currUser The transaction to delete.
      */
-    public void deleteUser(User currUser)
+    public void deleteUser(String[] currUser)
     {
-        Service.getUserPersistence().delete_user(currUser);
+        Service.getUserPersistence().deleteUser(currUser);
     }
 }

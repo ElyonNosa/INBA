@@ -10,7 +10,7 @@ import comp3350.inba.persistence.stubs.TransactionPersistenceStub;
 /**
  * Service.java
  *
- * Ensure that one instance of the database exists at a time.
+ * Ensure that one instance of the database exists at a time. Also store the name of the database.
  */
 public class Service {
     // set to true for hsqldb database
@@ -18,6 +18,21 @@ public class Service {
     // instance of the transaction persistence
     private static TransactionPersistence transactionPersistence = null;
     private static UserPersistence userPersistence = null;
+    // name of the database script
+    private static String dbName="INBA_DATABASE";
+
+    public static void setDBPathName(final String name) {
+        try {
+            Class.forName("org.hsqldb.jdbcDriver").newInstance();
+        } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        dbName = name;
+    }
+
+    public static String getDBPathName() {
+        return dbName;
+    }
 
     /**
      * Constructor
@@ -25,8 +40,8 @@ public class Service {
      */
     public Service(boolean generateExamples) {
         if (USE_HSQLDB) {
-            transactionPersistence = new TransactionPersistenceHSQLDB(Main.getDBPathName());
-            userPersistence = new UserPersistenceHSQLDB(Main.getDBPathName());
+            userPersistence = new UserPersistenceHSQLDB(dbName);
+            transactionPersistence = new TransactionPersistenceHSQLDB(dbName);
         } else {
             transactionPersistence = new TransactionPersistenceStub(generateExamples);
 
@@ -43,7 +58,7 @@ public class Service {
         // create one if it doesn't exist
         if (transactionPersistence == null) {
             if (USE_HSQLDB) {
-                transactionPersistence = new TransactionPersistenceHSQLDB(Main.getDBPathName());
+                transactionPersistence = new TransactionPersistenceHSQLDB(dbName);
             } else {
                 transactionPersistence = new TransactionPersistenceStub();
             }
@@ -61,7 +76,7 @@ public class Service {
     public static synchronized UserPersistence getUserPersistence() {
         // create one if it doesn't exist
         if (userPersistence == null) {
-            userPersistence = new UserPersistenceHSQLDB(Main.getDBPathName());
+            userPersistence = new UserPersistenceHSQLDB(dbName);
         }
 
         return userPersistence;

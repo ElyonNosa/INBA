@@ -8,22 +8,49 @@
     <title>INBA</title>
   </head>
   <body>
-    <nav>
-      <a id="logo" href="#"><img src="/imgs/logo-no-background.png" /></a>
-
-      <ul>
-        <li class="nav-btn"><a href="#">HOME</a></li>
-        <li class="nav-btn"><a href="#">ABOUT</a></li>
-        <li class="nav-btn"><a href="#">DEMO</a></li>
-      </ul>
-    </nav>
     <div class="container">
+      <nav>
+        <a
+          id="logo"
+          href="#"
+          onclick="smoothScroll(document.getElementById('block1'))"
+          draggable="false"
+          ><img src="./imgs/logo-no-background.png"
+        /></a>
+
+        <ul>
+          <li class="nav-btn">
+            <a
+              href="#"
+              onclick="smoothScroll(document.getElementById('block1'))"
+              >HOME</a
+            >
+          </li>
+          <li class="nav-btn">
+            <a
+              href="#"
+              onclick="smoothScroll(document.getElementById('block2'))"
+              >ABOUT</a
+            >
+          </li>
+          <li class="nav-btn">
+            <a
+              href="#"
+              onclick="smoothScroll(document.getElementById('block4'))"
+              >DEMO</a
+            >
+          </li>
+        </ul>
+      </nav>
+
       <div class="block" id="block1">
-        <img src="imgs/main-shift.png" alt="Image 1" />
+        <img src="./imgs/main-shift.png" alt="Image 1" />
         <div class="content">
           <h1>INBA: Is Not a Banking App</h1>
           <p>Learn to track your saving to spending ratio!</p>
-          <button><a href="#">Check out our demo here!</a></button>
+          <button onclick="smoothScroll(document.getElementById('block3'))">
+            Check out our demo here!
+          </button>
         </div>
       </div>
       <div class="block" id="block2">
@@ -34,34 +61,36 @@
             money is going
           </p>
         </div>
-        <img src="imgs/addtx-shift.png" alt="Image 2" />
+        <img src="./imgs/addtx-shift.png" alt="Image 2" />
       </div>
       <div class="block" id="block3">
-        <img src="#" alt="Image 3" />
-        <div class="content">
-          <h2>Block 3</h2>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce
-            bibendum enim sed ligula hendrerit malesuada. Sed at urna ac libero
-            bibendum faucibus. Praesent tempor tellus in risus commodo, vel
-            sagittis erat tincidunt.
-          </p>
+        <div class="sub-block-container">
+          <div class="sub-block">
+            <div class="content">
+              <div data-section="Who are the users?"></div>
+            </div>
+          </div>
+          <div class="sub-block">
+            <div class="content">
+              <div data-section="Why is this project valuable?"></div>
+            </div>
+          </div>
+        </div>
+        <div class="scroll-buttons">
+          <button id="prevBtn" onclick="scrollCards(-1)">Previous</button>
+          <button id="nextBtn" onclick="scrollCards(1)">Next</button>
         </div>
       </div>
       <div class="block" id="block4">
         <div class="content">
-          <h2>Block 4</h2>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce
-            bibendum enim sed ligula hendrerit malesuada. Sed at urna ac libero
-            bibendum faucibus. Praesent tempor tellus in risus commodo, vel
-            sagittis erat tincidunt.
-          </p>
+          <div data-section="Vision Statement"></div>
         </div>
         <img src="image4.jpg" alt="Image 4" />
       </div>
     </div>
 
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/markdown-it@12.2.0/dist/markdown-it.min.js"></script>
     <script src="script.js"></script>
   </body>
 </html>

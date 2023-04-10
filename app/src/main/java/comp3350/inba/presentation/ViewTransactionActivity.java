@@ -1,11 +1,16 @@
 package comp3350.inba.presentation;
-import androidx.annotation.NonNull;
 
-import android.app.Activity;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+
 import comp3350.inba.R;
+import comp3350.inba.business.AccessTransactions;
+import comp3350.inba.objects.Transaction;
+import comp3350.inba.objects.User;
 
 import android.view.MenuItem;
 import android.view.View;
@@ -30,32 +35,53 @@ import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
-public class ViewTransactionActivity extends Activity implements View.OnClickListener {
+/**
+ * ViewTransationActivity.java
+ * The page where we see graphs containing transaction data.
+ * This class is coupled with activity_view_transaction.xml.
+ */
+public class ViewTransactionActivity extends AppCompatActivity implements View.OnClickListener {
+    // the sum of prices for each month
+    private ArrayList<BigDecimal> monthlyPriceArray;
+    final String[] MONTHS = {"Jan", "Feb", "Mar", "Apr", "May", "June", "July",
+            "Aug", "Sept", "Oct", "Nov", "Dec"};
 
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_view_transaction);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_view_transaction);
+        User user = new User(getApplicationContext());
+        // instance of AccessTransactions
+        AccessTransactions accessTransactions = new AccessTransactions();
+        // fetch data
+        monthlyPriceArray = new ArrayList<>(Arrays.asList(accessTransactions.getSumByMonth(
+                user.getUserID(), LocalDateTime.now().getYear())));
 
-            Button button1 = findViewById(R.id.button);
-            Button button2 = findViewById(R.id.button2);
-            Button button3 = findViewById(R.id.button3);
+        Button button1 = findViewById(R.id.button);
+        Button button2 = findViewById(R.id.button2);
+        Button button3 = findViewById(R.id.button3);
 
-            button1.setOnClickListener(this);
-            button2.setOnClickListener(this);
-            button3.setOnClickListener(this);
+        button1.setOnClickListener(this);
+        button2.setOnClickListener(this);
+        button3.setOnClickListener(this);
 
-            navigationBarInit();
-            onClick(button1);
-        }
+        navigationBarInit();
+        // click button 1 by default
+        onClick(button1);
+    }
 
+    /**
+     * Initialize the navbar for this page.
+     */
     protected void navigationBarInit() {
         // Initialize and assign variable
-        BottomNavigationView bottomNavigationView=findViewById(R.id.bottom_navigation);
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
         // Set View Transaction selected
         bottomNavigationView.setSelectedItemId(R.id.buttonViewTransaction);
@@ -65,11 +91,12 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-                switch(item.getItemId()) // DashboardActivity
+                switch (item.getItemId()) // DashboardActivity
                 {
                     case R.id.home:
                         startActivity(new Intent(getApplicationContext(),DashboardActivity.class));
                         overridePendingTransition(0,0);
+                        finish();
                         return true;
                     case R.id.buttonViewTransaction:
                         // true if already on page.
@@ -77,10 +104,12 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
                     case R.id.buttonAddTransaction:
                         startActivity(new Intent(getApplicationContext(),TransactionsActivity.class));
                         overridePendingTransition(0,0);
+                        finish();
                         return true;
                     case R.id.buttonSettings:
                         startActivity(new Intent(getApplicationContext(),SettingsActivity.class));
                         overridePendingTransition(0,0);
+                        finish();
                         return true;
                     case R.id.buttonProfile:
                         startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
@@ -92,11 +121,15 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
         });
     }
 
+    /**
+     * onClick(): what happens when you click on the graph buttons.
+     *
+     * @param view
+     */
     @Override
     public void onClick(View view) {
         //Local Variable
-        final String[] MONTHS = {"Jan", "Feb", "Mar", "Apr", "May", "June", "July",
-                "Aug", "Sept", "Oct", "Nov", "Dec"};
+
         //Initializing the graphs
         LineChart lineChart = findViewById(R.id.line_chart);
         BarChart barChart = findViewById(R.id.bar_chart);
@@ -112,7 +145,7 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
                 // Show the line chart
                 lineChart.setVisibility(View.VISIBLE);
 
-                showLineChart(lineChart, MONTHS);
+                showLineChart(lineChart);
                 break;
 
             //Bar Graph
@@ -124,7 +157,7 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
                 // Show the line chart
                 barChart.setVisibility(View.VISIBLE);
 
-                showBarChart(barChart, MONTHS);
+                showBarChart(barChart);
                 break;
 
             //Pie Chart
@@ -144,27 +177,23 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
         }
     }
 
+    /**
+     * Obtain data formatted for the graphs.
+     *
+     * @return
+     */
     public List<Entry> getDataset() {
         List<Entry> entries = new ArrayList<>();
-        entries.add(new BarEntry(0f, 10));
-        entries.add(new BarEntry(1f, 20));
-        entries.add(new BarEntry(2f, 30));
-        entries.add(new BarEntry(3f, 40));
-        entries.add(new BarEntry(4f, 50));
-        entries.add(new BarEntry(5f, 20));
-        entries.add(new BarEntry(6f, 50));
-        entries.add(new BarEntry(7f, 40));
-        entries.add(new BarEntry(8f, 90));
-        entries.add(new BarEntry(9f, 30));
-        entries.add(new BarEntry(10f, 70));
-        entries.add(new BarEntry(11f, 60));
+        int i = 0;
+        for (i = 0; i < Month.values().length; ++i) {
+            entries.add(new Entry(i, monthlyPriceArray.get(i).floatValue()));
+        }
 
         return entries;
     }
 
     //Converts list<Entry> to list<BarEntry>
-    private  List<BarEntry> cast(List<Entry> entryVal)
-    {
+    private List<BarEntry> cast(List<Entry> entryVal) {
         // Create a new list of BarEntry objects
         List<BarEntry> barEntries = new ArrayList<>();
         // Iterate over the entries list, converting each Entry to a BarEntry
@@ -177,44 +206,92 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
     }
 
     // Used to add a label to the x axis of Bar and Line graph
-    private ValueFormatter setLabel(String[] months)
-    {
+    private ValueFormatter setLabel(String[] months) {
         return new ValueFormatter() {
             @Override
             public String getAxisLabel(float value, AxisBase axis) {
-                // Convert float value to int index of months array
-                int index = (int) value;
+                int index = (int)value;
                 // Check if index is within bounds of months array
-                if (index >= 0 && index < months.length) {
+                if (index >= 0 && index < MONTHS.length) {
                     // Return the corresponding month from the array
-                    return months[index];
+                    return MONTHS[index];
                 }
                 return "";
             }
         };
     }
 
-    //TODO: Need to resolve the bug in label. It is printing duplicate months.
-    private void showLineChart(LineChart lineChart, String[] months)
-    {
-
+    /**
+     * Display the line chart and its properties.
+     *
+     * @param lineChart Object used to modify the chart
+     */
+    private void showLineChart(LineChart lineChart) {
         List<Entry> entries = getDataset();
         LineDataSet dataSet = new LineDataSet(entries, "Cost");
         LineData lineData = new LineData(dataSet);
-
-        ValueFormatter formatter = setLabel(months);
-
+        // Set the value formatter for the x-axis labels
+        ValueFormatter formatter = setLabel(MONTHS);
         XAxis xAxis = lineChart.getXAxis();
-        xAxis.setLabelCount(entries.size());
+
+        // 10 labels actually prints 12 for some weird reason
+        xAxis.setLabelCount(10);
         xAxis.setValueFormatter(formatter);
-//        xAxis.setLabelRotationAngle(0);
+
+        dataSet.setColor(Color.parseColor("#80FF7F50"));
+        dataSet.setCircleColor(Color.BLUE);
+        dataSet.setDrawValues(true);
+        dataSet.setValueTextColor(Color.WHITE);
 
         // Add data to the chart
         lineChart.setData(lineData);
         modifyLineChart(lineChart);
     }
-    private void modifyLineChart(LineChart lineChart)
-    {
+
+    /**
+     * Display the bar chart and its properties.
+     *
+     * @param barChart Object used to modify the chart
+     */
+    private void showBarChart(BarChart barChart) {
+        List<Entry> entryVal = getDataset();
+        List<BarEntry> entries = cast(entryVal);
+        BarDataSet dataSet = new BarDataSet(entries, "Cost");
+        BarData data = new BarData(dataSet);
+        // Set the value formatter for the x-axis labels
+        ValueFormatter formatter = setLabel(MONTHS);
+        XAxis xAxis = barChart.getXAxis();
+
+        xAxis.setLabelCount(MONTHS.length);
+        xAxis.setValueFormatter(formatter);
+
+        dataSet.setColor(Color.YELLOW);
+        dataSet.setDrawValues(true);
+        dataSet.setValueTextColor(Color.WHITE);
+
+        barChart.setData(data);
+        modifyBarChart(barChart);
+    }
+
+    /**
+     * Align the bar chart
+     *
+     * @param barChart Object used to modify the chart
+     */
+    private void modifyBarChart(BarChart barChart) {
+        barChart.invalidate();
+        barChart.setDrawBarShadow(false);
+        barChart.setDrawValueAboveBar(true);
+        barChart.getDescription().setEnabled(false);
+        barChart.setDrawGridBackground(false);
+    }
+
+    /**
+     * Align the line chart
+     *
+     * @param lineChart Object used to modify the chart
+     */
+    private void modifyLineChart(LineChart lineChart) {
         // Refresh the chart
         lineChart.invalidate();
         lineChart.getDescription().setEnabled(false);
@@ -225,57 +302,31 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
         lineChart.setPinchZoom(true);
     }
 
+    /**
+     * TO display the pieChart
+     *
+     * @param pieChart Object used to modify the pieChart
+     */
+    private void showPieChart(PieChart pieChart) {
 
-    private void showBarChart(BarChart barChart, String[] months)
-    {
-        List<Entry> entryVal = getDataset();
-        List<BarEntry> entries = cast(entryVal);
-
-        BarDataSet dataSet = new BarDataSet(entries, "Cost");
-        dataSet.setColor(Color.YELLOW);
-        dataSet.setValueTextColor(Color.WHITE);
-        BarData data = new BarData(dataSet);
-
-        // Set the value formatter for the x-axis labels
-        ValueFormatter formatter = setLabel(months);
-
-        XAxis xAxis = barChart.getXAxis();
-        xAxis.setLabelCount(12);
-        xAxis.setValueFormatter(formatter);
-
-        barChart.setData(data);
-        modifyBarChart(barChart);
-    }
-
-    private void modifyBarChart(BarChart barChart)
-    {
-        barChart.invalidate();
-        barChart.setDrawBarShadow(false);
-        barChart.setDrawValueAboveBar(true);
-        barChart.getDescription().setEnabled(false);
-        barChart.setDrawGridBackground(false);
-    }
-    private  void showPieChart(PieChart pieChart){
-
-        //======================================================================================================================================
         ArrayList<PieEntry> pieEntries = new ArrayList<>();
         String label = "type";
-
-        //PieChart Data
-        Map<String, Integer> typeAmountMap = initPieChartData();
-
         //PieChart Colours
         ArrayList<Integer> colors = (ArrayList<Integer>) initChartColours();
-
-        //input data and fit data into pie chart entry
-        for(String type: typeAmountMap.keySet()){
-            pieEntries.add(new PieEntry(typeAmountMap.get(type).floatValue(), type));
+        int i = 0;
+        // create entries using monthly sums
+        for (i = 0; i < MONTHS.length; ++i) {
+            if(monthlyPriceArray.get(i).compareTo(BigDecimal.ZERO) > 0)
+            {
+                pieEntries.add(new PieEntry(monthlyPriceArray.get(i).floatValue(), MONTHS[i]));
+            }
         }
 
         //collecting the entries with label name
-        PieDataSet pieDataSet = new PieDataSet(pieEntries,label);
-        //setting text size of the value
-        pieDataSet.setValueTextSize(12f);
+        PieDataSet pieDataSet = new PieDataSet(pieEntries, label);
+        //setting text size and color of the label
+        pieDataSet.setValueTextSize(16f);
+        pieDataSet.setValueTextColor(Color.BLACK);
         //providing color list for coloring different entries
         pieDataSet.setColors(colors);
         //grouping the data set from entry to chart
@@ -285,34 +336,11 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
 
         pieChart.setData(pieData);
         pieChart.invalidate();
-        //======================================================================================================================================
 
     }
 
-    public Map<String, Integer> initPieChartData()
-    {
-
-        //initializing data
-        Map<String, Integer> typeAmountMap = new HashMap<>();
-        typeAmountMap.put("Jan",10);
-        typeAmountMap.put("Feb",20);
-        typeAmountMap.put("Mar",30);
-        typeAmountMap.put("Apr",40);
-        typeAmountMap.put("May",50);
-        typeAmountMap.put("June",20);
-        typeAmountMap.put("July",50);
-        typeAmountMap.put("Aug",40);
-        typeAmountMap.put("Sept",90);
-        typeAmountMap.put("Oct",30);
-        typeAmountMap.put("Nov",70);
-        typeAmountMap.put("Dec",60);
-
-        return typeAmountMap;
-    }
-
-    //Used to allocate different colours to pieChart
-    public List<Integer> initChartColours()
-    {
+    //Initializing the colours for PieChart
+    public List<Integer> initChartColours() {
         //initializing colors for the entries
         ArrayList<Integer> colors = new ArrayList<>();
         colors.add(Color.parseColor("#304567"));
@@ -323,7 +351,7 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
         colors.add(Color.parseColor("#ff5f67"));
         colors.add(Color.parseColor("#3ca567"));
 
-        return  colors;
+        return colors;
     }
 }
 

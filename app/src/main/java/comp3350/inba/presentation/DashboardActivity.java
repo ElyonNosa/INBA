@@ -1,7 +1,5 @@
 package comp3350.inba.presentation;
 
-import static comp3350.inba.objects.User.isLoggedIn;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +12,8 @@ import android.graphics.Color;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import com.jjoe64.graphview.GraphView;
@@ -27,30 +27,36 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
 
 import comp3350.inba.R;
-import comp3350.inba.application.Main;
 import comp3350.inba.business.AccessTransactions;
-import comp3350.inba.objects.Category;
 import comp3350.inba.objects.Transaction;
 import comp3350.inba.objects.User;
+import comp3350.inba.application.Service;
 
 /**
  * DashboardActivity.java
- *
+ * The home page that shows a graph and recent transactions.
  * This class is coupled with activity_dashboard.xml
  */
-public class DashboardActivity extends Activity {
+public class DashboardActivity extends AppCompatActivity {
+    // predefined category names to put on the graph and serve as suggestions for the user
+    static final String[] PREDEFINED_CATEG_NAMES = {"Amenities", "Education", "Entertainment",
+            "Food", "Hardware", "Hobby", "Medical", "Misc", "Transportation", "Utilities"};
     // the transactions database
     private AccessTransactions accessTransactions;
     // the adapter to display transactions in a list view
     private ArrayAdapter<Transaction> transactionArrayAdapter;
     // the local list of transactions
     private List<Transaction> transactionList;
+    // instance of user
+    private User user;
 
     /**
      * Constructor
@@ -59,19 +65,14 @@ public class DashboardActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if(!isLoggedIn) {
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
-            finish();
-            return;
-        }
+        user = new User(getApplicationContext());
 
         setContentView(R.layout.activity_dashboard);
-        accessTransactions = new AccessTransactions();
+        // create instance of accessTransactions using the predefined list of category names
+        accessTransactions = new AccessTransactions(Arrays.asList(PREDEFINED_CATEG_NAMES));
         try {
             // display transactions in list
-            transactionList = accessTransactions.getTransactions(User.currUser);
+            transactionList = accessTransactions.getTransactions(user.getUserID());
             transactionArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, transactionList);
             final ListView listView = findViewById(R.id.transaction_list);
             // adapt the transactions list to the listview
@@ -87,7 +88,7 @@ public class DashboardActivity extends Activity {
 
     // will need to ask the DB if we are logged in
     private boolean isLoggedIn() {
-        return isLoggedIn;
+        return user.getLoginStatus();
     }
 
     /**
@@ -103,7 +104,7 @@ public class DashboardActivity extends Activity {
         series.setValueDependentColor(new ValueDependentColor<DataPoint>() {
             @Override
             public int get(DataPoint data) {
-                return Color.rgb((int) (data.getX()*(122)* Category.getCategorySet().size())%255, 80, 140);
+                return Color.rgb((int) (data.getX()*(122)* accessTransactions.getCategNames().size())%255, 80, 140);
             }
         });
 
@@ -115,7 +116,7 @@ public class DashboardActivity extends Activity {
         graph.getGridLabelRenderer().setGridColor(0xFFA6ABBD);
         graph.getGridLabelRenderer().setHorizontalLabelsColor(0xFFA6ABBD);
         graph.getGridLabelRenderer().setVerticalLabelsColor(0xFFA6ABBD);
-        graph.getGridLabelRenderer().setNumHorizontalLabels(Category.getCategorySet().size());
+        graph.getGridLabelRenderer().setNumHorizontalLabels(accessTransactions.getCategNames().size());
         graph.getGridLabelRenderer().setHorizontalLabelsAngle(90);
         graph.setTitle("All Time Transactions:");
         graph.setTitleColor(0xFFA6ABBD);
@@ -125,7 +126,7 @@ public class DashboardActivity extends Activity {
         graph.getGridLabelRenderer().setPadding(50);
 
         // check if there are a sufficient number of categories
-        if(Category.getCategorySet().size() > 0) {
+        if(accessTransactions.getCategNames().size() > 0) {
             // custom label formatter to show categories
             graph.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
                 @Override
@@ -137,9 +138,9 @@ public class DashboardActivity extends Activity {
                         // convert the x value to an index number
                         index = (int) Double.parseDouble(super.formatLabel(value, isValueX));
                         // check if category string length is more than desired
-                        if ((output = Category.getCategorySet().get(index)).length() > TRUNCATE_LEN) {
+                        if ((output = accessTransactions.getCategNames().get(index)).length() > TRUNCATE_LEN) {
                             // truncate the string
-                            output = Category.getCategorySet().get(index).substring(0, TRUNCATE_LEN);
+                            output = accessTransactions.getCategNames().get(index).substring(0, TRUNCATE_LEN);
                         }
                         // return category of a given index
                         return output;
@@ -157,24 +158,26 @@ public class DashboardActivity extends Activity {
      * @return The data points of the total spendings.
      */
     protected DataPoint[] transactionsToGraphView() {
-        DataPoint[] output = new DataPoint[Category.getCategorySet().size()];
+        DataPoint[] output = new DataPoint[accessTransactions.getCategNames().size()];
         // the running price totals per category
-        double[] categoryTotals = new double[Category.getCategorySet().size()];
+        BigDecimal[] categoryTotals = new BigDecimal[accessTransactions.getCategNames().size()];
         int i = 0;
         int j = 0;
         boolean found = false;
         Transaction temp = null;
 
+        // fill the BigDecimal array with zeros
+        Arrays.fill(categoryTotals, BigDecimal.ZERO);
         // loop through all transactions
         for (i = 0; i < transactionList.size(); i++) {
             temp = transactionList.get(i);
             found = false;
             // loop through all predefined categories
-            for (j = 0; j < Category.getCategorySet().size() && !found; j++) {
+            for (j = 0; j < accessTransactions.getCategNames().size() && !found; j++) {
                 // check if the transaction category matches with a predefined category
-                if (Category.getCategorySet().get(j).equals(temp.getCategory())) {
+                if (accessTransactions.getCategNames().get(j).equals(temp.getCategoryName())) {
                     // increase the total price of this category
-                    categoryTotals[j] += temp.getPrice();
+                    categoryTotals[j] = categoryTotals[j].add(temp.getPrice());
                     found = true;
                 }
             }
@@ -183,7 +186,7 @@ public class DashboardActivity extends Activity {
         // loop through all predefined categories
         for (i = 0; i < categoryTotals.length; i++) {
             // make a data point per category
-            output[i] = new DataPoint(i, categoryTotals[i]);
+            output[i] = new DataPoint(i, categoryTotals[i].doubleValue());
         }
 
         return output;
@@ -211,18 +214,22 @@ public class DashboardActivity extends Activity {
                         startActivity(new Intent(getApplicationContext(), ViewTransactionActivity.class)); // Replace ViewActivity with the class used to view the graphs
                         // Can Adjust Transition Speed, both enter and exit
                         overridePendingTransition(0,0);
+                        finish();
                         return true;
                     case R.id.buttonAddTransaction:
                         startActivity(new Intent(getApplicationContext(),TransactionsActivity.class));
                         overridePendingTransition(0,0);
+                        finish();
                         return true;
                     case R.id.buttonSettings:
                         startActivity(new Intent(getApplicationContext(),SettingsActivity.class));
                         overridePendingTransition(0,0);
+                        finish();
                         return true;
                     case R.id.buttonProfile:
                         startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
                         overridePendingTransition(0,0);
+                        finish();
                         return true;
                 }
                 return false;
@@ -244,7 +251,7 @@ public class DashboardActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        transactionList = accessTransactions.getTransactions(User.currUser);
+        transactionList = accessTransactions.getTransactions(user.getUserid());
         // update the transaction list
         transactionArrayAdapter.notifyDataSetChanged();
 
@@ -261,11 +268,8 @@ public class DashboardActivity extends Activity {
         TextView title = findViewById(R.id.textTitle);
         LocalDateTime now = LocalDateTime.now();
         // get sum of transactions between now and 1 month ago
-        double total = accessTransactions.getSumInPeriod(User.currUser, now.minusSeconds(SECONDS_PER_MONTH), now);
+        BigDecimal total = accessTransactions.getSumInPeriod(user.getUserid(), now.minusSeconds(SECONDS_PER_MONTH), now);
         String text = "Monthly Total: $" + String.format(Locale.ENGLISH, "%.2f", total);
         title.setText(text);
     }
-
-
-
 }
