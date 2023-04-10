@@ -45,11 +45,7 @@ public class SettingsActivity extends Activity {
         arrayList.add("Set Threshold Limit");
         arrayList.add("Compile Report");
         arrayList.add("Budget Calculator");
-        arrayList.add("Change Theme (Iteration 3)");
-        arrayList.add("Update Account details (Iteration 3)");
-        arrayList.add("Print Monthly Report (Iteration 3)");
-        arrayList.add("Submit Feedback (Future Iteration)");
-        arrayList.add("Delete Account (Future Iteration)");
+        arrayList.add("Log Out");
 
         /*
           Adapter function for the list of settings
