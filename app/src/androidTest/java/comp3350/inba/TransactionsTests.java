@@ -21,6 +21,7 @@ import static org.hamcrest.CoreMatchers.anything;
 import static org.junit.Assert.assertTrue;
 
 // Android imports
+import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 
@@ -30,6 +31,7 @@ import androidx.test.runner.AndroidJUnit4;
 
 // Presentation layer
 import comp3350.inba.presentation.DashboardActivity;
+import comp3350.inba.presentation.LoginActivity;
 //import comp3350.inba.presentation.TransactionsActivity;
 
 @RunWith( AndroidJUnit4.class )
@@ -41,7 +43,7 @@ public class TransactionsTests
     */
 
     @Rule
-    public ActivityTestRule<DashboardActivity> activity_rule = new ActivityTestRule<>(DashboardActivity.class);
+    public ActivityTestRule<LoginActivity> activity_rule = new ActivityTestRule<>(LoginActivity.class);
     //public ActivityTestRule<TransactionsActivity> other_activity_rule = new ActivityTestRule<>(TransactionsActivity.class);
 
     @Test

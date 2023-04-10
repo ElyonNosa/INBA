@@ -19,38 +19,40 @@ import android.widget.Toast;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import comp3350.inba.R;
 
+/**
+ * SettingsActivity.java
+ * The page where the user may browse different settings.
+ * This class is coupled with the activity_settings.xml.
+ */
 public class SettingsActivity extends Activity {
-
     ListView listView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // init the xml and navigation bar
         setContentView(R.layout.activity_settings);
-
-//        Button thresholdButton = findViewById(R.id.threshold);
-//        thresholdButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                openThresholdActivity();
-//            }
-//        });
-
         navigationBarInit();
 
-        listView = (ListView)findViewById(R.id.listview);
-
+        listView = findViewById(R.id.listview);
+        // create an array list to hold the different settings
         ArrayList<String> arrayList = new ArrayList<>();
 
         arrayList.add("Set Threshold Limit");
         arrayList.add("Update Account details (Iteration 3)");
         arrayList.add("Change Theme (Iteration 3)");
+        arrayList.add("Compile Report");
         arrayList.add("Print Monthly Report (Iteration 3)");
         arrayList.add("Submit Feedback (Iteration 3)");
         arrayList.add("Delete Account (Iteration 3)");
 
+        /*
+          Adapter function for the list of settings
+         */
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, arrayList) {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
@@ -63,29 +65,47 @@ public class SettingsActivity extends Activity {
 
         listView.setAdapter(arrayAdapter);
 
-
+        /*
+          Do stuff based on what setting was pressed.
+         */
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String selectedItem = (String) parent.getItemAtPosition(position);
-                if (selectedItem.equals("Set Threshold Limit")) {
-                    // Open the button
-                    openThresholdActivity();
+                switch (selectedItem) {
+                    case "Set Threshold Limit":
+                        openThresholdActivity();
+                        break;
+                    case "Compile Report":
+                        openReportActivity();
+                        break;
                 }
                 // Perform other actions based on the clicked item
                 Toast.makeText(getApplicationContext(), "Clicked: " + selectedItem, Toast.LENGTH_SHORT).show();
             }
         });
+        navigationBarInit();
     }
 
-    protected void openThresholdActivity(){
+    /**
+     * Function for starting the transaction threshold activity.
+     */
+    protected void openThresholdActivity() {
         Intent intent = new Intent(this, ThresholdActivity.class);
         startActivity(intent);
     }
 
+    public void openReportActivity() {
+        Intent intent = new Intent(this, ReportActivity.class);
+        startActivity(intent);
+    }
+
+    /**
+     * Initialize the navigation bar for the settings page.
+     */
     protected void navigationBarInit() {
         // Initialize and assign variable
-        BottomNavigationView bottomNavigationView=findViewById(R.id.bottom_navigation);
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
         // Set Home selected
         bottomNavigationView.setSelectedItemId(R.id.buttonSettings);
@@ -96,27 +116,27 @@ public class SettingsActivity extends Activity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-                switch(item.getItemId()) // DashboardActivity
+                switch (item.getItemId()) // DashboardActivity
                 {
                     case R.id.home:
-                        startActivity(new Intent(getApplicationContext(),DashboardActivity.class));
-                        overridePendingTransition(0,0);
+                        startActivity(new Intent(getApplicationContext(), DashboardActivity.class));
+                        overridePendingTransition(0, 0);
                         return true;
                     case R.id.buttonViewTransaction:
                         // Intent to start new Activity
                         startActivity(new Intent(getApplicationContext(), ViewTransactionActivity.class));
                         // Can Adjust Transition Speed, both enter and exit
-                        overridePendingTransition(0,0);
+                        overridePendingTransition(0, 0);
                         return true;
                     case R.id.buttonAddTransaction:
-                        startActivity(new Intent(getApplicationContext(),TransactionsActivity.class));
-                        overridePendingTransition(0,0);
+                        startActivity(new Intent(getApplicationContext(), TransactionsActivity.class));
+                        overridePendingTransition(0, 0);
                         return true;
                     case R.id.buttonSettings:
                         return true;
                     case R.id.buttonProfile:
-                        startActivity(new Intent(getApplicationContext(),ProfileActivity.class));
-                        overridePendingTransition(0,0);
+                        startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+                        overridePendingTransition(0, 0);
                         return true;
                 }
                 return false;

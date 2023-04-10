@@ -28,12 +28,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 
-import static comp3350.inba.objects.User.currUser;
 
 
+/**
+ * ProfileActivity.java
+ * The page where the user browses their profile information.
+ * This class is coupled with activity_profile.xml
+ */
 public class ProfileActivity extends Activity {
+    // instance of user
+    private User user;
 
     // the transactions database
     private AccessTransactions accessTransactions;
@@ -50,6 +57,7 @@ public class ProfileActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+        user = new User(getApplicationContext());
 
         // Get all of the text in from the layout
         TextView monthlySpendingLimit = findViewById(R.id.v_mn_spending_limit);
@@ -57,16 +65,16 @@ public class ProfileActivity extends Activity {
         TextView userName = findViewById(R.id.profile_name);
         TextView email = findViewById(R.id.email_address);
 
-        // Set the profile tab to take the currUser's data
-        monthlySpendingLimit.setText("$"+String.format("%.2f",currUser.getWkendThresh()));
-        weeklySpendingLimit.setText("$"+String.format("%.2f",currUser.getWkendThresh()));
-        userName.setText(currUser.getUserName());
-        email.setText("Email: "+currUser.getUserName()+"@gmail.com");
+        // Set the profile tab to take the user's data
+        monthlySpendingLimit.setText("$"+String.format("%.2f",user.getWkendThresh()));
+        weeklySpendingLimit.setText("$"+String.format("%.2f",user.getWkendThresh()));
+        userName.setText(user.getUserName());
+        email.setText("Email: "+user.getUserName()+"@gmail.com");
 
         accessTransactions = new AccessTransactions();
         try {
             // display transactions in list
-            transactionList = accessTransactions.getTransactions(User.currUser);
+            transactionList = accessTransactions.getTransactions(user.getUserID());
             transactionArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, transactionList);
             final ListView listView = findViewById(R.id.transaction_list);
             // adapt the transactions list to the listview
@@ -96,7 +104,7 @@ public class ProfileActivity extends Activity {
 
         //input data and fit data into pie chart entry
         for(String type: typeAmountMap.keySet()){
-            pieEntries.add(new PieEntry(typeAmountMap.get(type).floatValue(), type));
+            pieEntries.add(new PieEntry(Objects.requireNonNull(typeAmountMap.get(type)).floatValue(), type));
         }
 
         //collecting the entries with label name
@@ -208,7 +216,7 @@ public class ProfileActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        transactionList = accessTransactions.getTransactions(User.currUser);
+        transactionList = accessTransactions.getTransactions(user.getUserID());
         // update the transaction list
         transactionArrayAdapter.notifyDataSetChanged();
         PieChart pieChart = findViewById(R.id.pie_chart);

@@ -1,11 +1,14 @@
 package comp3350.inba.objects;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.TreeSet;
 
-public class Category {
-    // an ordered set of category names
-    private static TreeSet<String> categorySet = new TreeSet<>();
+/**
+ * Category.java
+ * The set of categories that a user has created.
+ */
+public class Category implements Comparable<Category> {
     // the name of the current category
     private final String name;
 
@@ -16,8 +19,6 @@ public class Category {
     Category(String name)
     {
         this.name = name;
-        // add the category name to the tree set
-        categorySet.add(name);
     }
 
     /**
@@ -29,10 +30,12 @@ public class Category {
     }
 
     /**
-     * Get an arraylist of the names.
-     * @return The category set converted to a string arraylist.
+     * Compare two categories.
+     * @param category The category to compare to.
+     * @return Positive int if this is greater than the other category. Zero if equal.
      */
-    public static ArrayList<String> getCategorySet() {
-        return new ArrayList<>(categorySet);
+    @Override
+    public int compareTo(Category category) {
+        return this.name.compareTo(category.getName());
     }
 }
