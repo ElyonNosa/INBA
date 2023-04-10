@@ -12,6 +12,8 @@ import android.graphics.Color;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import com.jjoe64.graphview.GraphView;
@@ -43,7 +45,7 @@ import comp3350.inba.application.Service;
  * The home page that shows a graph and recent transactions.
  * This class is coupled with activity_dashboard.xml
  */
-public class DashboardActivity extends Activity {
+public class DashboardActivity extends AppCompatActivity {
     // predefined category names to put on the graph and serve as suggestions for the user
     static final String[] PREDEFINED_CATEG_NAMES = {"Amenities", "Education", "Entertainment",
             "Food", "Hardware", "Hobby", "Medical", "Misc", "Transportation", "Utilities"};
@@ -63,19 +65,9 @@ public class DashboardActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         user = new User(getApplicationContext());
 
-        // login if not currently logged in
-        if(!user.getLoginStatus()) {
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
-            finish();
-            return;
-        }
-
         setContentView(R.layout.activity_dashboard);
-        copyDatabaseToDevice();
         // create instance of accessTransactions using the predefined list of category names
         accessTransactions = new AccessTransactions(Arrays.asList(PREDEFINED_CATEG_NAMES));
         try {
@@ -222,18 +214,22 @@ public class DashboardActivity extends Activity {
                         startActivity(new Intent(getApplicationContext(), ViewTransactionActivity.class)); // Replace ViewActivity with the class used to view the graphs
                         // Can Adjust Transition Speed, both enter and exit
                         overridePendingTransition(0,0);
+                        finish();
                         return true;
                     case R.id.buttonAddTransaction:
                         startActivity(new Intent(getApplicationContext(),TransactionsActivity.class));
                         overridePendingTransition(0,0);
+                        finish();
                         return true;
                     case R.id.buttonSettings:
                         startActivity(new Intent(getApplicationContext(),SettingsActivity.class));
                         overridePendingTransition(0,0);
+                        finish();
                         return true;
                     case R.id.buttonProfile:
                         startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
                         overridePendingTransition(0,0);
+                        finish();
                         return true;
                 }
                 return false;
@@ -275,58 +271,5 @@ public class DashboardActivity extends Activity {
         BigDecimal total = accessTransactions.getSumInPeriod(user.getUserid(), now.minusSeconds(SECONDS_PER_MONTH), now);
         String text = "Monthly Total: $" + String.format(Locale.ENGLISH, "%.2f", total);
         title.setText(text);
-    }
-
-
-    private void copyDatabaseToDevice() {
-        final String DB_PATH = "db";
-
-        String[] assetNames;
-        Context context = getApplicationContext();
-        File dataDirectory = context.getDir(DB_PATH, Context.MODE_PRIVATE);
-        AssetManager assetManager = getAssets();
-
-        try {
-
-            assetNames = assetManager.list(DB_PATH);
-            for (int i = 0; i < assetNames.length; i++) {
-                assetNames[i] = DB_PATH + "/" + assetNames[i];
-            }
-
-            copyAssetsToDirectory(assetNames, dataDirectory);
-
-            Service.setDBPathName(dataDirectory.toString() + "/" + Service.getDBPathName());
-
-        } catch (final IOException ioe) {
-            Messages.warning(this, "Unable to access application data: " + ioe.getMessage());
-        }
-    }
-
-    public void copyAssetsToDirectory(String[] assets, File directory) throws IOException {
-        AssetManager assetManager = getAssets();
-
-        for (String asset : assets) {
-            String[] components = asset.split("/");
-            String copyPath = directory.toString() + "/" + components[components.length - 1];
-
-            char[] buffer = new char[1024];
-            int count;
-
-            File outFile = new File(copyPath);
-
-            if (!outFile.exists()) {
-                InputStreamReader in = new InputStreamReader(assetManager.open(asset));
-                FileWriter out = new FileWriter(outFile);
-
-                count = in.read(buffer);
-                while (count != -1) {
-                    out.write(buffer, 0, count);
-                    count = in.read(buffer);
-                }
-
-                out.close();
-                in.close();
-            }
-        }
     }
 }

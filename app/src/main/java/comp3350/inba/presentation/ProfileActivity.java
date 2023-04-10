@@ -7,6 +7,7 @@ import comp3350.inba.objects.Category;
 import comp3350.inba.objects.User;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -38,7 +39,7 @@ import java.util.Objects;
  * The page where the user browses their profile information.
  * This class is coupled with activity_profile.xml
  */
-public class ProfileActivity extends Activity {
+public class ProfileActivity extends AppCompatActivity {
     // instance of user
     private User user;
 
@@ -178,20 +179,24 @@ public class ProfileActivity extends Activity {
                     case R.id.home:
                         startActivity(new Intent(getApplicationContext(), DashboardActivity.class));
                         overridePendingTransition(0, 0);
+                        finish();
                         return true;
                     case R.id.buttonViewTransaction:
                         // Intent to start new Activity
                         startActivity(new Intent(getApplicationContext(), ViewTransactionActivity.class)); // Replace ViewActivity with the class used to view the graphs
                         // Can Adjust Transition Speed, both enter and exit
                         overridePendingTransition(0, 0);
+                        finish();
                         return true;
                     case R.id.buttonAddTransaction:
                         startActivity(new Intent(getApplicationContext(), TransactionsActivity.class));
                         overridePendingTransition(0, 0);
+                        finish();
                         return true;
                     case R.id.buttonSettings:
                         startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
                         overridePendingTransition(0, 0);
+                        finish();
                         return true;
                     case R.id.buttonProfile:
                         return true;

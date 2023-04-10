@@ -33,7 +33,7 @@ public class UserPersistenceHSQLDB implements UserPersistence
     private Connection connection() throws SQLException 
     {
         return DriverManager.getConnection(
-            "jdbc:hsqldb:file:" + dbPath + ";shutdown=true", 
+            "jdbc:hsqldb:file:" + dbPath + ";readonly=false;hsqldb.lock_file=false;shutdown=true",
             "SA", 
             "");
     }
@@ -51,7 +51,7 @@ public class UserPersistenceHSQLDB implements UserPersistence
 
     // ############### returns list of all users ######################
     @Override
-    public List<String[]> get_user_list()
+    public List<String[]> getUsers()
     {
         final List<String[]> users = new ArrayList<>();
         
@@ -79,7 +79,7 @@ public class UserPersistenceHSQLDB implements UserPersistence
 
     // ################ Insert new User into db ####################### 
     @Override
-    public String[] insert_user( String[] usr )
+    public String[] insertUser(String[] usr )
     {
         try (final Connection c = connection()) 
         {
@@ -102,7 +102,7 @@ public class UserPersistenceHSQLDB implements UserPersistence
 
     // ####################### Update User ############################
     @Override
-    public String[] update_user(String[] usr)
+    public String[] updateUser(String[] usr)
     {
         try (final Connection c = connection()) 
         {
@@ -126,7 +126,7 @@ public class UserPersistenceHSQLDB implements UserPersistence
 
     // ##################### Delete User ##############################
     @Override
-    public void delete_user(String[] usr)
+    public void deleteUser(String[] usr)
     {
         try ( final Connection c = connection() ) 
         {

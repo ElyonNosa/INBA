@@ -1,8 +1,8 @@
 package comp3350.inba.presentation;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -47,7 +47,7 @@ import java.util.List;
  * The page where we see graphs containing transaction data.
  * This class is coupled with activity_view_transaction.xml.
  */
-public class ViewTransactionActivity extends Activity implements View.OnClickListener {
+public class ViewTransactionActivity extends AppCompatActivity implements View.OnClickListener {
     // the sum of prices for each month
     private ArrayList<BigDecimal> monthlyPriceArray;
     final String[] MONTHS = {"Jan", "Feb", "Mar", "Apr", "May", "June", "July",
@@ -94,23 +94,26 @@ public class ViewTransactionActivity extends Activity implements View.OnClickLis
                 switch (item.getItemId()) // DashboardActivity
                 {
                     case R.id.home:
-                        startActivity(new Intent(getApplicationContext(), DashboardActivity.class));
-                        overridePendingTransition(0, 0);
+                        startActivity(new Intent(getApplicationContext(),DashboardActivity.class));
+                        overridePendingTransition(0,0);
+                        finish();
                         return true;
                     case R.id.buttonViewTransaction:
                         // true if already on page.
                         return true;
                     case R.id.buttonAddTransaction:
-                        startActivity(new Intent(getApplicationContext(), TransactionsActivity.class));
-                        overridePendingTransition(0, 0);
+                        startActivity(new Intent(getApplicationContext(),TransactionsActivity.class));
+                        overridePendingTransition(0,0);
+                        finish();
                         return true;
                     case R.id.buttonSettings:
-                        startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
-                        overridePendingTransition(0, 0);
+                        startActivity(new Intent(getApplicationContext(),SettingsActivity.class));
+                        overridePendingTransition(0,0);
+                        finish();
                         return true;
                     case R.id.buttonProfile:
                         startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
-                        overridePendingTransition(0, 0);
+                        overridePendingTransition(0,0);
                         return true;
                 }
                 return false;

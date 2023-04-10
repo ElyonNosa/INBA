@@ -22,7 +22,7 @@ import comp3350.inba.objects.User;
  * The page where the user adjusts their spending threshold.
  * This class is coupled with activity_threshold.xml
  */
-public class ThresholdActivity extends Activity {
+public class ThresholdActivity extends AppCompatActivity {
     // instance of user
     private User user;
 

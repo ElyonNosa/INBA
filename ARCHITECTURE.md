@@ -7,6 +7,7 @@ graph TD
 
     PR --> |res| R[pkg layout]
     R --> ACTD(activity_dashboard.xml)
+    R ----> ACTR(activity_report.xml)
     R ---> ACTT(activity_transactions.xml)
     R --> ACTL(activity_login.xml)
     R ---> ACTP(activity_profile.xml)
@@ -17,6 +18,7 @@ graph TD
     PRES --> DACT(DashboardActivity.java)
     PRES ---> TACT(TransactionsActivity.java)
     PRES --> LACT(LoginActivity.java)
+    PRES ----> RACT(ReportActivity.java)
     PRES ---> PACT(ProfileActivity.java)
     PRES --> SACT(SettingsActivity.java)
     PRES ---> THACT(ThresholdActivity.java)
@@ -24,6 +26,7 @@ graph TD
 
     L --> |comp3350.inba| BUS[pkg business]
     BUS --> AT(AccessTransactions.java)
+    BUS --> AU(AccessUsers.java)
     L --> |comp3350.inba| OBJ[pkg objects]
     OBJ --> TRANS(Transaction.java)
     OBJ ---> CAT(Category.java)
