@@ -4,7 +4,7 @@
 Our group has always struggled with keeping our code smell-free. \
 In past iterations, we have done well on most of the rubric categories. \
 However, we are usually penalized significantly for the smells that were introduced in our code. \
-Below are a few ways that this can be prevented. 
+Below are a few causes and ways that this can be prevented. 
 
 ### Late Work
 Firstly, our group has a bad habit of starting our work late. \
