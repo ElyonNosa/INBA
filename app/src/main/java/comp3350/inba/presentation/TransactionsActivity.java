@@ -475,6 +475,7 @@ public class TransactionsActivity extends AppCompatActivity implements AdapterVi
                         return true;
                     case R.id.buttonAddTransaction:
                         // true if already on page.
+
                         return true;
                     case R.id.buttonSettings:
                         startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
