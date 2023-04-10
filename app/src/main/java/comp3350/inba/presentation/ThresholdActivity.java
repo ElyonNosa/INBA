@@ -17,7 +17,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import comp3350.inba.R;
 import static comp3350.inba.objects.User.currUser;
 
-public class ThresholdActivity extends Activity {
+public class ThresholdActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

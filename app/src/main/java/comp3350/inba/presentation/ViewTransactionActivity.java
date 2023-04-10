@@ -1,7 +1,7 @@
 package comp3350.inba.presentation;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -35,7 +35,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ViewTransactionActivity extends Activity implements View.OnClickListener {
+public class ViewTransactionActivity extends AppCompatActivity implements View.OnClickListener {
 
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);

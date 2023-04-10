@@ -5,23 +5,36 @@ import static comp3350.inba.objects.User.isLoggedIn;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+
 import comp3350.inba.R;
 import comp3350.inba.objects.User;
 
-public class LoginActivity extends Activity {
+public class LoginActivity extends AppCompatActivity {
     private EditText usernameEditText;
     private EditText passwordEditText;
+
+    SharedPreferences sharePrefs = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        sharePrefs = getSharedPreferences("night", 0);
+
+        Boolean booleanValue = sharePrefs.getBoolean("night_mode",true);
+        if (booleanValue){
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        }
 
         usernameEditText = findViewById(R.id.username_edit_text);
         passwordEditText = findViewById(R.id.password_edit_text);
@@ -63,6 +76,5 @@ public class LoginActivity extends Activity {
     private void saveLoginStatus() {
         // Save the user's login status in shared preferences or local database
         isLoggedIn = true;
-
     }
 }

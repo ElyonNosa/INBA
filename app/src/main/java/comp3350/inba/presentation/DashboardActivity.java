@@ -14,6 +14,8 @@ import android.graphics.Color;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import com.jjoe64.graphview.GraphView;
@@ -44,7 +46,7 @@ import comp3350.inba.objects.User;
  *
  * This class is coupled with activity_dashboard.xml
  */
-public class DashboardActivity extends Activity {
+public class DashboardActivity extends AppCompatActivity {
     // the transactions database
     private AccessTransactions accessTransactions;
     // the adapter to display transactions in a list view
@@ -212,18 +214,22 @@ public class DashboardActivity extends Activity {
                         startActivity(new Intent(getApplicationContext(), ViewTransactionActivity.class)); // Replace ViewActivity with the class used to view the graphs
                         // Can Adjust Transition Speed, both enter and exit
                         overridePendingTransition(0,0);
+                        finish();
                         return true;
                     case R.id.buttonAddTransaction:
                         startActivity(new Intent(getApplicationContext(),TransactionsActivity.class));
                         overridePendingTransition(0,0);
+                        finish();
                         return true;
                     case R.id.buttonSettings:
                         startActivity(new Intent(getApplicationContext(),SettingsActivity.class));
                         overridePendingTransition(0,0);
+                        finish();
                         return true;
                     case R.id.buttonProfile:
                         startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
                         overridePendingTransition(0,0);
+                        finish();
                         return true;
                 }
                 return false;
