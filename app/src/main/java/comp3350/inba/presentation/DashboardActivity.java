@@ -63,16 +63,7 @@ public class DashboardActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         user = new User(getApplicationContext());
-
-        // login if not currently logged in
-        if(!user.getLoginStatus()) {
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
-            finish();
-            return;
-        }
 
         setContentView(R.layout.activity_dashboard);
         copyDatabaseToDevice();

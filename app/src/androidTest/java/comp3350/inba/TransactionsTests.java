@@ -21,6 +21,7 @@ import static org.hamcrest.CoreMatchers.anything;
 import static org.junit.Assert.assertTrue;
 
 // Android imports
+import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 
@@ -30,6 +31,8 @@ import androidx.test.runner.AndroidJUnit4;
 
 // Presentation layer
 import comp3350.inba.presentation.DashboardActivity;
+import comp3350.inba.presentation.LoginActivity;
+//import comp3350.inba.presentation.TransactionsActivity;
 
 @RunWith( AndroidJUnit4.class )
 @LargeTest
@@ -40,7 +43,7 @@ public class TransactionsTests
     */
 
     @Rule
-    public ActivityTestRule<DashboardActivity> activity_rule = new ActivityTestRule<>(DashboardActivity.class);
+    public ActivityTestRule<LoginActivity> activity_rule = new ActivityTestRule<>(LoginActivity.class);
 
     @Test
     public void testCreateTransaction()
@@ -89,5 +92,6 @@ public class TransactionsTests
         onData(anything()).inAdapterView(withId(R.id.listTransactions)).atPosition(numItems[0] - 1).perform(click());
         onView(withId(R.id.editTransactionCategory)).check(matches(withText("something fun")));
         onView(withId(R.id.editTransactionPrice)).check(matches(withText("20.34")));
+        onView( withId( R.id.buttonTransactionDelete )).perform( click() );
     }
 }
