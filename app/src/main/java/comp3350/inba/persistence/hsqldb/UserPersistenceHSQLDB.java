@@ -33,7 +33,7 @@ public class UserPersistenceHSQLDB implements UserPersistence
     private Connection connection() throws SQLException 
     {
         return DriverManager.getConnection(
-            "jdbc:hsqldb:file:" + dbPath + ";shutdown=true", 
+            "jdbc:hsqldb:file:" + dbPath + ";readonly=false;hsqldb.lock_file=false;shutdown=true",
             "SA", 
             "");
     }

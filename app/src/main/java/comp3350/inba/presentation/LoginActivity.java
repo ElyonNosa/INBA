@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import comp3350.inba.R;
@@ -22,7 +23,7 @@ public class LoginActivity extends Activity {
     //the users "database"
     private AccessUsers accessUsers;
     // the local list of users after retrieving from the "database"
-    private List<User> usersList;
+    private List<User> usersList = new ArrayList<>();
     private EditText usernameEditText;
     private EditText passwordEditText;
 
@@ -35,7 +36,9 @@ public class LoginActivity extends Activity {
         passwordEditText = findViewById(R.id.password_edit_text);
 
         accessUsers = new AccessUsers();
-        usersList = accessUsers.getUsers();
+        //usersList = accessUsers.getUsers();
+
+        usersList.add(new User("Trojan", "Elyon", "Rassit"));
 
         Button loginButton = findViewById(R.id.login_button);
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -72,15 +75,16 @@ public class LoginActivity extends Activity {
      * @return true if the username and password are correct, false otherwise.
      */
     private boolean isValidCredentials(String username, String password) {
-
+        boolean returnVal = false;
         for(User currUser : usersList){
             if(currUser.getUserName().equals(username) && currUser.getPasswd().equals(password)){
-                return true;
+                returnVal = true;
             }
+
         }
 
 
-        return false;
+        return returnVal;
     }
 
     private void saveLoginStatus() {
