@@ -43,12 +43,13 @@ public class SettingsActivity extends Activity {
         ArrayList<String> arrayList = new ArrayList<>();
 
         arrayList.add("Set Threshold Limit");
-        arrayList.add("Update Account details (Iteration 3)");
-        arrayList.add("Change Theme (Iteration 3)");
         arrayList.add("Compile Report");
+        arrayList.add("Budget Calculator");
+        arrayList.add("Change Theme (Iteration 3)");
+        arrayList.add("Update Account details (Iteration 3)");
         arrayList.add("Print Monthly Report (Iteration 3)");
-        arrayList.add("Submit Feedback (Iteration 3)");
-        arrayList.add("Delete Account (Iteration 3)");
+        arrayList.add("Submit Feedback (Future Iteration)");
+        arrayList.add("Delete Account (Future Iteration)");
 
         /*
           Adapter function for the list of settings
@@ -79,6 +80,9 @@ public class SettingsActivity extends Activity {
                     case "Compile Report":
                         openReportActivity();
                         break;
+                    case "Budget Calculator":
+                        openBudgetCalculatorActivity();;
+                        break;
                 }
                 // Perform other actions based on the clicked item
                 Toast.makeText(getApplicationContext(), "Clicked: " + selectedItem, Toast.LENGTH_SHORT).show();
@@ -95,8 +99,19 @@ public class SettingsActivity extends Activity {
         startActivity(intent);
     }
 
+    /**
+     * Function for starting the transaction report activity.
+     */
     public void openReportActivity() {
         Intent intent = new Intent(this, ReportActivity.class);
+        startActivity(intent);
+    }
+
+    /**
+     * Function for starting the transaction report activity.
+     */
+    public void openBudgetCalculatorActivity() {
+        Intent intent = new Intent(this, BudgetCalculatorActivity.class);
         startActivity(intent);
     }
 
