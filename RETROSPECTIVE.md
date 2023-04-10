@@ -47,4 +47,4 @@ It would be considered a success if all 5 group members began communicating at l
 [See project velocity here](projectVelocity.jpg) \
 There is a clear trend that our group is underdelivering more and more for every iteration. \
 This is compounded by the fact that we are postponing an increasing amount of issues to the next release. \
-However, we are completing more issues for every iteration. 
+However, we are completing more issues for every iteration, thanks to the increasing number of smells. 
