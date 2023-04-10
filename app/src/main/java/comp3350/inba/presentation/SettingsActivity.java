@@ -82,8 +82,8 @@ public class SettingsActivity extends AppCompatActivity {
         ArrayList<String> arrayList = new ArrayList<>();
 
         arrayList.add("Set Threshold Limit");
-        arrayList.add("Update Account details (Iteration 3)");
         arrayList.add("Compile Report");
+        arrayList.add("Logout");
 
         /*
           Adapter function for the list of settings
@@ -113,6 +113,9 @@ public class SettingsActivity extends AppCompatActivity {
                         break;
                     case "Compile Report":
                         openReportActivity();
+                        break;
+                    case "Logout":
+                        // TODO: log out the user
                         break;
                 }
                 // Perform other actions based on the clicked item
