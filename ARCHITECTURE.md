@@ -7,6 +7,7 @@ graph TD
 
     PR --> |res| R[pkg layout]
     R --> ACTD(activity_dashboard.xml)
+    R ----> ACTBC(activity_budget_calculator.xml)
     R ----> ACTR(activity_report.xml)
     R ---> ACTT(activity_transactions.xml)
     R --> ACTL(activity_login.xml)
@@ -18,6 +19,7 @@ graph TD
     PRES --> DACT(DashboardActivity.java)
     PRES ---> TACT(TransactionsActivity.java)
     PRES --> LACT(LoginActivity.java)
+    PRES --> BCACT(BudgetCalculatorActivity.java)
     PRES ----> RACT(ReportActivity.java)
     PRES ---> PACT(ProfileActivity.java)
     PRES --> SACT(SettingsActivity.java)
