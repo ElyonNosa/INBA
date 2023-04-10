@@ -44,7 +44,7 @@ Smells may develop if group members are not communicating their ideas and sharin
 It would be considered a success if all 5 group members began communicating at least 7 days before the deadline in iteration 3. 
 
 ## Project Velocity
-[See project velocity here](projectVelocity.jpeg) \
+[See project velocity here](projectVelocity.jpg) \
 There is a clear trend that our group is underdelivering more and more for every iteration. \
 This is compounded by the fact that we are postponing an increasing amount of issues to the next release. \
 However, we are completing more issues for every iteration. 
