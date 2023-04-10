@@ -42,3 +42,9 @@ The general expectation at the time was that group members would come forward an
 However, the group would probably had succeeded to a higher degree if communications were more open. \
 Smells may develop if group members are not communicating their ideas and sharing their code with others. \
 It would be considered a success if all 5 group members began communicating at least 7 days before the deadline in iteration 3. 
+
+## Project Velocity
+[See project velocity here](projectVelocity.jpeg) \
+There is a clear trend that our group is underdelivering more and more for every iteration. \
+This is compounded by the fact that we are postponing an increasing amount of issues to the next release. \
+However, we are completing more issues for every iteration. 
