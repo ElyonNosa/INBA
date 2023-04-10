@@ -8,7 +8,7 @@ import java.io.IOException;
 import comp3350.inba.application.Service;
 
 public class TestUtils {
-    private static final File DB_SRC = new File("src/main/assets/db/SC.script");
+    private static final File DB_SRC = new File("src/main/assets/db/INBA_DATABASE.script");
 
     public static File copyDB() throws IOException {
         final File target = File.createTempFile("temp-db", ".script");
