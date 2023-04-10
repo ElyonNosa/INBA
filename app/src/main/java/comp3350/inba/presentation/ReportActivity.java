@@ -1,6 +1,7 @@
 package comp3350.inba.presentation;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -25,7 +26,7 @@ import comp3350.inba.objects.Transaction;
 import comp3350.inba.objects.User;
 
 
-public class ReportActivity extends Activity {
+public class ReportActivity extends AppCompatActivity {
 
 
     private final ArrayList<LocalDateTime> localDateTime = new ArrayList<>();
