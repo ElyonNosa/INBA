@@ -92,6 +92,7 @@ public class TransactionsTests
         onData(anything()).inAdapterView(withId(R.id.listTransactions)).atPosition(numItems[0] - 1).perform(click());
         onView(withId(R.id.editTransactionCategory)).check(matches(withText("something fun")));
         onView(withId(R.id.editTransactionPrice)).check(matches(withText("20.34")));
+        // delete once done
         onView( withId( R.id.buttonTransactionDelete )).perform( click() );
     }
 }

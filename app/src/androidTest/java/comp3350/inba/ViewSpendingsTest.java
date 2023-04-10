@@ -30,7 +30,7 @@ import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
 
 // Presentation layer
-import comp3350.inba.presentation.DashboardActivity;
+import comp3350.inba.presentation.LoginActivity;
 
 @RunWith( AndroidJUnit4.class )
 @LargeTest
@@ -41,13 +41,11 @@ public class ViewSpendingsTest
     */
 
     @Rule
-    public ActivityTestRule<DashboardActivity> activity_rule = new ActivityTestRule<>(DashboardActivity.class);
+    public ActivityTestRule<LoginActivity> activity_rule = new ActivityTestRule<>(LoginActivity.class);
 
     @Test
     public void testViewSpending()
     {
-        final int[] numItems = new int[1];
-
         // login
         onView( withId( R.id.username_edit_text )).perform( typeText("rossD" ));
         onView( withId( R.id.password_edit_text )).perform( typeText( "rassit" ));

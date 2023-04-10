@@ -269,6 +269,8 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
                     // these are done in case of a new category addition, we want to update the autocomplete and filter list
                     // refresh list
                     updateListView();
+                    selectedTransactionPosition = -1;
+                    selectedTransactionTime = null;
                 } catch (final Exception e) {
                     Messages.fatalError(this, e.getMessage());
                 }
@@ -306,6 +308,8 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
                     }
                     // refresh list
                     updateListView();
+                    selectedTransactionPosition = -1;
+                    selectedTransactionTime = null;
                 } catch (final Exception e) {
                     Messages.fatalError(this, e.getMessage());
                 }
@@ -375,6 +379,8 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
             transactionArrayAdapter.notifyDataSetChanged();
             // refresh list
             updateListView();
+            selectedTransactionPosition = -1;
+            selectedTransactionTime = null;
         } catch (final Exception e) {
             Messages.warning(this, e.getMessage());
         }
@@ -434,6 +440,8 @@ public class TransactionsActivity extends Activity implements AdapterView.OnItem
             // Messages.warning(this, e.getMessage());
             // parsing error occurred, leave the transaction as null
         }
+        editCategory.setText("");
+        editPrice.setText("");
         return output;
     }
 

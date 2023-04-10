@@ -31,6 +31,7 @@ import androidx.test.runner.AndroidJUnit4;
 
 // Presentation layer
 import comp3350.inba.presentation.DashboardActivity;
+import comp3350.inba.presentation.LoginActivity;
 
 @RunWith( AndroidJUnit4.class )
 @LargeTest
@@ -41,7 +42,7 @@ public class ChangeSettingTest
     */
 
     @Rule
-    public ActivityTestRule<DashboardActivity> activity_rule = new ActivityTestRule<>(DashboardActivity.class);
+    public ActivityTestRule<LoginActivity> activity_rule = new ActivityTestRule<>(LoginActivity.class);
 
     @Test
     public void testSettings()
