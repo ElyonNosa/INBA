@@ -42,25 +42,17 @@ The project will be considered successful if the user can view their total month
 
 Another criteria for success is that the user should be able to record their transactions within 2 clicks or less. 
 
-
 It is ideal if INBA is preferred by 75% of users over their current financial planning platform. 
 
 ## How did the project change from your initial vision
 
 The outcome of our vision did for the most part did come to fruition. We planned on creating an easy to use, visually appealing financial planning application. INBA is now a visually appealing and functions simply. This is an overall success from the vision that was planned months ago. We believe that INBA has the capacity to be a very useful application for all those.
 
-## Post
-
-
-
 ## What went wrong or right?
 
 Front-End development generally went smoothly, once the front-end team had an understanding of the mark-up that Android utilizes it was easy to create nice UIs. One challenge that happened in Front-End was changing application theme, online there are so many differing ways to do it and each implemented so differently. After choosing one, we had to refactor all the mark-up code to make it work. Eventually, a simple colour switcher was utilized, but there were many bugs, some that flickered the screen endlessly.
 
 Another particularly challenging implementation was the switching of graphical displays. It due to changing the graphical implementations to successfully display the correct. Back-end development had some pitfalls. Databases that brick our computers and creating x many different versions of the database file to fix the issue.
-
-
-## Poo
 
 ## Features better than expected
 
